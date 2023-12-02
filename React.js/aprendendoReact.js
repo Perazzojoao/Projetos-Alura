@@ -191,7 +191,14 @@
             .
           )
         }
-      */ 
+      */
+
+  // useEfect() --> Executa uma função após um componente ser renderizado.
+    // Sintaxe: useEfect(() => {<bloco_de_comandos>}, <condição>)
+    // Condições:
+      // VAZIO: Função é executada SEMPRE que um componente é renderizado (Pode causar loop infinito).
+      // []: Função é executada apenas na 1ª renderização.
+      // [<variável>]: Função é executada toda vez que a variável é alterada (Variável utilizada é proveniente do "useState()".
     
 
 // Condicionais
