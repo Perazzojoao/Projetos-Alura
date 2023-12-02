@@ -17,6 +17,21 @@ h1 {
   display: inline-block;
   padding-bottom: 24px;
   margin: 32px 0;
+  position: relative;
+  left: 20px;
+}
+
+.btn-formHidde {
+  padding: 8px;
+  border-radius: 50%;
+  border: 1px solid #ffffff;
+  box-shadow: rgba(0, 0, 0, 0.08);
+  background-color: #6278F7;
+  color: #ffffff;
+  position: relative;
+  right: -35px;
+  top: 15px;
+  cursor: pointer;
 }
 
 h1, h2 {

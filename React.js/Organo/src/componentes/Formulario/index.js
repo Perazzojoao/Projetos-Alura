@@ -5,7 +5,7 @@ import ListaSuspensa from '../ListaSuspensa'
 import { v4 as uuidv4 } from 'uuid';
 import './formulario.css'
 
-const Formulario = ({aoCadastrar, times, aoCriarTime}) => {
+const Formulario = ({aoCadastrar, times, aoCriarTime, hidden}) => {
 
     const [nome, setNome] = useState('');
     const [cargo, setCargo] = useState('');
@@ -36,7 +36,7 @@ const Formulario = ({aoCadastrar, times, aoCriarTime}) => {
     }
 
     return (
-        <section className="formulario-container">
+        (hidden === true) && <section className="formulario-container">
             <form className="formulario" onSubmit={aoSubmeter}>
                 <h2>Preencha os dados para criar o card do colaborador.</h2>
                 <Campo

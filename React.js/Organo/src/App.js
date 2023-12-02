@@ -4,6 +4,7 @@ import Formulario from "./componentes/Formulario";
 import Rodape from "./componentes/Rodape";
 import Time from "./componentes/Time";
 import { v4 as uuidv4 } from 'uuid';
+import { BiAddToQueue } from "react-icons/bi";
 
 function App() {
 
@@ -262,6 +263,13 @@ function App() {
     }));
   }
 
+  const [hide, setHide] = useState(false);
+
+  function hideForm() {
+    setHide(!hide);
+    console.log(hide);
+  }
+
   return (
     <div>
       <Banner />
@@ -269,9 +277,11 @@ function App() {
         times={times.map(time => time.nome)} 
         aoCadastrar={colaborador => setColaboradores([...colaboradores, colaborador])}
         aoCriarTime={time => setTimes([...times, time])}
+        hidden={hide}
       />
       <section className="times">
         <h1>Minha organização</h1>
+        <BiAddToQueue className="btn-formHidde" size={35} onClick={hideForm}/>
         {times.map((time, indice) => <Time 
           key={indice} 
           time={time} 
