@@ -6,7 +6,7 @@ const Colaborador = ({ colaborador, corDeFundo, aoDeletar }) => {
         <TiDelete 
             size={25} 
             className='deletar' 
-            onClick={() => aoDeletar(colaborador.id)}
+            onClick={() => aoDeletar(colaborador.id)}       // Devemos passar uma arrow function para o "onClick", assim, a função não é executada instantaneamente.
         />
         <div className="cabecalho" style={{ backgroundColor: corDeFundo }}>
             <img src={colaborador.imagem} alt={colaborador.nome} />
