@@ -234,7 +234,11 @@ function App() {
   return (
     <div>
       <Banner />
-      <Formulario times={times.map(time => time.nome)} aoCadastrar={colaborador => setColaboradores([...colaboradores, colaborador])} />
+      <Formulario 
+        times={times.map(time => time.nome)} 
+        aoCadastrar={colaborador => setColaboradores([...colaboradores, colaborador])}
+        aoCriarTime={time => setTimes([...times, time])}
+      />
       <section className="times">
         <h1>Minha organização</h1>
         {times.map((time, indice) => <Time 

@@ -2,23 +2,36 @@ import { useState } from 'react'
 import Botao from '../Botao'
 import CampoTexto from '../CampoTexto'
 import ListaSuspensa from '../ListaSuspensa'
+import { v4 as uuidv4 } from 'uuid';
 import './formulario.css'
 
-const Formulario = ({aoCadastrar, times}) => {
+const Formulario = ({aoCadastrar, times, aoCriarTime}) => {
 
-    const [nome, setNome] = useState('')
-    const [cargo, setCargo] = useState('')
-    const [imagem, setImagem] = useState('')
-    const [time, setTime] = useState('')
+    const [nome, setNome] = useState('');
+    const [cargo, setCargo] = useState('');
+    const [imagem, setImagem] = useState('');
+    const [time, setTime] = useState('');
+    const [nomeTime, setNomeTime] = useState('');
+    const [corTime, setCorTime] = useState('');
 
     const aoSubmeter = (evento) => {
         evento.preventDefault()
-        console.log('form enviado', nome, cargo, imagem, time )
+        console.log('Form enviado ->', nome, cargo, imagem, time )
         aoCadastrar({
             nome,
             cargo,
             imagem,
             time
+        })
+    }
+
+    const aoSubmeterTime = (evento) => {
+        evento.preventDefault();
+        console.log('Time criado com sucesso! ->', nomeTime, corTime);
+        aoCriarTime({
+            id: uuidv4(),
+            nome: nomeTime,
+            cor: corTime
         })
     }
 
@@ -49,6 +62,24 @@ const Formulario = ({aoCadastrar, times}) => {
                     valor={time}
                     aoAlterado={valor => setTime(valor)}/>
                 <Botao texto='Criar card' />
+            </form>
+            <form className="formulario" onSubmit={aoSubmeterTime}>
+                <h2>Preencha os dados para criar um novo time.</h2>
+                <CampoTexto
+                    obrigatorio
+                    label='Nome'
+                    placeholder='Digite o nome do time'
+                    valor={nomeTime}
+                    aoAlterado={valor => setNomeTime(valor)}
+                />
+                <CampoTexto
+                    obrigatorio
+                    label='Cargo' 
+                    placeholder='Digite a cor do time'
+                    valor={corTime}
+                    aoAlterado={valor => setCorTime(valor)}
+                />
+                <Botao texto='Criar um novo time'/>
             </form>
         </section>
     )
