@@ -23,7 +23,9 @@
     // componentes são funções que criamos para construir o html da página.
     /*
       import '<caminho_css>';     --> Importando o css.
-
+      OU
+      import <variável> from './<caminho_css>'    --> 'styles' recebe um obj com todas as confugurações do css.
+.                                                 OBS: para isso devemos criar um arquivo css desta forma: <nome>.module.css
       function <função_componente>() {
         <bloco_de_comandos_em_js>
         .
@@ -221,7 +223,7 @@
     */
 
 
-// React-router-dom: rotas do react
+// React-router-dom: Biblioteca de rotas do react
   // Instalação: npm instal react-router-dom@<versão>
   // Uso: gerencia as rotas da url da página, renderizando apenas os componentes que fazem parte daquela rota (url) específica.
   // Ex:
@@ -230,7 +232,7 @@
         return (
           <BrowserRouter>
             <Routes>
-              <Route path="/" element={<Inicio />} />
+              <Route path="/" element={<Inicio />} />                           // "element" --> Define o componente que será renderizado naquela url.
               <Route path="/sobremim" element={<SobreMim />} />
               <Route path="*" element={<h1>Página não encontrada</h1>} />       // path="*" --> Todos os outros caminhos não definidos.
             </Routes>
@@ -238,3 +240,7 @@
         );
       }
     */
+  
+  // Links:
+    // Uso: Cria um link que leva o usuário a uma nova página sem recarregar a página.
+    // Sintaxe: <Link to='/<caminho_relativo>' ></Link>
