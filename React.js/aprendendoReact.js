@@ -219,3 +219,22 @@
             );
           }
     */
+
+
+// React-router-dom: rotas do react
+  // Instalação: npm instal react-router-dom@<versão>
+  // Uso: gerencia as rotas da url da página, renderizando apenas os componentes que fazem parte daquela rota (url) específica.
+  // Ex:
+    /*
+      function App() {
+        return (
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Inicio />} />
+              <Route path="/sobremim" element={<SobreMim />} />
+              <Route path="*" element={<h1>Página não encontrada</h1>} />       // path="*" --> Todos os outros caminhos não definidos.
+            </Routes>
+          </BrowserRouter>
+        );
+      }
+    */
