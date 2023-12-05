@@ -1,95 +1,97 @@
+# Códigos React.js
 
-// Criando o projeto:
-  // No terminal digite: npx create-react-app <nome_projeto>
+## Criando o projeto:
+No terminal digite: npx create-react-app <nome_projeto>
 
-  // Códigos para rodar no terminal: 
-  /*
-    npm start 
-         Starts the development server.
-
-    npm run build
-          Bundles the app into static files for productions.
-
-    npm test
-          Starts the test runner.
-
-    npm run eject
-          Removes this tool and copies build dependencies, configurations files and scripts into the app directory. If you do this, you can't go back!
-  */
-
-
-// Componentes:
-  // Criando componentes:
-    // componentes são funções que criamos para construir o html da página.
-    /*
-      import <variável_imagem> from './<caminho_imagem>';   --> Importando imagens.
-      import '<caminho_css>';                               --> Importando o css.
-      OU
-      import <variável> from './<caminho_css>'    --> 'styles' recebe um obj com todas as confugurações do css.
-.                                                 OBS: para isso devemos criar um arquivo css desta forma: <nome>.module.css
-      function <função_componente>() {
-        <bloco_de_comandos_em_js>
-        .
-        .
-        .
-        return (Linguagem JSX: javascript + xml)
-      }
-
-      export default <função_componente>;
-    */
-
-      // Ex:
-      /*
-        import './banner.css';    --> Import do css.
-
-        function Banner() {
-          return (
-            <header className='banner'>
-              <img src="/img/banner.png" alt="Banner principal do Organo."/>
-            </header>
-          )
-        }
-
-        export default Banner;
-      */
-
-    // Fragment:
-      // Componentes devem retornar tudo dentro de uma única tag html. Caso queira retornar várias tags, envolva-as dentro da tag "<Fragment>...</Fragment>" ou de tags vazias "<>...</>"
-      // Ex:
-        /*
-          function Banner() {
-          return (
-            <Fragment>
-              <header className='banner'>
-                <img src="/img/banner.png" alt="Banner principal do Organo."/>
-              </header>
-              <p1>Teste de fragment</p1>
-            </Fragment>
-          )
-        }
-        */
+- Códigos para rodar no terminal: 
+  ```
+  npm start 
+       Starts the development server.
   
-  // Importando componentes:
-    // para utilizar os componentes criados precisamos importa-los:
-      // Ex: import Banner from './components/Banner/banner'; --> (caminho do arquivo).
+  npm run build
+        Bundles the app into static files for productions.
+  
+  npm test
+        Starts the test runner.
+  
+  npm run eject
+        Removes this tool and copies build dependencies, configurations files and scripts into the app directory. If you do this, you can't go back!
+  ```
 
-    // com isso, a função importada vira uma tag html e podemos utiliza-la no arquivo "App.js" para desenvolver-mos nossa aplicação.
-      // Ex: <Banner/>
 
-    // Caminhos absolutos:
-      // Uso: podemos configurar um arquivo "jsconfig.json" na raiz do projeto para habilitar caminhos absolutos à pasta "src".
-      // Ex: import Banner from '../../components/Banner/banner'  -->  'components/Banner/banner' (caminho absoluto).
-      // Configuração: Crie uma pasta "jsconfig.json" na pasta raiz do projeto.
-        /*
-          {
-            "compilerOptions": {
-              "baseUrl": "src"
-            },
-            "include": ["src"]
-          }
-        */
+## Componentes:
+### Criando componentes:
+Componentes são funções que criamos para construir o html da página.
+```
+  import <variável_imagem> from './<caminho_imagem>';   --> Importando imagens.
+  import '<caminho_css>';                               --> Importando o css.
+  OU
+  import <variável> from './<caminho_css>'    --> 'styles' recebe um obj com todas as confugurações do css.
+                                              OBS: para isso devemos criar um arquivo css desta forma: <nome>.module.css
+  function <função_componente>() {
+    <bloco_de_comandos_em_js>
+    .
+    .
+    .
+    return (Linguagem JSX: javascript + xml)
+  }
+  
+  export default <função_componente>;
+```
 
-  // Propriedades dos componentes (props):
+Ex:
+```
+  import './banner.css';    --> Import do css.
+  
+  function Banner() {
+    return (
+      <header className='banner'>
+        <img src="/img/banner.png" alt="Banner principal do Organo."/>
+      </header>
+    )
+  }
+  
+  export default Banner;
+  ```
+
+### Fragment:
+Componentes devem retornar tudo dentro de uma única tag html. Caso queira retornar várias tags, envolva-as dentro da tag "<Fragment>...</Fragment>" ou de tags vazias "<>...</>".
+Ex:
+```
+  function Banner() {
+  return (
+    <Fragment>
+      <header className='banner'>
+        <img src="/img/banner.png" alt="Banner principal do Organo."/>
+      </header>
+      <p1>Teste de fragment</p1>
+    </Fragment>
+  )
+  }
+```
+
+## Importando componentes:
+Para utilizar os componentes criados precisamos importa-los:
+
+Ex: **import Banner from './components/Banner/banner'; --> (caminho do arquivo).**
+
+com isso, a função importada vira uma tag html e podemos utiliza-la no arquivo "App.js" para desenvolver-mos nossa aplicação.
+Ex: <Banner/>
+
+## Caminhos absolutos:
+- Uso: podemos configurar um arquivo "jsconfig.json" na raiz do projeto para habilitar caminhos absolutos à pasta "src".
+- Ex: import Banner from '../../components/Banner/banner'  -->  'components/Banner/banner' (caminho absoluto).
+- Configuração: Crie uma pasta "**jsconfig.json**" na pasta raiz do projeto.
+```
+  {
+    "compilerOptions": {
+      "baseUrl": "src"
+    },
+    "include": ["src"]
+  }
+```
+
+  ## Propriedades dos componentes (props):
     // podemos passar propriedades das tags dos componentes criados diretamente para suas funções
     // Ex:
         /*
@@ -126,7 +128,7 @@
         */
 
 
-// Eventos:
+ ## Eventos:
   // Digitamos os eventos dentro das tags html ou JSX
   // Ex: <form onSubmit={script js}></form>             --> {script js}: passamos funções previamente criadas no bloco de comandos js do componente
   // Ex:
@@ -153,7 +155,7 @@
       */
 
 
-// Hooks:
+## Hooks:
   // Regra n1: Hooks, no geral, devem ser usadas na ordem em que são declaradas, ou seja, proibido sua declaração em "if", loops...
 
   // useState() --> Para alterar o estado de algum componente (mandar o react renderizar)
@@ -221,7 +223,7 @@
       // <variável> recebe um obj com o campo "current: <valor_inicial>".
     
 
-// Condicionais
+## Condicionais
   // Não podemos utilizar "if()" no formato JSX, sendo assim, para aplicarmos uma condição à um componente utilizamos:
     // <condição> && <comando_se_verdadeiro>    ou    <condição> ? <comando_se_verdadeiro> : <comando_se_falso>
 
@@ -237,7 +239,7 @@
     */
 
 
-// React-router-dom: Biblioteca de rotas do react
+## React-router-dom: Biblioteca de rotas do react
   // Instalação: npm instal react-router-dom@<versão>
   // Uso: gerencia as rotas da url da página, renderizando apenas os componentes que fazem parte daquela rota (url) específica.
   // Ex:
