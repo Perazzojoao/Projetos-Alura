@@ -1,11 +1,10 @@
-import { Link, useLocation } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import styles from './MenuLink.module.css';
 
 const MenuLink = ({ href, children }) => {
-  const location = useLocation();
 
   return ( 
-    <Link className={`${styles.link} ${location.pathname === href ? styles.linkDestacado : ''}`} to={href} >{children}</Link>
+    <NavLink className={({ isActive,  }) => `${styles.link} ${isActive ? styles.linkDestacado : ''}`} to={href} end >{children}</NavLink>
   );
 }
  

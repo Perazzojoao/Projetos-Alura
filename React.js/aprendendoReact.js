@@ -22,7 +22,8 @@
   // Criando componentes:
     // componentes são funções que criamos para construir o html da página.
     /*
-      import '<caminho_css>';     --> Importando o css.
+      import <variável_imagem> from './<caminho_imagem>';   --> Importando imagens.
+      import '<caminho_css>';                               --> Importando o css.
       OU
       import <variável> from './<caminho_css>'    --> 'styles' recebe um obj com todas as confugurações do css.
 .                                                 OBS: para isso devemos criar um arquivo css desta forma: <nome>.module.css
@@ -70,10 +71,23 @@
   
   // Importando componentes:
     // para utilizar os componentes criados precisamos importa-los:
-      // Ex: import Banner from './components/Banner/banner'; (caminho do arquivo).
+      // Ex: import Banner from './components/Banner/banner'; --> (caminho do arquivo).
 
     // com isso, a função importada vira uma tag html e podemos utiliza-la no arquivo "App.js" para desenvolver-mos nossa aplicação.
       // Ex: <Banner/>
+
+    // Caminhos absolutos:
+      // Uso: podemos configurar um arquivo "jsconfig.json" na raiz do projeto para habilitar caminhos absolutos à pasta "src".
+      // Ex: import Banner from '../../components/Banner/banner'  -->  'components/Banner/banner' (caminho absoluto).
+      // Configuração: Crie uma pasta "jsconfig.json" na pasta raiz do projeto.
+        /*
+          {
+            "compilerOptions": {
+              "baseUrl": "src"
+            },
+            "include": ["src"]
+          }
+        */
 
   // Propriedades dos componentes (props):
     // podemos passar propriedades das tags dos componentes criados diretamente para suas funções
@@ -241,6 +255,24 @@
       }
     */
   
-  // Links:
+  // Link:
     // Uso: Cria um link que leva o usuário a uma nova página sem recarregar a página.
-    // Sintaxe: <Link to='/<caminho_relativo>' ></Link>
+    // Sintaxe: <Link to='/<caminho_relativo>' >...</Link>
+    // OBS: Deve ser utilizado fora da tag "<Routers></Routers>".
+
+  // NavLink:
+  // Uso: Cria um link semelhante ao componente "Link" que sabe quando foi ativo.
+  // Sintaxe: <NavLink className={({isActive}) => `${...}`} to='/<caminho_relativo>' end >...</NavLink>
+    // end: Por padrão, o NavLink compara o início das url. Com o atributo "end" ele passa a comparar o final, assim diferenciando "/" de "/<caminho>".
+    // className: O "NavLink", caso verifique que o link está ativo, adiciona automaticamente a classe "active", podendo ser utilizada em um arquivo CSS.
+    // className: O "NavLink", também, fornece acesso a uma função com os parâmetros "{isActive, isPending, isTransitioning}", em que cada um retorna um booleano (true or false).
+              //  Com isso, podemos retornar uma tamplate string com uma condicional que verifique se o link está ativo, pendente e/ou transicionando ou não.
+    // Ex:
+      /*
+        <NavLink className={({ isActive }) => `${styles.link} ${isActive ? styles.linkDestacado : ''}`} to={href} end >{children}</NavLink>
+      */
+    // OBS: A função com os parâmetros especiais pode ser acessada por "className" (retornar string), "style" (retornar obj) e "children" (retornar tags html).
+
+  // Funções:
+    // useLocation(): retorna a url relativa da página atual.
+      // Ex: const location = useLocation();
