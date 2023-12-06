@@ -299,3 +299,44 @@ Ex:
 #### Funções:
 - useLocation(): retorna a url relativa da página atual.
 > Ex: const location = useLocation();
+
+### Rotas Aninhadas:
+--> Quando aninhamos rotas dentro de outras rotas, afim de evitar repetições de código
+
+Ex:
+```
+  <BrowserRouter>
+      <Menu />
+      <Routes>
+        <Route path="/" element={<PaginaPadrao />}>         --> Rotas aninhadas sobre uma mesma rota.
+          <Route path="/" element={<Inicio />} />
+          <Route path="sobremim" element={<SobreMim />} />
+        </Route>
+        <Route path="*" element={<h1>Página não encontrada</h1>} />
+      </Routes>
+      <Footer />
+    </BrowserRouter>
+```
+
+1. **OBS:** As rotas "filhas" são dependentes da rota "pai" e só renderizam se a rota pai renderizar.
+
+2. **OBS:** Se a rota pai tivesse o caminho "/qualquercoisa", os caminhos das duas rotas aninhadas seriam equivalentes a "/qualquercoisa e "/qualquercoisa/sobremim".
+
+2. **OBS:** As rotas "filhas" não são renderizadas por padrão, para isso devemos utilizar o componente: 
+```
+  <Outlet />
+```
+
+**Ex:**
+
+Dentro do componente "PaginaPadrao" temos:
+```
+  const PaginaPadrao = () => {
+  return ( 
+    <main>
+      <Banner />                --> Para o Banner aparecer em todas as páginas "filhas" devemos utilizar esta técnica!
+      <Outlet />                --> Indica ao react-router-dom para renderizar os componentes "filhos".
+    </main>
+   );
+}
+```
