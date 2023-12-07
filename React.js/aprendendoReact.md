@@ -296,9 +296,6 @@ Ex:
 ```
 **OBS:** A função com os parâmetros especiais pode ser acessada por "className" (retornar string), "style" (retornar obj) e "children" (retornar tags html).
 
-#### Funções:
-- useLocation(): retorna a url relativa da página atual.
-> Ex: const location = useLocation();
 
 ### Rotas Aninhadas:
 --> Quando aninhamos rotas dentro de outras rotas, afim de evitar repetições de código
@@ -340,3 +337,39 @@ Dentro do componente "PaginaPadrao" temos:
    );
 }
 ```
+
+### Passando parâmetros na url:
+
+Para passar parâmetros junto da url de uma página temos que especificar os parâmetros já na criação da rota.
+
+**Sintaxe:** 
+
+      <Route path='caminho/:<parâmetro>' element={<Componente>} />
+
+**Ex:**
+```
+  <Routes>
+        <Route path="/" element={<PaginaPadrao />}>
+          <Route index element={<Inicio />} />
+          <Route path="sobremim" element={<SobreMim />} />
+          <Route path="posts/:id" element={<Post />} />       --> "id" é o parâmetro
+        </Route>
+        <Route path="*" element={<h1>Página não encontrada</h1>} />
+      </Routes>
+```
+
+      "https://localhost:3000/posts/556"          --> id = 556
+
+**OBS:** Para acessar o parâmetro passado utilize o hook "useParams()"
+
+
+### Funções:
+- useLocation(): retorna a url relativa da página atual.
+
+  Ex: const location = useLocation();
+
+- useParams(): Retorna um obj contendo os parâmetros passados junto da url da página atual.
+
+  Ex: "https://caminho-do-site/225566"
+
+      const parametros = useParams();   --> retorna: {'key': '225566'}
