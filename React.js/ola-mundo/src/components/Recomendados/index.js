@@ -1,12 +1,7 @@
 import PostCard from 'components/PostCard';
 import styles from './Recomendados.module.css';
-import posts from 'json/posts.json';
-import { useParams } from 'react-router-dom';
 
 const Recomendados = ({ posts }) => {
-
-  const parametros = useParams();
-
   return ( 
     <>
       <h2 className={styles.titulo}>Outros posts que você pode gostar:</h2>
