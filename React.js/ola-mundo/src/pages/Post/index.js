@@ -1,9 +1,12 @@
 import './Post.css';
 
-import { useParams } from 'react-router-dom';
+import { Route, Routes, useParams } from 'react-router-dom';
 import posts from 'json/posts.json'
 import PostModelo from 'components/PostModelo';
 import Markdown from 'react-markdown';
+import NaoEncontrada from 'pages/NaoEncontrada';
+import PaginaPadrao from 'components/PaginaPadrao';
+import Recomendados from 'components/Recomendados';
 
 const Post = () => {
 
@@ -13,17 +16,31 @@ const Post = () => {
   });
 
   if(!post) {
-    return <h1>Post não encontrado!</h1>
+    return <NaoEncontrada />
   }
 
+  const postsRecomendados = posts
+    .filter(post => post.id !== Number(parametros.id))
+    .sort((a, b) => b.id - a.id)
+    .slice(0, 4);
+
   return ( 
-    <PostModelo titulo={post.titulo} fotoCapa={`/assets/posts/${post.id}/capa.png`} >
-      <div className='post-markdown-container'>
-        <Markdown>
-          {post.texto}
-        </Markdown>
-      </div>
-    </PostModelo>
+    <Routes>
+      <Route path='*' element={<PaginaPadrao />}>
+        <Route index element={
+          <>
+            <PostModelo titulo={post.titulo} fotoCapa={`/assets/posts/${post.id}/capa.png`} >
+              <div className='post-markdown-container'>
+                <Markdown>
+                  {post.texto}
+                </Markdown>
+              </div>
+              <Recomendados posts={postsRecomendados}/>
+            </PostModelo>
+          </>
+        }/>
+      </Route>
+    </Routes>
   );
 }
  
