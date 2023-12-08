@@ -12,6 +12,10 @@ const Post = () => {
     return post.id === Number(parametros.id);
   });
 
+  if(!post) {
+    return <h1>Post não encontrado!</h1>
+  }
+
   return ( 
     <PostModelo titulo={post.titulo} fotoCapa={`/assets/posts/${post.id}/capa.png`} >
       <div className='post-markdown-container'>
