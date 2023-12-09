@@ -4,7 +4,7 @@ import CampoTexto from "../CampoTexto";
 const HeaderStyled = styled.header`
   display: flex;
   justify-content: space-between;
-  padding: 60px 0;
+  padding: 60px 0px;
   img {
     max-width: 212px;
   }
