@@ -5,6 +5,9 @@ import SideBar from './components/SideBar';
 import Banner from './components/Banner';
 import Galeria from './components/Galeria';
 
+import fotos from './fotos.json';
+import { useState } from 'react';
+
 const FundoGradiente = styled.div`
 	background: linear-gradient(174.61deg, #041833 4.16%, #04244f 48%, #154580 96.76%);
 	width: 100%;
@@ -28,7 +31,10 @@ const ConteudoGaleria = styled.section`
 	flex-grow: 1;
 `;
 
-function App() {
+const App = () => {
+
+	const [fotosDaGaleria, setFotosDaGaleria] = useState(fotos);
+
 	return (
 		<FundoGradiente>
 			<EstilosGlobais />
@@ -40,7 +46,7 @@ function App() {
 						<Banner backgroundImage='/public/arquivos/banner.png'>
 							A galeria mais completa de fotos do espaço!
 						</Banner>
-						<Galeria />
+						<Galeria fotos={fotosDaGaleria} />
 					</ConteudoGaleria>
 				</MainContainer>
 			</AppContainer>
