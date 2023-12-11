@@ -29,10 +29,10 @@ const IconeStyled = styled.img`
 	right: 10px;
 `;
 
-const CampoTexto = (props) => {
+const CampoTexto = ({ aoDigitar }) => {
 	return (
 		<ContainerStyled>
-			<InputStyled placeholder='O que você procura?' {...props} />
+			<InputStyled placeholder='O que você procura?' onChange={event => aoDigitar(event.target.value)} />
 			<IconeStyled src={search} alt='Ícone de lupa' />
 		</ContainerStyled>
 	);

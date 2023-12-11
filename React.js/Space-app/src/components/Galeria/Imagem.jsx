@@ -1,74 +1,86 @@
-import { useState } from "react";
-import styled from "styled-components";
+import { useState } from 'react';
+import styled from 'styled-components';
 
 const FigureStyle = styled.figure`
-  margin: 0;
-`
+	width: ${(props) => (props.$expandida ? '90%' : '400px')};
+	max-width: 100%;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	& > img {
+		max-width: 100%;
+		border-radius: 20px 20px 0 0;
+	}
+	figcaption {
+		background-color: #001634;
+		border-radius: 0px 0px 20px 20px;
+		color: #ffffff;
+		box-sizing: border-box;
+		padding: 16px;
+		h3 {
+			font-family: 'GandhiSansBold';
+			margin: 0;
+			font-size: 20px;
+		}
+		h4 {
+			flex-grow: 1;
+			font-family: 'GandhiSansRegular';
+			margin: 0;
+			font-size: 16px;
+		}
+		footer {
+			display: flex;
 
-const ImagemStyle = styled.img`
-  width: 448px;
-  height: 256px;
-  border-radius: 20px;
+			div {
+				display: flex;
+				gap: 18px;
+
+				img {
+					cursor: pointer;
+				}
+			}
+		}
+	}
 `;
 
-const CaptionStyle = styled.figcaption`
-  background-color: #001634;
-  color: #FFFFFF;
-  position: relative;
-  top: -20px;
-  padding: 20px;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
-  h3 {
-    margin: 0;
-    font-size: 20px;
-    font-weight: 24px;
-  }
-`;
+const Imagem = ({
+	foto,
+	aoZoomSolicitado,
+	expandida = false,
+	aoAlternarFavorito,
+	fotosFavoritas = [],
+	filtroPesquisa,
+	filtrarTags,
+}) => {
+	const fotoFavorita = fotosFavoritas.find((fotoFav) => fotoFav.titulo === foto.titulo);
+	return (
+		foto.titulo.toLowerCase().includes(filtroPesquisa) &&
+		(foto.tagId === filtrarTags || filtrarTags === 0) && (
+			<FigureStyle $expandida={expandida}>
+				<img src={foto.path} alt='Imagem do espaço' />
+				<figcaption>
+					<h3>{foto.titulo}</h3>
+					<footer>
+						<h4>{foto.fonte}</h4>
+						<div>
+							<img
+								src={`/arquivos/icones/${fotoFavorita ? 'favorito-ativo' : 'favorito'}.png`}
+								alt='Ícone de coração'
+								onClick={() => aoAlternarFavorito(foto)}
+							/>
+							{!expandida && (
+								<img
+									src='/arquivos/icones/expandir.png'
+									alt='Ícone de seta dupla'
+									onClick={() => aoZoomSolicitado(foto)}
+								/>
+							)}
+						</div>
+					</footer>
+				</figcaption>
+			</FigureStyle>
+		)
+	);
+};
 
-const FooterStyle = styled.footer`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  p {
-    margin: 0;
-    font-size: 16px;
-    line-height: 19px;
-  }
-  div {
-    display: flex;
-    gap: 25px;
-  }
-`;
-
-const IconeStyle = styled.img`
-  width: 22px;
-  cursor: pointer;
-`;
-
-const Imagem = ({ foto }) => {
-
-  const [favorito, setFavorito] = useState(false);
-
-  return ( 
-    <FigureStyle>
-      <ImagemStyle src={foto.path} alt="Imagem do espaço" />
-      <CaptionStyle>
-        <h3>{foto.titulo}</h3>
-        <FooterStyle>
-          <p>{foto.fonte}</p>
-          <div>
-            <IconeStyle 
-              src={`/arquivos/icones/${favorito ? 'favorito-ativo' : 'favorito'}.png`} 
-              alt="Ícone de coração"
-              onClick={() => setFavorito(antigo => !antigo)}
-            />
-            <IconeStyle src="/arquivos/icones/expandir.png" alt="Ícone de seta dupla"/>
-          </div>
-        </FooterStyle>
-      </CaptionStyle>
-    </FigureStyle>
-  );
-}
- 
 export default Imagem;

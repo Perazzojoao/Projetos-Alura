@@ -30,11 +30,11 @@ const TagStyle = styled.button`
 
 `;
 
-const Tags = () => {
+const Tags = ({ aoAcionarTag }) => {
   return ( 
     <TagContainer>
       <h3>Busque por tags: </h3>
-      {tags.map(tag => <TagStyle key={tag.id}>{tag.titulo}</TagStyle>)}
+      {tags.map(tag => <TagStyle key={tag.id} onClick={() => aoAcionarTag(tag.id)}>{tag.titulo}</TagStyle>)}
     </TagContainer>
   );
 }
