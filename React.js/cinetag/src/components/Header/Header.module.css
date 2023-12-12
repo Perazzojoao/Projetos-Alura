@@ -1,0 +1,27 @@
+.headerContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--preto);
+  padding: 1.1em 20em;
+}
+
+.linkContainer {
+  display: flex;
+  gap: 20px;
+}
+
+.link {
+  text-decoration: none;
+  color: #F0F0F0;
+  font-weight: 400;
+  font-size: 18px;
+}
+
+.linkDestacado {
+  text-decoration: underline;
+  color: var(--branco);
+  font-weight: 600;
+  font-size: 18px;
+}
