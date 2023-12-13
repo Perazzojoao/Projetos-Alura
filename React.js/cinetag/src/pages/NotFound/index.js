@@ -1,6 +1,11 @@
+import Titulo from "components/Titulo";
+
 const NotFound = () => {
   return ( 
-    <h1>Página não encontrada...</h1>
+    <Titulo>
+      <h1>Ops!</h1>
+      <p>Página não encontrada.</p>
+    </Titulo>
   );
 }
  

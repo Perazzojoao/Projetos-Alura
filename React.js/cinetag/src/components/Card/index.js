@@ -21,7 +21,7 @@ const Card = ({ id, titulo, capa }) => {
 				className={styles.capa}
 				src={capa}
 				alt='Capa do vídeo'
-				onClick={() => navigate(`/player/${id}`)}
+				onClick={() => navigate(`/videos/${id}`)}
 			/>
 			<h2>{titulo}</h2>
 			<img

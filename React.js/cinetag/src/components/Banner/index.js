@@ -10,7 +10,7 @@ const Banner = () => {
   const trocaBanner = () => {
     if(location.pathname === '/favoritos') {
       setPathBanner('banner-favoritos.png');
-    } else if(location.pathname.includes("/player")) {
+    } else if(location.pathname.includes("/videos")) {
       setPathBanner('banner-player.png');
     } else {
       setPathBanner('banner-home.png');
