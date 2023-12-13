@@ -19,7 +19,7 @@ const AppRoutes = () => {
           <Routes>
             <Route path="/" element={<Inicio />} />
             <Route path="/favoritos" element={<Favoritos />} />
-            <Route path="/player" element={<Player />} />
+            <Route path="/player/:id" element={<Player />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </FavoritosProvider>

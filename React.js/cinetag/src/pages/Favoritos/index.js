@@ -4,7 +4,7 @@ import Titulo from 'components/Titulo';
 import { useFavoritoContext } from 'components/Context/Favoritos';
 
 const Favoritos = () => {
-	const { favorito, addFavorito } = useFavoritoContext();
+	const { favorito } = useFavoritoContext();
 
 	return (
 		<main>

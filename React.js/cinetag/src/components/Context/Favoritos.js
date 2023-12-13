@@ -18,20 +18,17 @@ export function useFavoritoContext() {
 
 	function addFavorito(novoFavorito) {
 		const favoritoRepetido = favorito.some((item) => item.id === novoFavorito.id);
-
-		let novaLista = [...favorito];
+		const novaLista = favorito.filter((item) => item.id !== novoFavorito.id);
 
 		if (!favoritoRepetido) {
 			novaLista.push(novoFavorito);
 			return setFavorito(novaLista);
 		}
-
-    novaLista.splice(novaLista.indexOf(novoFavorito), 1);
-    return setFavorito(novaLista);
+		return setFavorito(novaLista);
 	}
 
-  return {
-    favorito,
-    addFavorito
-  }
+	return {
+		favorito,
+		addFavorito,
+	};
 }
