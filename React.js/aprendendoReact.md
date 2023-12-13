@@ -1,28 +1,33 @@
 # Códigos React.js
+
 > Resumo das principais funcionalidades do React.js
 
 ## Criando o projeto:
+
 No terminal digite: npx create-react-app <nome_projeto>
 
-- Códigos para rodar no terminal: 
+- Códigos para rodar no terminal:
+
   ```
-  npm start 
+  npm start
        Starts the development server.
-  
+
   npm run build
         Bundles the app into static files for productions.
-  
+
   npm test
         Starts the test runner.
-  
+
   npm run eject
         Removes this tool and copies build dependencies, configurations files and scripts into the app directory. If you do this, you can't go back!
   ```
 
-
 ## Componentes:
+
 ### Criando componentes:
+
 Componentes são funções que criamos para construir o html da página.
+
 ```
   import <variável_imagem> from './<caminho_imagem>';   --> Importando imagens.
   import '<caminho_css>';                               --> Importando o css.
@@ -36,14 +41,15 @@ Componentes são funções que criamos para construir o html da página.
     .
     return (Linguagem JSX: javascript + xml)
   }
-  
+
   export default <função_componente>;
 ```
 
 Ex:
+
 ```
   import './banner.css';    --> Import do css.
-  
+
   function Banner() {
     return (
       <header className='banner'>
@@ -51,13 +57,15 @@ Ex:
       </header>
     )
   }
-  
+
   export default Banner;
-  ```
+```
 
 ### Fragment:
+
 Componentes devem retornar tudo dentro de uma única tag html. Caso queira retornar várias tags, envolva-as dentro da tag "<Fragment>...</Fragment>" ou de tags vazias "<>...</>".
 Ex:
+
 ```
   function Banner() {
   return (
@@ -72,19 +80,23 @@ Ex:
 ```
 
 ## Importando componentes:
+
 Para utilizar os componentes criados precisamos importa-los:
 
 Ex: **import Banner from './components/Banner/banner'; --> (caminho do arquivo).**
 
 com isso, a função importada vira uma tag html e podemos utiliza-la no arquivo "App.js" para desenvolver-mos nossa aplicação.
+
 ```
 Ex: <Banner/>
 ```
 
 ## Caminhos absolutos:
+
 - Uso: podemos configurar um arquivo "jsconfig.json" na raiz do projeto para habilitar caminhos absolutos à pasta "src".
-- Ex: import Banner from '../../components/Banner/banner'  -->  'components/Banner/banner' (caminho absoluto).
+- Ex: import Banner from '../../components/Banner/banner' --> 'components/Banner/banner' (caminho absoluto).
 - Configuração: Crie uma pasta "**jsconfig.json**" na pasta raiz do projeto.
+
 ```
   {
     "compilerOptions": {
@@ -95,8 +107,10 @@ Ex: <Banner/>
 ```
 
 ## Propriedades dos componentes (props):
+
 Podemos passar propriedades das tags dos componentes criados diretamente para suas funções.
 Ex:
+
 ```
   const CampoTexto = (props) => {       --> <props>: obj que contém os valores de todos os atributos passados para a tag do componente.
     return (                            --> <props> podem ser desestruturadas: Const campoTexto = ({label, placeholder}) - Não precisa mais utilizar props.<nome_propriedade>
@@ -115,10 +129,12 @@ Ex:
 ```
 
 ### Passar "childrenNodes" para a tag do componente: {props.children}
+
 Ex:
+
 ```
   const Botao = (props) => {
-    return ( 
+    return (
       <button className='botao'>
         {props.children}
       </button>
@@ -130,17 +146,20 @@ Ex:
   <Botao>Criar Card</Botao>         --> Tudo que estiver entre as tags (<tag>...</tag>) é passado para {props.children}
 ```
 
-
 ## Eventos:
+
 Digitamos os eventos dentro das tags html ou JSX.
 Ex:
+
 ```
  <form onSubmit={script js}></form>             --> {script js}: passamos funções previamente criadas no bloco de comandos js do componente
 ```
+
 Ex:
+
 ```
   const Formulario = () => {
-    
+
     const aoSalvar = (evento) => {
       evento.preventDefault();
       .
@@ -161,13 +180,16 @@ Ex:
 ```
 
 ## Hooks:
+
 **Regra n1:** Hooks, no geral, devem ser usadas na ordem em que são declaradas, ou seja, proibido sua declaração em "if", loops...
 
-### useState() 
+### useState()
+
 --> Para alterar o estado de algum componente (mandar o react renderizar)
 
 - Sintaxe: const [<valor_atual>, <função_altera_valor>] = useState(<valor_inicial>);
   Ex:
+
 ```
   function Exemplo() {
 
@@ -189,14 +211,18 @@ Ex:
   }
 ```
 
-### .createContext() e useContext() 
+### .createContext() e useContext()
+
 --> Servem para passar valores de componentes pai para filho, ou vice versa, sem usar props
+
 - 1° passo - criando contexto:
+
 ```
   export const <contexto> = React.createContext();
 ```
 
 - 2° passo - Definir quais componentes terão acesso ao contexto:
+
 ```
   <<contexto>.Provider value={<variáveis_passadas>}>
     .
@@ -206,9 +232,10 @@ Ex:
 ```
 
 - 3° passo - Ir no componente filho desejado e extrair o contexto:
+
 ```
   import { <contexto> } from '<caminho_do contexto>';
-  
+
   const <componente> = () => {
 
     const <variavel_a_receber_contexto> = useContext(<contexto>);       --> Contexto extraido para nova variável.
@@ -221,32 +248,100 @@ Ex:
   }
 ```
 
-### useEffect() 
+#### Organizando contextos:
+
+--> É de boa prática gerenciar seus contextos em pastas separadas, sendo assim, segue um guia de organização:
+
+1. Crie uma pasta "context", dentro de "components", e adicione seus contextos como componentes react.
+
+2. Crie seu contexto específico e o transforme em um componente react
+
+**Ex:**
+
+```
+  const FavoritosContext = createContext();     --> Cria o contexto
+  FavoritosContext.displayName = 'Favoritos';
+
+  const FavoritosProvider = ({ children }) => {
+    const [favorito, setFavorito] = useState([]);
+
+    return (
+      <FavoritosContext.Provider value={{ favorito, setFavorito }}>
+        {children}
+      </FavoritosContext.Provider>
+    );
+  }
+
+  export default FavoritosProvider;
+```
+
+3. Utilize seu novo componente como um "Context.provider" e englobe todos os componentes que receberão o contexto com ele.
+
+4. Crie um hook personalizado, dentro do mesmo arquivo, responsável por manipular o contexto.
+
+**Ex:**
+
+```
+  export function useFavoritoContext() {
+    const { favorito, setFavorito } = useContext(FavoritosContext);
+
+    function addFavorito(novoFavorito) {
+      const favoritoRepetido = favorito.some((item) => item.id === novoFavorito.id);
+
+      let novaLista = [...favorito];
+
+      if (!favoritoRepetido) {
+        novaLista.push(novoFavorito);
+        return setFavorito(novaLista);
+      }
+
+      novaLista.splice(novaLista.indexOf(novoFavorito), 1);
+      return setFavorito(novaLista);
+    }
+
+    return {          --> Retornando um obj com "favorito" e a nova função "addFavorito"
+      favorito,
+      addFavorito
+    }
+}
+```
+
+### useEffect()
+
 --> Executa uma função após um componente ser renderizado.
+
 - Sintaxe: useEfect(() => {<bloco_de_comandos>}, <condição>)
 - Condições:
+
 1. VAZIO: Função é executada SEMPRE que um componente é renderizado (Pode causar loop infinito).
 2. [...]: Função é executada apenas na 1ª renderização.
 3. [<variável>]: Função é executada toda vez que a variável é alterada (Variável utilizada é proveniente do "useState()".
 
-### useRef() 
---> Similar ao useState(), porém, ao ser alterada, não força a renderização de um componente (evita loops infinitos dentro do useEffect). Além disso, seu valor não     é perdido à cada renderização.
+### useRef()
+
+--> Similar ao useState(), porém, ao ser alterada, não força a renderização de um componente (evita loops infinitos dentro do useEffect). Além disso, seu valor não é perdido à cada renderização.
+
 - Sintaxe:
+
 ```
   const <variavel> = useRef(<valor_inivial>);
 ```
+
 <variável> recebe um obj com o campo "current: <valor_inicial>".
-    
 
 ## Condicionais
+
 Não podemos utilizar "if()" no formato JSX, sendo assim, para aplicarmos uma condição à um componente utilizamos:
+
 ```
   <condição> && <comando_se_verdadeiro>    ou    <condição> ? <comando_se_verdadeiro> : <comando_se_falso>
 ```
-Ex: 
+
+Ex:
+
 ```
   const Botao = (props) => {
-        return ( 
+        return (
           (props.children.length > 0) && <button className='botao'>   --> componente "Botao" apenas será renderizado se "(props.children.length > 0) === true".
             {props.children}
           </button>
@@ -254,11 +349,12 @@ Ex:
       }
 ```
 
-
 ## React-router-dom: Biblioteca de rotas do react
+
 - **Instalação:** npm instal react-router-dom@<versão>
 - **Uso:** gerencia as rotas da url da página, renderizando apenas os componentes que fazem parte daquela rota (url) específica.
 - Ex:
+
 ```
   function App() {
     return (
@@ -272,35 +368,44 @@ Ex:
     );
   }
 ```
-  
+
 ### Link:
+
 - **Uso:** Cria um link que leva o usuário a uma nova página sem recarregar a página.
 - **Sintaxe:**
+
 ```
   <Link to='/<caminho_relativo>' >...</Link>
 ```
+
 **OBS:** Deve ser utilizado fora da tag "<Routers></Routers>".
 
 ### NavLink:
+
 - **Uso:** Cria um link semelhante ao componente "Link" que sabe quando foi ativo.
 - **Sintaxe:**
+
 ```
   <NavLink className={({isActive}) => `${...}`} to='/<caminho_relativo>' end >...</NavLink>
 ```
+
 - **end:** Por padrão, o NavLink compara o início das url. Com o atributo "end" ele passa a comparar o final, assim diferenciando "/" de "/<caminho>".
 - **className:** O "NavLink", caso verifique que o link está ativo, adiciona automaticamente a classe "active", podendo ser utilizada em um arquivo CSS.
 - **className:** O "NavLink", também, fornece acesso a uma função com os parâmetros "{isActive, isPending, isTransitioning}", em que cada um retorna um booleano (true or false). Com isso, podemos retornar uma tamplate string com uma condicional que verifique se o link está ativo, pendente e/ou transicionando ou não.
-Ex:
+  Ex:
+
 ```
   <NavLink className={({ isActive }) => `${styles.link} ${isActive ? styles.linkDestacado : ''}`} to={href} end >{children}</NavLink>
 ```
+
 **OBS:** A função com os parâmetros especiais pode ser acessada por "className" (retornar string), "style" (retornar obj) e "children" (retornar tags html).
 
-
 ### Rotas Aninhadas:
+
 --> Quando aninhamos rotas dentro de outras rotas, afim de evitar repetições de código
 
 Ex:
+
 ```
   <BrowserRouter>
       <Menu />
@@ -319,7 +424,8 @@ Ex:
 
 2. **OBS:** Se a rota pai tivesse o caminho "/qualquercoisa", os caminhos das duas rotas aninhadas seriam equivalentes a "/qualquercoisa e "/qualquercoisa/sobremim".
 
-2. **OBS:** As rotas "filhas" não são renderizadas por padrão, para isso devemos utilizar o componente: 
+3. **OBS:** As rotas "filhas" não são renderizadas por padrão, para isso devemos utilizar o componente:
+
 ```
   <Outlet />
 ```
@@ -327,9 +433,10 @@ Ex:
 **Ex:**
 
 Dentro do componente "PaginaPadrao" temos:
+
 ```
   const PaginaPadrao = () => {
-  return ( 
+  return (
     <main>
       <Banner />                --> Para o Banner aparecer em todas as páginas "filhas" devemos utilizar esta técnica!
       <Outlet />                --> Indica ao react-router-dom para renderizar os componentes "filhos".
@@ -342,11 +449,12 @@ Dentro do componente "PaginaPadrao" temos:
 
 Para passar parâmetros junto da url de uma página temos que especificar os parâmetros já na criação da rota.
 
-**Sintaxe:** 
+**Sintaxe:**
 
       <Route path='caminho/:<parâmetro>' element={<Componente>} />
 
 **Ex:**
+
 ```
   <Routes>
         <Route path="/" element={<PaginaPadrao />}>
@@ -362,8 +470,8 @@ Para passar parâmetros junto da url de uma página temos que especificar os par
 
 **OBS:** Para acessar o parâmetro passado utilize o hook "useParams()"
 
-
 ### Funções:
+
 - **useLocation():** retorna a url relativa da página atual.
 
   Ex: const location = useLocation();
@@ -376,13 +484,13 @@ Para passar parâmetros junto da url de uma página temos que especificar os par
 
 - **useNavigate():** Retorna uma função que permite redirecionar a página sem recarregar.
 
-  Ex: const navigate = useNavigate(); 
+  Ex: const navigate = useNavigate();
 
       navigate(<caminho>);    --> Redireciona a página para o caminho indicado.
 
   **Parâmetros:**
-    
-    Existem 2 tipos de parâmetros disponíveis: String (caminho normal) e Number (Ex: -1).
 
-    - String: caminhos em string ("/paginadeinicio"), levam ao caminho indicado.
-    - Number: redirecionam com base no histórico. Ex: navigate(-1) --> volta à página anterior.
+  Existem 2 tipos de parâmetros disponíveis: String (caminho normal) e Number (Ex: -1).
+
+  - String: caminhos em string ("/paginadeinicio"), levam ao caminho indicado.
+  - Number: redirecionam com base no histórico. Ex: navigate(-1) --> volta à página anterior.
