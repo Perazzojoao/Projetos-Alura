@@ -77,3 +77,45 @@ Qundo uma variável ou função é definida sem um tipo explícito o TS nos da u
       .
     }
   ```
+
+
+- Tipando props de componentes
+
+  Criamos uma interface e adcionamos suas props com seus respectivos tipos. Após isso, adcionamos os tipos às props.
+
+  **Ex:**
+
+  ```
+    interface BannerProps {
+      pathImg: string;
+      alt?: strring;
+    }
+
+    const Banner = ({ pathImg, alt }:BannerProps) => {
+      return (
+        .
+        .
+        .
+      );
+    }
+  ```
+
+### Tipos do TS:
+
+- Tipos primitivos:
+  - string
+  - number
+  - boolean
+  - symbol
+  - null
+  - undefined
+  - object
+  - void
+
+- Tipo de função:
+
+  ```
+    interface TiposEx {
+      funcao: (<parametro>: <tipo>) => <tipo_retorno>
+    }
+  ```
