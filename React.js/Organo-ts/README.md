@@ -10,6 +10,11 @@ Um arquivo .json será criado, contendo todas as configs do TS no seu projeto.
 
 **Link da referência:** [propriedades explicadas](https://www.typescriptlang.org/tsconfig)
 
+## Criando projeto do 0
+No terminal digite:
+
+    npx create-react-app <nome_projeto> --template typescript
+
 
 ## Tipagem
 
