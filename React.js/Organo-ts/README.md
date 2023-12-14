@@ -111,6 +111,7 @@ Qundo uma variável ou função é definida sem um tipo explícito o TS nos da u
   - undefined
   - object
   - void
+  - any
 
 - Tipo de função:
 
