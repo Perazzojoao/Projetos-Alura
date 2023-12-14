@@ -1,0 +1,31 @@
+.container {
+  padding: 15px;
+  background-color: #7586a1;
+  border-radius: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  gap: 10px;
+}
+
+.tarefa {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.tarefa label {
+  color: #FFFFFF;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.tempo {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.tempo label {
+  color: #FFFFFF;
+  font-size: 16px;
+  font-weight: 400;
+}
