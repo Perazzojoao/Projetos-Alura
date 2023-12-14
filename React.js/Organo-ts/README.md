@@ -8,6 +8,8 @@ No terminal digite:
 
 Um arquivo .json será criado, contendo todas as configs do TS no seu projeto.
 
+**Link da referência:** [propriedades explicadas](https://www.typescriptlang.org/tsconfig)
+
 
 ## Tipagem
 

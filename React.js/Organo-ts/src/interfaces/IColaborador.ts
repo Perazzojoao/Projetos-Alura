@@ -3,4 +3,5 @@ export interface IColaborador {
 	cargo: string;
 	imagem: string;
 	time?: string;
+	data: string; 
 }
