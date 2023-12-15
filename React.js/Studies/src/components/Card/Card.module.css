@@ -1,0 +1,29 @@
+.container {
+  border-radius: 6px;
+  background-color: #4e4c4e;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 5px;
+  padding: 8px 15px;
+  cursor: pointer;
+}
+
+.container:hover {
+  background-color: #2a282a;
+}
+
+.containerActive {
+  background-color: #2a282a;
+}
+
+.container label {
+  font-size: 18px;
+  color: #FFFFFF;
+  cursor: pointer;
+}
+
+.container span {
+  font-size: 14px;
+  color: #DDDDDD;
+}

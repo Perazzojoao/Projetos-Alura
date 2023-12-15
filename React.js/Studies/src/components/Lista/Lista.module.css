@@ -1,0 +1,11 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.container h1 {
+  margin: 0 0 15px 0;
+  color: #FFFFFF;
+  font-weight: 500;
+}

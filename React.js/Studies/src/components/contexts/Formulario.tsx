@@ -1,13 +1,13 @@
-import { ReactElement, createContext, useContext, useState } from 'react';
+import { ReactElement, createContext, useContext, useRef, useState } from 'react';
 import { IFormValues } from '../../interfaces/IFormValues';
 
 interface FormProviderProps {
-	children: ReactElement;
+	children: ReactElement | ReactElement[];
 }
 
 interface IContext {
-  formValues?: IFormValues | {};
-  setFormValues?: (value: IFormValues) => void
+  formValues?: IFormValues[];
+  setFormValues?: (value: IFormValues[]) => void
 }
 
 const FormularioContext = createContext({});
@@ -24,9 +24,11 @@ const FormProvider = ({ children }: FormProviderProps) => {
 
 export function useFormularioContext () {
   const { formValues, setFormValues }: IContext = useContext(FormularioContext);
+  const listaAtual = useRef<IFormValues[]>([]);
 
   function formHandler (submitValue: IFormValues) {
-    setFormValues?.(submitValue);
+    listaAtual.current.push(submitValue);
+    setFormValues?.(listaAtual.current.map(valor => valor));
   }
 
   return { formValues, formHandler }
