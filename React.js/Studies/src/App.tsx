@@ -1,9 +1,12 @@
 import Formulario from "./components/Formulario";
+import FormProvider from "./components/contexts/Formulario";
 
 function App() {
 	return (
 		<div className='App'>
-      <Formulario />
+			<FormProvider>
+      	<Formulario />
+			</FormProvider>
 		</div>
 	);
 }

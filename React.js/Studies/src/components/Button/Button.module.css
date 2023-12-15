@@ -3,10 +3,11 @@
   border: none;
   border-radius: 10px;
   padding: 0 15px;
-  width: auto;
+  max-width: 200px;
   height: 60px;
   font-size: 28px;
   cursor: pointer;
+  box-shadow: 7px 7px 7px rgba(0, 0, 0, 0.08);
 }
 .button:hover {
   background-color: rgba(134,186,205,0.6);
