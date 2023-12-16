@@ -28,7 +28,7 @@ export function useFormularioContext () {
 
   function formHandler (submitValue: IFormValues) {
     listaAtual.current.push(submitValue);
-    setFormValues?.(listaAtual.current.map(valor => valor));
+    setFormValues?.([...listaAtual.current]);
   }
 
   return { formValues, formHandler }
