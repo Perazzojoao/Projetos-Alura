@@ -1,19 +1,22 @@
-import { ReactElement, createContext, useContext, useRef, useState } from 'react';
+import { ReactNode, createContext, useContext, useState } from 'react';
 import { IFormValues } from '../../interfaces/IFormValues';
 
 interface FormProviderProps {
-	children: ReactElement | ReactElement[];
+	children: ReactNode;
 }
 
 interface IContext {
-  formValues?: IFormValues[];
-  setFormValues?: (value: IFormValues[]) => void
+  formValues: IFormValues[];
+  setFormValues: (value: IFormValues[] | (ICallBack)) => void;
 }
 
-const FormularioContext = createContext({});
+type ICallBack = (prev: IFormValues[]) => IFormValues[];
+
+const FormularioContext = createContext({} as IContext);
+FormularioContext.displayName = 'valorForm';
 
 const FormProvider = ({ children }: FormProviderProps) => {
-	const [formValues, setFormValues] = useState();
+	const [formValues, setFormValues] = useState<IFormValues[]>([]);
 
 	return (
 		<FormularioContext.Provider value={{ formValues, setFormValues }}>
@@ -23,12 +26,9 @@ const FormProvider = ({ children }: FormProviderProps) => {
 };
 
 export function useFormularioContext () {
-  const { formValues, setFormValues }: IContext = useContext(FormularioContext);
-  const listaAtual = useRef<IFormValues[]>([]);
-
+  const { formValues, setFormValues } = useContext(FormularioContext);
   function formHandler (submitValue: IFormValues) {
-    listaAtual.current.push(submitValue);
-    setFormValues?.([...listaAtual.current]);
+    setFormValues?.((prev: IFormValues[]): IFormValues[] => [...prev, submitValue]);
   }
 
   return { formValues, formHandler }
