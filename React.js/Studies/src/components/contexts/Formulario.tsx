@@ -29,7 +29,7 @@ const FormProvider = ({ children }: FormProviderProps) => {
 export function useFormularioContext () {
   const { formValues, setFormValues } = useContext(FormularioContext);
   function formHandler (submitValue: IFormValues) {
-    setFormValues((prev: IFormValues[]): IFormValues[] => [...prev, submitValue]);
+    setFormValues((prev) => [...prev, submitValue]);
   }
 
   return { formValues, formHandler }
