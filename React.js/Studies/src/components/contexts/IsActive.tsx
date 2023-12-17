@@ -14,6 +14,7 @@ type CallBack = (prev: IFormValues) => IFormValues;
 
 const IsActiveContext = createContext({} as IContext);
 
+// eslint-disable-next-line
 const IsActiveProvider = ({ children }: IsActiveProvider) => {
   const [ isActive, setIsActive ] = useState<IFormValues>({} as IFormValues);
   return ( 
@@ -27,8 +28,6 @@ export function useIsActive () {
   const { isActive, setIsActive } = useContext(IsActiveContext);
 
   function addIsActive ({ tarefa, tempo }: IFormValues) {
-    // const inicialValue = {tarefa: '', tempo: ''}
-    // setIsActive({tarefa: '', tempo: ''});
     
     setIsActive(prev => {
       if (prev.tarefa === tarefa) {
@@ -36,7 +35,6 @@ export function useIsActive () {
       }
       return { tarefa, tempo };
     })
-    console.log(isActive);
   }
 
   return { isActive, addIsActive };

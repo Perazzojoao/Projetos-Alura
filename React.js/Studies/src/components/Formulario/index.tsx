@@ -6,11 +6,13 @@ import styles from './Formulario.module.css';
 const Formulario = () => {
 	const { formHandler } = useFormularioContext();
 	const [tarefa, setTarefa] = useState('');
-	const [tempo, setTempo] = useState('');
+	const [tempo, setTempo] = useState('00:00:00');
 
 	function submitHendler(event: React.FormEvent) {
 		event.preventDefault();
 		formHandler({ tarefa, tempo });
+		setTarefa('');
+		setTempo('00:00:00');
 	}
 
 	return (
@@ -23,6 +25,7 @@ const Formulario = () => {
 						name='tarefa'
 						id='tarefa'
 						placeholder='O que você quer estudar?'
+						value={tarefa}
 						required
 						onChange={(event) => setTarefa(event.target.value)}
 					/>
@@ -36,7 +39,7 @@ const Formulario = () => {
 						step={1}
 						min='00:00:00'
 						max='01:30:00'
-						defaultValue='00:00:00'
+						value={tempo}
 						required
 						onChange={(event) => setTempo(event.target.value)}
 					/>

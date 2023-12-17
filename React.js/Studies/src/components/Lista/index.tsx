@@ -1,6 +1,5 @@
 import Card from '../Card';
 import { useFormularioContext } from '../contexts/Formulario';
-import { useIsActive } from '../contexts/IsActive';
 import styles from './Lista.module.css';
 
 const Lista = () => {
