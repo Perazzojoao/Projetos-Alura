@@ -33,8 +33,12 @@
   width: 20px;
   height: 20px;
   position: relative;
-  left: 121px;
-  bottom: 54px;
+  left: 144px;
+  bottom: 74px;
+  cursor: pointer;
+  background-color: #181718;
+  border-radius: 50%;
+  padding: 2px;
 }
 
 .deleteCard:hover {
