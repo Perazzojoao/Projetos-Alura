@@ -1,0 +1,23 @@
+.container {
+  text-align: center;
+}
+
+.container p {
+  color: #FFFFFF;
+  font-size: 20px;
+  font-weight: 500;
+  margin: 0 0 5px 0;
+}
+
+.relogioWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 10px;
+  padding: 16px 12px;
+  margin-bottom: 24px;
+  box-shadow: 2px 4px 4px #0000009F;
+  background-color: #7586a1;
+}

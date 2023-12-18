@@ -8,7 +8,7 @@ const Lista = () => {
   return ( 
     <aside className={styles.container}>
       <h1>Estudos do dia</h1>
-      {formValues.map(tarefa => <Card key={tarefa.tarefa} tarefa={tarefa.tarefa} tempo={tarefa.tempo} />)}
+      {formValues.map((tarefa, i) => <Card key={i} tarefa={tarefa.tarefa} tempo={tarefa.tempo} />)}
     </aside>
   );
 }

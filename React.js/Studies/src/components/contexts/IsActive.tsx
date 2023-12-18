@@ -16,7 +16,7 @@ const IsActiveContext = createContext({} as IContext);
 
 // eslint-disable-next-line
 const IsActiveProvider = ({ children }: IsActiveProvider) => {
-  const [ isActive, setIsActive ] = useState<IFormValues>({} as IFormValues);
+  const [ isActive, setIsActive ] = useState({} as IFormValues);
   return ( 
     <IsActiveContext.Provider value={{isActive, setIsActive}}>
       {children}

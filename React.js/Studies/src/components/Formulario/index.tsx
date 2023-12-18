@@ -2,17 +2,20 @@ import { useState } from 'react';
 import Button from '../Button';
 import { useFormularioContext } from '../contexts/Formulario';
 import styles from './Formulario.module.css';
+import { tarefaRepetida } from './validation';
 
 const Formulario = () => {
-	const { formHandler } = useFormularioContext();
+	const { formValues, formHandler } = useFormularioContext();
 	const [tarefa, setTarefa] = useState('');
 	const [tempo, setTempo] = useState('00:00:00');
 
 	function submitHendler(event: React.FormEvent) {
 		event.preventDefault();
-		formHandler({ tarefa, tempo });
-		setTarefa('');
-		setTempo('00:00:00');
+		if (!tarefaRepetida(formValues, tarefa)) {
+			formHandler({ tarefa, tempo });
+			setTarefa('');
+			setTempo('00:00:00');
+		}
 	}
 
 	return (
