@@ -9,7 +9,7 @@ const Cronometro = () => {
       <div className={styles.relogioWrapper}>
         <Relogio />
       </div>
-      <Button>
+      <Button timer={true}>
         Começar!
       </Button>
     </div>

@@ -4,16 +4,19 @@ import FormProvider from "./components/contexts/Formulario";
 import styles from './App.module.css';
 import IsActiveProvider from "./components/contexts/IsActive";
 import Cronometro from "./components/Cronometro";
+import TimerProvider from "./components/contexts/Timer";
 
 function App() {
 	return (
 		<div className={styles.appContainer}>
 			<FormProvider>
-				<div className={styles.formContainer}>
-					<Formulario />
-					<Cronometro />
-				</div>
 				<IsActiveProvider>
+					<div className={styles.formContainer}>
+						<Formulario />
+						<TimerProvider>
+							<Cronometro />
+						</TimerProvider>
+					</div>
 					<Lista />
 				</IsActiveProvider>
 			</FormProvider>
