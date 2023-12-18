@@ -23,10 +23,12 @@ const Card = ({ tarefa, tempo }: IFormValues) => {
 			<div
 				className={`${styles.container} ${ativo ? styles.containerActive : ''}`}
 				onClick={() => addIsActive({ tarefa, tempo })}>
-				<label>{tarefa}</label>
-				<span>{tempo}</span>
+				<div className={styles.contentWrapper}>
+					<label>{tarefa}</label>
+					<span>{tempo}</span>
+				</div>
+				<IoCloseCircleOutline className={styles.deleteCard} onClick={() => deleteCard(tarefa)} />
 			</div>
-			<IoCloseCircleOutline className={styles.deleteCard} onClick={() => deleteCard(tarefa)} />
 		</>
 	);
 };
