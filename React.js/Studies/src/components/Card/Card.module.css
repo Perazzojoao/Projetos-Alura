@@ -4,6 +4,7 @@
   display: flex;
   box-shadow: 2px 4px 4px #0000009F;
   justify-content: flex-start;
+  align-items: center;
   gap: 5px;
   padding: 8px 16px;
   cursor: pointer;
@@ -43,7 +44,7 @@
   height: 20px;
   position: relative;
   left: 67px;
-  bottom: 15px;
+  bottom: 25px;
   cursor: pointer;
   background-color: #181718;
   border-radius: 50%;
@@ -52,4 +53,12 @@
 
 .deleteCard:hover {
   color: #FB0808;
+}
+
+.check {
+  color: #def5c8;
+  width: 20px;
+  height: 100%;
+  position: relative;
+  left: 30px;
 }

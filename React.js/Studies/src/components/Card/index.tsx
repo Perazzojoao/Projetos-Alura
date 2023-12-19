@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import { IFormValues } from '../../interfaces/IFormValues';
 import { useIsActive } from '../contexts/IsActive';
 import { IoCloseCircleOutline } from 'react-icons/io5';
-import styles from './Card.module.css';
+import { FaCheck } from "react-icons/fa6";
 import { useDeleteCard, useEndTask } from '../contexts/Formulario';
+import styles from './Card.module.css';
 
 const Card = ({ tarefa, tempo }: IFormValues) => {
 	const [ativo, setAtivo] = useState(false);
@@ -38,6 +39,7 @@ const Card = ({ tarefa, tempo }: IFormValues) => {
 					<span>{tempo}</span>
 				</div>
 				<IoCloseCircleOutline className={styles.deleteCard} onClick={() => deleteCard(tarefa)} />
+				{finished && <FaCheck className={styles.check} />}
 			</div>
 		</>
 	);
