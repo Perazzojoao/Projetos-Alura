@@ -4,6 +4,7 @@ import Cardapio from './pages/Cardapio';
 import 'normalize.css';
 import './index.css';
 import BuscadorProvider from 'contexts/BuscadorContext';
+import FiltroProvider from 'contexts/FiltroContext';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -11,7 +12,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <BuscadorProvider>
-      <Cardapio />
+      <FiltroProvider>
+        <Cardapio />
+      </FiltroProvider>
     </BuscadorProvider>
   </React.StrictMode>
 );

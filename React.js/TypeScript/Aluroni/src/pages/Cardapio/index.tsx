@@ -1,7 +1,7 @@
 import Buscador from './Buscador';
 import styles from './Cardapio.module.scss';
 import { ReactComponent as Logo } from 'assets/logo.svg';
-
+import Filtros from './Filtros';
 
 const Cardapio = () => {
   return ( 
@@ -17,6 +17,9 @@ const Cardapio = () => {
       <section className={styles.cardapio}>
         <h3 className={styles.cardapio__titulo}>Cardápio</h3>
         <Buscador />
+        <div className={styles.cardapio__filtros}>
+          <Filtros />
+        </div>
       </section>
     </main>
   );
