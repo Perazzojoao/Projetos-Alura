@@ -11,16 +11,18 @@ const Relogio = () => {
   const [ displayTimer, setDisplayTimer ] = useState<string[]>([])
 
   useEffect (() => {
-    const tempoConvertido = converteTempo(isActive.tempo);
+  const tempoConvertido = converteTempo(isActive.tempo);
     setTimer(tempoConvertido);
+  }, [isActive])
 
+  useEffect(() => {
     const spredTime: string[] = []
 
-    for (let i = 0; i < tempoConvertido.length; i++) {
-      spredTime.push(tempoConvertido.charAt(i));
+    for (let i = 0; i < time.length; i++) {
+      spredTime.push(time.charAt(i));
     }
     setDisplayTimer(spredTime);
-  }, [isActive])
+  }, [time]);
   return ( 
     <>
       <span className={styles.relogioNumber}>{displayTimer[0]}</span>
