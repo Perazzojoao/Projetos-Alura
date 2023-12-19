@@ -32,7 +32,7 @@ const Cronometro = () => {
 				onClick={() => {
 					setIsActive((prev) => !prev);
 				}}>
-				Começar!
+				{active ? 'Parar!' : 'Começar!'}
 			</Button>
 		</div>
 	);
