@@ -31,7 +31,7 @@ const Card = ({ tarefa, tempo }: IFormValues) => {
 	return (
 		<>
 			<div
-				className={`${styles.container} ${finished !== '' ? finished : ativo ? styles.containerActive : ''}`}
+				className={`${styles.container} ${finished ? finished : ativo ? styles.containerActive : ''}`}
 				onClick={() => !finished ? addIsActive({ tarefa, tempo }) : ''}>
 				<div className={styles.contentWrapper}>
 					<label>{tarefa}</label>
