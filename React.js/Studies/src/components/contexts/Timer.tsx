@@ -8,31 +8,28 @@ type TimerProviderProps = {
 type Context = {
   time: string;
   setTime: React.Dispatch<React.SetStateAction<string>>;
-  active: boolean;
-  setIsActive: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const TimerContext = createContext({} as Context);
 
 const TimerProvider = ({ children }: TimerProviderProps) => {
   const [ time, setTime ] = useState('');
-  const [ active, setIsActive] = useState(false);
 
   return ( 
-    <TimerContext.Provider value={{time, setTime, active, setIsActive}}>
+    <TimerContext.Provider value={{time, setTime}}>
       {children}
     </TimerContext.Provider>
   );
 }
 
 export function useTimer () {
-  const { time, setTime, active, setIsActive } = useContext(TimerContext);
+  const { time, setTime } = useContext(TimerContext);
 
   function setTimer (tempo: string) {
     setTime(tempo);
   }
 
-  function startTimer () {
+  function startTimer (active: boolean) {
     const timerInterval = setInterval(interval, 1000);
     
     function interval () {
@@ -51,7 +48,7 @@ export function useTimer () {
     }
   }
 
-  return {time, setTimer, startTimer, active, setIsActive};
+  return {time, setTimer, startTimer};
 }
  
 export default TimerProvider;

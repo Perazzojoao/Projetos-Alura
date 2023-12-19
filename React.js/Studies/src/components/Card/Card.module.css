@@ -22,6 +22,10 @@
   background-color: #2a282a;
 }
 
+.containerFinished {
+  background-color: #576e46;
+}
+
 .container label {
   font-size: 18px;
   color: #FFFFFF;

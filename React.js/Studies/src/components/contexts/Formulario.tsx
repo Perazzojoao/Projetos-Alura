@@ -28,8 +28,8 @@ const FormProvider = ({ children }: FormProviderProps) => {
 // Hook para receber os valores do formulário e formar uma lista.
 export function useFormularioContext () {
   const { formValues, setFormValues } = useContext(FormularioContext);
-  function formHandler (submitValue: IFormValues) {
-    setFormValues((prev) => [...prev, submitValue]);
+  function formHandler ({ tarefa, tempo }: IFormValues) {
+    setFormValues((prev) => [...prev, {tarefa, tempo, finished: false}]);
   }
 
   return { formValues, formHandler }
@@ -45,6 +45,23 @@ export function useDeleteCard () {
   }
 
   return deleteCard;
+}
+
+export function useEndTask () {
+  const { formValues, setFormValues } = useContext(FormularioContext);
+
+  function endTask (task: IFormValues) {
+    setFormValues (prev => {
+      return prev.map(item => {
+        if (item.tarefa === task.tarefa) {
+          return {tarefa: task.tarefa, tempo: task.tempo, finished: true};
+        }
+        return item;
+      });
+    });
+  }
+
+  return { formValues, endTask };
 }
 
 export default FormProvider;

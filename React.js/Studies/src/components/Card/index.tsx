@@ -3,12 +3,16 @@ import { IFormValues } from '../../interfaces/IFormValues';
 import { useIsActive } from '../contexts/IsActive';
 import { IoCloseCircleOutline } from 'react-icons/io5';
 import styles from './Card.module.css';
-import { useDeleteCard } from '../contexts/Formulario';
+import { useDeleteCard, useEndTask } from '../contexts/Formulario';
 
 const Card = ({ tarefa, tempo }: IFormValues) => {
 	const [ativo, setAtivo] = useState(false);
+	const [ finished, setFinished ] = useState('');
 	const { isActive, addIsActive } = useIsActive();
+	const { formValues } = useEndTask();
 	const deleteCard = useDeleteCard();
+
+	const tarefaAtual = formValues.find(item => item.tarefa === tarefa);
 
 	useEffect(() => {
 		if (isActive.tarefa !== tarefa) {
@@ -18,11 +22,17 @@ const Card = ({ tarefa, tempo }: IFormValues) => {
 		}
 	}, [isActive, tarefa]);
 
+	useEffect(() => {
+		if (tarefaAtual?.finished) {
+			setFinished(styles.containerFinished)
+		}
+	}, [tarefaAtual]);
+
 	return (
 		<>
 			<div
-				className={`${styles.container} ${ativo ? styles.containerActive : ''}`}
-				onClick={() => addIsActive({ tarefa, tempo })}>
+				className={`${styles.container} ${finished !== '' ? finished : ativo ? styles.containerActive : ''}`}
+				onClick={() => !finished ? addIsActive({ tarefa, tempo }) : ''}>
 				<div className={styles.contentWrapper}>
 					<label>{tarefa}</label>
 					<span>{tempo}</span>
