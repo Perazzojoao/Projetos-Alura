@@ -1,8 +1,8 @@
 import styles from './Item.module.scss';
-import logo from 'assets/logo.svg';
 import itens from '../itens.json';
 import { useContext } from 'react';
 import { BuscadorContext } from 'contexts/BuscadorContext';
+import classNames from 'classnames';
 
 type TItem = typeof itens[0];
 
@@ -12,7 +12,7 @@ const Item = ( { photo, title, description, category, size, serving, price }: TI
   return ( 
     title.toLowerCase().includes(busca) ? <div className={styles.item}>
       <div className={styles.item__imagem}>
-        <img src={logo} alt="Imagem de comida" />
+        <img src={photo} alt="Imagem de comida" />
       </div>
       <div className={styles.item__descricao}>
         <div className={styles.item__titulo}>
@@ -20,7 +20,10 @@ const Item = ( { photo, title, description, category, size, serving, price }: TI
           <p>{description}</p>
         </div>
         <div className={styles.item__tags}>
-          <div className={styles.item__tipo}>
+          <div className={classNames({
+            [styles.item__tipo]: true,
+            [styles[`item__tipo__${category.label.toLowerCase()}`]]: true
+          })}>
             {category.label}
           </div>
           <div className={styles.item__porcao}>
@@ -30,7 +33,7 @@ const Item = ( { photo, title, description, category, size, serving, price }: TI
             Serve {serving} {serving === 1 ? 'pessoa' : 'pessoas'}
           </div>
           <div className={styles.item__valor}>
-            R$ {price}
+            R$ {price.toFixed(2)}
           </div>
         </div>
       </div>
