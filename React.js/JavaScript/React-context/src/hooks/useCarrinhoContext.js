@@ -58,5 +58,13 @@ export const useCarrinhoContext = () => {
 		setValorTotal(totalTemp);
 	}, [carrinho]);
 
-	return { carrinho, setCarrinho, adicionarProduto, removerProduto, excluirProduto };
+	return {
+		carrinho,
+		setCarrinho,
+		adicionarProduto,
+		removerProduto,
+		excluirProduto,
+		quantidade,
+		valorTotal,
+	};
 };
