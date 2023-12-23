@@ -1,66 +1,46 @@
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { CarrinhoContext } from '../contexts/CarrinhoContext';
+import { ADD_PRODUTO, REMOVE_PRODUTO, UPDATE_QUANTIDADE } from '../reducers/carrinhoReducer';
+
+const addProdutoAction = (novoProduto) => ({
+	type: ADD_PRODUTO,
+	payload: novoProduto,
+});
+
+const removeProdutoAction = (produtoId) => ({
+  type: REMOVE_PRODUTO,
+  payload: produtoId,
+});
+
+const updateQuantidadeAction = (produtoId, quantidade) => ({
+  type: UPDATE_QUANTIDADE,
+  payload: { produtoId, quantidade },
+});
+
 
 export const useCarrinhoContext = () => {
-	const { carrinho, setCarrinho, quantidade, setQuantidade, valorTotal, setValorTotal } =
-		useContext(CarrinhoContext);
-
-	function mudarQuantidade(id, quantidade) {
-		return carrinho.map((itemDoCarrinho) => {
-			if (itemDoCarrinho.id === id) itemDoCarrinho.quantidade += quantidade;
-			return itemDoCarrinho;
-		});
-	}
+	const { carrinho, quantidade, valorTotal, dispatch } = useContext(CarrinhoContext);
 
 	function adicionarProduto(novoProduto) {
-		const temOProduto = carrinho.some((itemDoCarrinho) => itemDoCarrinho.id === novoProduto.id);
-
-		if (!temOProduto) {
-			novoProduto.quantidade = 1;
-			return setCarrinho((prev) => [...prev, novoProduto]);
-		}
-
-		const carrinhoAtualizado = mudarQuantidade(novoProduto.id, 1);
-
-		setCarrinho([...carrinhoAtualizado]);
+		dispatch(addProdutoAction(novoProduto));
 	}
 
 	function removerProduto(id) {
-		const produto = carrinho.find((itemDoCarrinho) => itemDoCarrinho.id === id);
-		const ehOUltimo = produto.quantidade === 1;
+		const produto = carrinho.find((item) => item.id === id);
 
-		if (ehOUltimo) {
-			return setCarrinho((prev) => prev.filter((itemDoCarrinho) => itemDoCarrinho.id !== id));
-		}
-
-		const carrinhoAtualizado = mudarQuantidade(id, -1);
-
-		setCarrinho([...carrinhoAtualizado]);
+    if (produto && produto.quantidade > 1) {
+        dispatch(updateQuantidadeAction(id, produto.quantidade - 1));
+    } else {
+        dispatch(removeProdutoAction(id));
+    }
 	}
 
 	function excluirProduto(id) {
-		const carrinhoAtualizado = carrinho.filter((itemDoCarrinho) => itemDoCarrinho.id !== id);
-		setCarrinho([...carrinhoAtualizado]);
+		dispatch(removeProdutoAction(id));
 	}
-
-	useEffect(() => {
-		const { totalTemp, quantidadeTemp } = carrinho.reduce(
-			(acumulador, produto) => ({
-				quantidadeTemp: acumulador.quantidadeTemp + produto.quantidade,
-				totalTemp: acumulador.totalTemp + produto.preco * produto.quantidade,
-			}),
-			{
-				quantidadeTemp: 0,
-				totalTemp: 0,
-			}
-		);
-		setQuantidade(quantidadeTemp);
-		setValorTotal(totalTemp);
-	}, [carrinho]);
 
 	return {
 		carrinho,
-		setCarrinho,
 		adicionarProduto,
 		removerProduto,
 		excluirProduto,
