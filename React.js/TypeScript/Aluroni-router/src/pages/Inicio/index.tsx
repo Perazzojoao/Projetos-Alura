@@ -1,4 +1,3 @@
-import Menu from 'components/Menu';
 import styles from './Inicio.module.scss';
 import cardapio from 'data/cardapio.json';
 
@@ -8,7 +7,6 @@ const Inicio = () => {
 
   return (
     <section>
-      <Menu />
       <h3 className={styles.titulo}>Recomendações da cozinha</h3>
       <div className={styles.recomendados}>
         {pratosRecomendados.map((item) => (
