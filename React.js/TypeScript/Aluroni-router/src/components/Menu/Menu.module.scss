@@ -3,6 +3,8 @@
 
 .menu {
   padding: 20px $padding-horizontal;
+  display: flex;
+  flex-wrap: nowrap;
   @media (max-width: $desktop_xsm) {
     padding: 20px $padding-horizontal-mobile;
   }
