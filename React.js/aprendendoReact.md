@@ -472,7 +472,7 @@ Para passar parâmetros junto da url de uma página temos que especificar os par
 
 ### Funções:
 
-- **useLocation():** retorna a url relativa da página atual.
+- **useLocation():** retorna um obj contendo a url relativa da página atual.
 
   Ex: const location = useLocation();
 
@@ -482,7 +482,7 @@ Para passar parâmetros junto da url de uma página temos que especificar os par
 
       const parametros = useParams();   --> retorna: {'key': '225566'}
 
-- **useNavigate():** Retorna uma função que permite redirecionar a página sem recarregar.
+- **useNavigate():** Retorna uma função que permite redirecionar a página sem recarrega-la.
 
   Ex: const navigate = useNavigate();
 
@@ -494,3 +494,8 @@ Para passar parâmetros junto da url de uma página temos que especificar os par
 
   - String: caminhos em string ("/paginadeinicio"), levam ao caminho indicado.
   - Number: redirecionam com base no histórico. Ex: navigate(-1) --> volta à página anterior.
+
+  **OBS:** Pode receber um obj como 2° parâmetro contendo propriedades adicionais --> state? e replace?
+
+  - state: podemos passar uma variável (obj, array, ...) que será transmitida para a próxima página. Pode ser acessada com o "useLocation".
+  - replace: booleano (true, false) que informa à página se queremos dubstituir o histórico de navegação. False = histório continua normal. True = histórico é substituido pela próxima página.  
