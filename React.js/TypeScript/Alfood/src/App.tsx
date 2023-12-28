@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
-import Home from './paginas/Home';
-import VitrineRestaurantes from './paginas/VitrineRestaurantes';
+import Home from './pages/Home';
+import VitrineRestaurantes from './pages/VitrineRestaurantes';
 
 function App() {
 
