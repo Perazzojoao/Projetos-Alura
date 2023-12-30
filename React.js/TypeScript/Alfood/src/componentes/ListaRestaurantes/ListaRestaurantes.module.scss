@@ -2,3 +2,16 @@
   margin-top: 1.5rem;
   padding: 2rem;
 }
+
+.formWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.formInputs {
+  display: flex;
+  width: 100%;
+}

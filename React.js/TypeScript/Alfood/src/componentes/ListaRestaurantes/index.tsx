@@ -4,7 +4,7 @@ import style from './ListaRestaurantes.module.scss';
 import Restaurante from './Restaurante';
 import axios, { AxiosRequestConfig } from 'axios';
 import { IPaginacao } from '../../interfaces/IPaginacao';
-import { Button, TextField } from '@mui/material';
+import { Box, Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 
 type CarregarDados = (url: string, options?: AxiosRequestConfig<ParamsBusca>) => void;
 
@@ -17,6 +17,7 @@ const ListaRestaurantes = () => {
 	const [restaurantes, setRestaurantes] = useState<IRestaurante[]>([]);
 	const [proxPagina, setProxPagina] = useState('');
 	const [busca, setBusca] = useState('');
+	const [ordenacao, setOrdenacao] = useState('');
 
 	const carregarDados: CarregarDados = useCallback((url, options = {}) => {
 		axios
@@ -52,6 +53,9 @@ const ListaRestaurantes = () => {
 		if (busca) {
 			options.params.search = busca;
 		}
+		if (ordenacao) {
+			options.params.ordering = ordenacao;
+		}
 		carregarDados('http://localhost:8000/api/v1/restaurantes/', options);
 	};
 
@@ -65,22 +69,45 @@ const ListaRestaurantes = () => {
 				Os restaurantes mais <em>bacanas</em>!
 			</h1>
 			<form
+				className={style.formWrapper}
 				onSubmit={event => {
 					buscar(event);
 				}}
 			>
-				<TextField
-					id='standard-basic'
-					label='Restaurante'
-					variant='standard'
-					value={busca}
-					onChange={event => {
-						setBusca(event.target.value);
-					}}
-				/>
-				<Button variant='contained' type='submit'>
-					Buscar
-				</Button>
+				<Box sx={{ display: 'flex', gap: 10 }}>
+					<TextField
+						id='standard-basic'
+						label='Restaurante'
+						variant='standard'
+						fullWidth
+						value={busca}
+						onChange={event => {
+							setBusca(event.target.value);
+						}}
+					/>
+					<FormControl>
+						<InputLabel id='demo-simple-select-label'>Ordenar</InputLabel>
+						<Select
+							sx={{ minWidth: 140 }}
+							labelId='demo-simple-select-label'
+							id='demo-simple-select'
+							value={ordenacao}
+							label='Ordenar'
+							onChange={event => {
+								setOrdenacao(event.target.value);
+							}}
+						>
+							<MenuItem value=''>Padrão</MenuItem>
+							<MenuItem value='id'>Por id</MenuItem>
+							<MenuItem value='nome'>Por Nome</MenuItem>
+						</Select>
+					</FormControl>
+				</Box>
+				<div className={style.button}>
+					<Button variant='contained' type='submit'>
+						Buscar
+					</Button>
+				</div>
 			</form>
 			{restaurantes?.map(item => (
 				<Restaurante restaurante={item} key={item.id} />
