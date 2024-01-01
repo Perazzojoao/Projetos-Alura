@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 import BotaoNavegacao from "../BotaoNavegacao"
-import logo from './assets/logo.svg'
+// import logo from './assets/logo.svg'
 import usuario from './assets/usuario.svg'
 import './BarraNavegacao.css'
 
@@ -8,7 +8,7 @@ const BarraNavegacao = () => {
     return (<nav className="ab-navbar">
         <h1 className="logo">
             <Link to="/">
-                <img className="logo" src={logo} alt="Logo da AluraBooks" />
+                <img className="logo" src={'#'} alt="Logo da AluraBooks" />
             </Link>
         </h1>
         <ul className="navegacao">
