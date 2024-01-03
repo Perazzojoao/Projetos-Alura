@@ -1,34 +1,40 @@
 import React, { useState } from 'react';
 import style from './Filtro.module.scss';
+import { IFiltroDeEventos } from 'interfaces/IFiltroDeEventos';
+import { useSetRecoilState } from 'recoil';
+import { filtroDeEventos } from 'state/atom';
 
-const Filtro: React.FC<{ aoFiltroAplicado: (data: Date | null) => void }> = ({ aoFiltroAplicado }) => {
-  
-  const [data, setData] = useState('')
-  
-  const submeterForm = (evento: React.FormEvent<HTMLFormElement>) => {
-    evento.preventDefault()
-    if (!data) {
-      aoFiltroAplicado(null)
-      return
-    }
-    aoFiltroAplicado(new Date(data))
-  }
+const Filtro: React.FC = () => {
+	const [data, setData] = useState('');
+  const setFiltroDeEventos = useSetRecoilState<IFiltroDeEventos>(filtroDeEventos);
 
-  return (<form className={style.Filtro} onSubmit={submeterForm}>
-    <h3 className={style.titulo}>Filtrar por data</h3>
-    <input 
-      type="date" 
-      name="data"
-      className={style.input}
-      onChange={evento => setData(evento.target.value)} 
-      placeholder="Por data"
-      value={data} />
+	const submeterForm = (evento: React.FormEvent<HTMLFormElement>) => {
+		evento.preventDefault();
+		const filtro: IFiltroDeEventos = {};
 
-    <button className={style.botao}>
-      Filtrar
-    </button>
+		if (data) {
+			filtro.data = new Date(data);
+		} else {
+			filtro.data = null;
+		}
+    setFiltroDeEventos(filtro);
+	};
 
-  </form>)
-}
+	return (
+		<form className={style.Filtro} onSubmit={submeterForm}>
+			<h3 className={style.titulo}>Filtrar por data</h3>
+			<input
+				type='date'
+				name='data'
+				className={style.input}
+				onChange={evento => setData(evento.target.value)}
+				placeholder='Por data'
+				value={data}
+			/>
 
-export default Filtro
+			<button className={style.botao}>Filtrar</button>
+		</form>
+	);
+};
+
+export default Filtro;
