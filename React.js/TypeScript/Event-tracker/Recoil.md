@@ -40,9 +40,11 @@ Novos contextos são criados em uma pasta separada. Nessa pasta criamos o chamad
 });
 ```
 
-## Utilizando o contexto (Atom)
+## Utilizando o contexto do Atom
 
-- 1° Para prover acesso aos componentes, precisamos envolve-los na tag `<RecoilRoot>`
+### Compartilhando o contexto:
+
+Para prover acesso aos componentes, precisamos envolve-los na tag `<RecoilRoot>`
 
 **Ex:**
 
@@ -58,12 +60,25 @@ Novos contextos são criados em uma pasta separada. Nessa pasta criamos o chamad
 	}
 ```
 
-- 2° Para utilizar os estados criados precisamos utilizar o hook `useRecoilValue()`
+### Recebendo o valor do estado
 
-	- **Sintax:** const `<nome_variável>` = `useRecoilValue(<atom>)`
+Para utilizar os estados criados precisamos utilizar o hook `useRecoilValue()`
+
+**Sintax:** const `<nome_variável>` = `useRecoilValue(<atom>)`
 
 **OBS:** O `<atom>` é a variável criada e exportada no atom.tsx
 
 **Ex:**
 
 		const eventos = useRecoilValue(listaDeEventosState);
+
+
+### Alterando o valor do estado:
+
+Para alterar o valor do estado criado pelo atom utilizamos a função `useSetRecoilState()`
+
+- **Sintaxe:** const `<nome_função>` = `useSetRecoilState(<atom>)`
+
+**Ex:**
+
+		const setListaDeEventos = useSetRecoilState(listaDeEventosState)
