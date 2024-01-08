@@ -196,7 +196,7 @@ As chaves são criadas junto à definição do tipo de variável de uma coluna.
     Nome_do_Produto VARCHAR(250), 
     Descricao TEXT, 
     Categoria INT, 
-    Preco_de_Compra DECIMAL (10,2),   --> (10: casas antes da vírgula, 2: casas decimais)
+    Preco_de_Compra DECIMAL (10,2),   --> (10: número total de dígitos, 2: casas decimais)
     Unidade VARCHAR(50), 
     Fornecedor INT,
     Data_de_Inclusao DATE, 
