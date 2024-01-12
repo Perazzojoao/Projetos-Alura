@@ -123,9 +123,39 @@ Agrupa a resposta do SELECT com base no parâmetro especificado.
 
 - AVG(coluna): Média de todas as colunas do grupo.
 
-- COUNT(): Exibe a contagem de todas as ocorrências iguais do grupo.
+- COUNT(*): Exibe a contagem de todas as ocorrências iguais do grupo.
+
+### HAVING:
+Filtro aplicado à resposta após o uso do `GROUP BY`.
+
+**Sintaxe:** ...Comandos GROUP BY `<coluna>` `HAVING` <coluna> = '...' ;
+
+**OBS:** `HAVING` é equivalente à `WHERE`, porém é aplicado apenas após o comando `GROUP BY`.
 
 
+## Condicionais
+Forma de utilizar if/else em código SQL
+
+**Sintaxe:** `CASE` <comandos_> `THEN` <comandos_> `END`;
+
+- CASE: Início do "if".
+
+- THEN: Após o `THEN`, utilizamos os comandos a serem executados caso a condicional seja verdadeira.
+
+- END: Indica que finalizamos a condicional.
+
+**Ex:**
+
+```
+  SELECT X,
+  CASE
+    WHEN Y>=8 AND Y<=10 THEN 'OTIMO'
+    WHEN Y>=7 AND Y<8 THEN 'BOM'
+    WHEN Y>5 AND Y<7 THEN 'MEDIO'
+    ELSE 'RUIM'
+  END
+  FROM tabela;
+```
 
 
 ## Criar tabelas
