@@ -80,7 +80,17 @@
 
   **Sintaxe:**
 
-      SELECT <coluna> FROM <tabela> WHERE <coluna> `LIKE` 'string';
+      SELECT <coluna> FROM <tabela> WHERE <coluna> `LIKE` '%string%';
+
+  - %string% --> Se o valor da coluna contém a string como valor.
+
+  - %string --> Se o valor da coluna termina com a string passada.
+
+  - string% --> Se o valor da coluna começa com a string passada.
+
+  **Ex:**
+
+      SELECT * FROM tabela_de_produtos WHERE SABOR LIKE '%Maça%';
 
 
 ## Operadores lógicos
@@ -92,6 +102,30 @@
   - **NOT (<>):** Operador lógico 'NÃO' = !. --> Ex: ... WHERE NOT <coluna_> = <valor_>; ou ... WHERE <coluna_> <> <valor_>;
 
   - **BETWEEN:** Operador lógico 'ENTRE'. -->Ex: ... BETWEEN <valor_1> AND <valor_2>;
+
+
+## GROUP BY
+Agrupa a resposta do SELECT com base no parâmetro especificado.
+
+**Sintaxe:**
+
+    SELECT <coluna>, <parâmetro> AS <apelido> FROM <tabela> GROUP BY <coluna>;
+
+**OBS:** É obrigatório o uso do `AS <apelido>` após o parâmetro dado.
+
+### Parâmetros:
+
+- SUM(coluna): Soma o valor de todas as colunas do grupo. 
+
+- MAX(coluna): Valor máximo de todas as colunas do grupo.
+
+- MIN(coluna): Valor mínimo de todas as colunas do grupo.
+
+- AVG(coluna): Média de todas as colunas do grupo.
+
+- COUNT(): Exibe a contagem de todas as ocorrências iguais do grupo.
+
+
 
 
 ## Criar tabelas
