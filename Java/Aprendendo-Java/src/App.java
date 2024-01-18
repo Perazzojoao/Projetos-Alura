@@ -1,4 +1,8 @@
 public class App {
+
+  public int teste (int valor1, int valor2) {
+    return valor1 + valor2;
+  }
   public static void main(String[] args) throws Exception {
     System.out.println("Esse é o Screen Match");
     System.out.println("Filme: Top Gun: Maverick");
@@ -20,5 +24,6 @@ public class App {
         """;
 
     System.out.println(sinopse + textoFormatado);
+
   }
 }

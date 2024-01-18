@@ -15,6 +15,10 @@ public class Leitura {
       System.out.println(filme);
       System.out.println(anoDeLancamento);
       System.out.println(avaliacao);
+
+      App testar = new App();
+
+      System.out.println(testar.teste(1, 3));
     }
   }
 }
