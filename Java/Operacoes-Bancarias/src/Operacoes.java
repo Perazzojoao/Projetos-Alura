@@ -14,5 +14,6 @@ public class Operacoes {
 
   public void consultarSaldo(float saldo) {
     System.out.printf("Saldo atual: R$ %.2f", saldo);
+    mostrarOperacoes();
   }
 }

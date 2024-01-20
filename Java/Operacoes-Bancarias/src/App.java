@@ -9,10 +9,10 @@ public class App {
 		cliente.mostrarDados();
 		
 		int opcao = 0;
-		try (Scanner scann = new Scanner(System.in)) {
+		try (Scanner scan = new Scanner(System.in)) {
 			do {
 				operacoes.mostrarOperacoes();
-				opcao = scann.nextInt();
+				opcao = scan.nextInt();
 
 				if (opcao == 4) break;
 

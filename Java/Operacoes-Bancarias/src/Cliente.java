@@ -6,17 +6,19 @@ public class Cliente {
   float saldoInicial;
 
   public void inserirDados() {
-    try (Scanner scann = new Scanner(System.in)) {
+    try (Scanner scan = new Scanner(System.in)) {
       System.out.println("----- Insira seus dados -----\n");
 
       System.out.println("Nome: ");
-      nome = scann.nextLine();
+      nome = scan.nextLine();
 
       System.out.println("Tipo Conta: ");
-      tipoConta = scann.nextLine();
+      tipoConta = scan.nextLine();
 
       System.out.println("Saldo inicial: ");
-      saldoInicial = scann.nextFloat();
+      saldoInicial = scan.nextFloat();
+
+      scan.close();
     }
   }
 
