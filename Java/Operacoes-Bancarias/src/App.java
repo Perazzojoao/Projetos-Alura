@@ -12,6 +12,7 @@ public class App {
 		try (Scanner scan = new Scanner(System.in)) {
 			do {
 				operacoes.mostrarOperacoes();
+				scan.nextLine();
 				opcao = scan.nextInt();
 
 				if (opcao == 4) break;
