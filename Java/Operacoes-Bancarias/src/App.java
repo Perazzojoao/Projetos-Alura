@@ -8,7 +8,7 @@ public class App {
 		cliente.inserirDados();
 		cliente.mostrarDados();
 		
-		int opcao = 0;
+		int opcao = 4;
 		try (Scanner scan = new Scanner(System.in)) {
 			do {
 				operacoes.mostrarOperacoes();
@@ -27,10 +27,8 @@ public class App {
 					case 3:
 						
 						break;
-					case 4:
-						System.out.println("Saindo!");
-						break;
 					default:
+						System.out.println("Operação inválida!");
 						break;
 				}
 
