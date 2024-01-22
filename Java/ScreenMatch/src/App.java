@@ -22,7 +22,8 @@ public class App {
 		lost.setDuracaoEmMin(3522);
 		lost.setTemporadas(10);
 		lost.setEpsPorTemporada(10);
+		lost.setMinPorEp(50);
 
-		lost.mostrarFichaTecnica();
+		System.out.println("Duração para maratonar Lost: " + lost.getDuracaoEmMin() + " min");
 	}
 }

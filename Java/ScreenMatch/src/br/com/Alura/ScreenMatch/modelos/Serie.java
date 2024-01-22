@@ -38,4 +38,9 @@ public class Serie extends Titulo {
   public void setMinPorEp(int minPorEp) {
     this.minPorEp = minPorEp;
   }
+
+  @Override
+  public int getDuracaoEmMin() {
+    return temporadas * epsPorTemporada * minPorEp;
+  }
 }

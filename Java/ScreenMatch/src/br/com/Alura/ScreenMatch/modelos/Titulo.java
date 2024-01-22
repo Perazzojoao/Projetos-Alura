@@ -3,7 +3,7 @@ package br.com.Alura.ScreenMatch.modelos;
 public class Titulo {
   private String nome;
   private int anoLancamento;
-  private boolean inclusoNoPlano;
+  // private boolean inclusoNoPlano;
   private double somaAvaliacoes;
   private int totalAvaliacoes;
   private int duracaoEmMin;
@@ -18,6 +18,10 @@ public class Titulo {
 
   public void setDuracaoEmMin(int duracaoEmMin) {
     this.duracaoEmMin = duracaoEmMin;
+  }
+
+  public int getDuracaoEmMin() {
+    return this.duracaoEmMin;
   }
 
   public void mostrarFichaTecnica() {
