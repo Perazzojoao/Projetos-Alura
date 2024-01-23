@@ -1,3 +1,4 @@
+import br.com.Alura.ScreenMatch.calculos.FiltroRecomendacao;
 import br.com.Alura.ScreenMatch.modelos.*;
 
 public class App {
@@ -25,5 +26,8 @@ public class App {
 		lost.setMinPorEp(50);
 
 		System.out.println("Duração para maratonar Lost: " + lost.getDuracaoEmMin() + " min");
+
+		FiltroRecomendacao filtro = new FiltroRecomendacao();
+		filtro.filtrar(meuFilme);
 	}
 }
