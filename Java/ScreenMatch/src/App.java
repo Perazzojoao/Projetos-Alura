@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 import br.com.Alura.ScreenMatch.calculos.FiltroRecomendacao;
 import br.com.Alura.ScreenMatch.modelos.*;
 
@@ -29,5 +31,19 @@ public class App {
 
 		FiltroRecomendacao filtro = new FiltroRecomendacao();
 		filtro.filtrar(meuFilme);
+
+		var filmePaulo = new Filme();
+		filmePaulo.setNome("Avatar");
+		filmePaulo.setDuracaoEmMin(200);
+		filmePaulo.setAnoLancamento(2003);
+		filmePaulo.avaliar(9);
+
+		ArrayList<Filme> listaFilmes = new ArrayList<>();
+		listaFilmes.add(meuFilme);
+		listaFilmes.add(filmePaulo);
+		System.out.println("Tamanho da lista: " + listaFilmes.size());
+
+		System.out.println("Primeiro filme: " + listaFilmes.get(0).getNome());
+
 	}
 }
