@@ -1,10 +1,14 @@
+import { TUser } from "types/TUser";
 import ToggleTheme from "../ToggleTheme";
 
+type HeaderProps = {
+	user: TUser;
+}
 
-const Header = () => {
+const Header = ({ user }: HeaderProps) => {
 	return (
 		<div className='flex h-20 justify-between items-center bg-alura-200 dark:bg-dark-200 px-5 font-bold sm:rounded-xl sm:m-5'>
-			<span className='text-gray-200'>Olá, usuário</span>
+			<span className='text-gray-200'>{`Olá, ${user.name || 'usuário'}`}</span>
 			<h1 className='text-gray-200 text-xl'>Alura NewsLetter</h1>
       <ToggleTheme />      
 		</div>
