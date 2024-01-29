@@ -3,7 +3,7 @@ import Article from './Article';
 
 const ArticleList = () => {
 	return (
-		<div className='my-5 sm:my-0 sm:px-16 grid gap-5 m-auto max-w-full sm:grid-cols-2 lg:grid-cols-3'>
+		<div className='my-5 sm:my-0 sm:px-16 grid gap-7 sm:gap-5 max-w-full sm:grid-cols-2 lg:grid-cols-3'>
 			{articlesList.map((article, index) => (
 				<Article key={index} {...article} />
 			))}

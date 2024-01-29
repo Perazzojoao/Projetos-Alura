@@ -3,6 +3,7 @@ import ArticleList from "./components/ArticleList";
 import Header from "./components/Header";
 import { TUser } from "types/TUser";
 import Form from "./components/Form";
+import Footer from "./components/Footer";
 
 function App() {
   const [user, setUser] = useState<TUser>({name: '', email: ''});
@@ -13,6 +14,7 @@ function App() {
       <Header user={user} />
       {hasUser && <ArticleList />}
       {!hasUser && <Form setUser={setUser} />}
+      <Footer />
     </div>
   )
 }
