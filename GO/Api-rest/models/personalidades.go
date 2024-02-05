@@ -1,8 +1,9 @@
 package models
 
 type Personalidade struct {
-	Nome     string `jason:"nome"`
-	Historia string `jason:"historia"`
+	Id       int    `json: "id"`
+	Nome     string `json:"nome"`
+	Historia string `json:"historia"`
 }
 
 var Personalidades []Personalidade
