@@ -8,8 +8,8 @@ import (
 
 	"github.com/gorilla/mux"
 
+	"api-rest/database"
 	"api-rest/models"
-
 )
 
 func Home(w http.ResponseWriter, r *http.Request) {
@@ -17,7 +17,9 @@ func Home(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetTodasPersonalidades(w http.ResponseWriter, r *http.Request) {
-	json.NewEncoder(w).Encode(models.Personalidades)
+	var p []models.Personalidade
+	database.DB.Find(&p)
+	json.NewEncoder(w).Encode(p)
 }
 
 func GetPersonalidade(w http.ResponseWriter, r *http.Request) {
