@@ -76,6 +76,44 @@ Para acessá-las, utilizamos: `vars := mux.Vars(r)`. "vars" é um map em que a c
 
 **Ex:** `id := vars["id"]`
 
+### Middleware
+Middleware é uma forma de aplicar uma funcionalidade a todas as rotas criadas sem a necessidade de copiar código.
+
+**Criação:** Devemos criar um package novo e definir uma função à ela.
+
+- **Função:**
+
+		```
+		func ContentType(next http.Handler) http.Handler {
+			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				.
+				.
+				.
+				next.ServeHTTP(w, r)
+			})
+		}
+		```
+
+	No exemplo em questão, queremos adicionar um "content-type" ao header das requisições do servidor para todas as rotas, para que todas devolvam um json.
+
+	**Ex:**
+
+	```
+	func ContentType(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Content-type", "application/json")
+			next.ServeHTTP(w, r)
+		})
+	}
+	```
+
+**Uso:** Para utilizar o middleware criado, devemos utilizar a função `Use()` no "package routes".
+
+- **Ex:**
+
+		r := mux.NewRouter()
+		r.Use(middleware.ContentType)
+
 ## Banco de Dados com gorm
 
 [Gorm](https://gorm.io/) é uma biblioteca go para acesso e manipulação de banco de dados SQL.
@@ -117,7 +155,7 @@ func ConectarDB() {
 	}
 }
 ```
-### Query (SELECT):
+### Query (SELECT ALL):
 Para executar um select, primeiro precisamos criar uma variável do exato mesmo tipo contido no db.
 
 **Tipo db:**
@@ -132,7 +170,7 @@ type Personalidade struct {
 
 **Variável a receber o SELECT:** `var p []Personalidade` (Vai receber uma lista de personalidades).
 
-Após isso, utilizamos a função `DB.Find(&<destino>)`, e passamos o endereõ de memória da variável que desejamos receber os valores.
+Após isso, utilizamos a função `DB.Find(&<destino>)`, e passamos o endereço de memória da variável que desejamos receber os valores.
 
 **Ex:**
 
@@ -145,3 +183,94 @@ func GetTodasPersonalidades(w http.ResponseWriter, r *http.Request) {
 ```
 
 **Obs:** A função `Find()` vai procurar, automaticamente, pelos dados correspondentes ao tipo de variável passado, e vai devolver uma lista com dodas elas.
+
+### SELECT First
+Para selecionar o primeiro valor encontrado utilizamos `First(&<destino>, <condições>)`
+
+**Ex:**
+
+	database.DB.First(&p, id)
+
+`First()` irá retonar o primeiro valor encontrado, dado uma certa condição, para o endereço de memória passado.
+
+**Ex completo:**
+
+```
+func GetPersonalidade(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+	var p models.Personalidade
+
+	database.DB.First(&p, id)
+	json.NewEncoder(w).Encode(p)
+}
+```
+
+### INSERT
+Para adicionarmos dados ao banco de dados utilizamos a função `Create(&<valor>)`, em que passamos o endereço de memória da variável que contém os valores a serem inseridos como parâmetro.
+
+**Ex:**
+
+	database.DB.Create(&p)
+
+Para isso, precisamos receber um json pelo método "POST" e adicionar seu conteúdo a variável "p". Sendo assim, temos que `decodificar um json` recebido pela api: `json.NewDecoder(r.Body).Decode(&p)`.
+
+**Ex completo:**
+
+```
+func AddPersonalidade(w http.ResponseWriter, r *http.Request) {
+	var p models.Personalidade
+	json.NewDecoder(r.Body).Decode(&p) // Quando queremos receber um json
+	database.DB.Create(&p)
+	json.NewEncoder(w).Encode(p) // Quando queremos exibir ou enviar um json
+}
+```
+
+**Obs:** Para o INSERT funcionar, precisamos receber um json no corpo de uma requisição do tipo POST, sendo assim, deve ser criada uma rota que apenas aceia requisições "POST".
+
+	r.HandleFunc("/api/personalidades", AddPersonalidade).Methods("Post")
+
+### DELETE
+Para atualizarmos um valor no banco de dados precisamos apenas do id do ítem específico. Com isso, utilizamos a função `database.DB.Delete(&<valor>, <condições>)` para deletar o ítem.
+
+**Ex completo:**
+
+```
+func DeletePersonalidade(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+	var p models.Personalidade
+
+	database.DB.Delete(&p, id)
+	json.NewEncoder(w).Encode(p)
+}
+```
+
+### UPDATE
+Para atualizarmos um valor no banco de dados precisamos do id do ítem e dos dados atualizados.
+
+**Recebendo id:** 
+
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+Após isso, precisamos encontrar o ítem antigo no banco de dados: `database.DB.First(&p, id)`. Com isso, recebemos o json com os dados atualizados e utilizamos a função `Save(&<valor>)` para salvar as alterações no banco de dados.
+
+**Ex completo:**
+
+```
+func EditPersonalidade(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+	var p models.Personalidade
+
+	database.DB.First(&p, id)
+	json.NewDecoder(r.Body).Decode(&p)
+	database.DB.Save(&p)
+	json.NewEncoder(w).Encode(p)
+}
+```
+
+**Obs:** Para o UPDATE funcionar, precisamos receber o "id" e um json no corpo de uma requisição do tipo PUT, sendo assim, deve ser criada uma rota que apenas aceia requisições "PUT".
+
+	r.HandleFunc("/api/personalidades/{id}", EditPersonalidade).Methods("Put")
