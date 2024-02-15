@@ -1,6 +1,10 @@
 package controllers
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+
+	"api-go-gin/controllers/models"
+)
 
 func Saudacao(c *gin.Context) {
 	nome := c.Params.ByName("nome")
@@ -11,8 +15,5 @@ func Saudacao(c *gin.Context) {
 }
 
 func GetTodosAlunos(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"id":   "1",
-		"nome": "João Victor Perazzo",
-	})
+	c.JSON(200, models.Alunos)
 }
