@@ -14,7 +14,7 @@ var (
 	err error
 )
 
-func DbConection() {
+func ConectarDB() {
 	dsn := "host=localhost user=root password=root dbname=root port=5432 sslmode=disable"
 	DB, err = gorm.Open(postgres.Open(dsn))
 	if err != nil {

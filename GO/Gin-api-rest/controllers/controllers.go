@@ -4,6 +4,8 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"api-go-gin/controllers/models"
+	"api-go-gin/database"
+
 )
 
 func Saudacao(c *gin.Context) {
@@ -15,5 +17,9 @@ func Saudacao(c *gin.Context) {
 }
 
 func GetTodosAlunos(c *gin.Context) {
-	c.JSON(200, models.Alunos)
+	var a []models.Aluno
+
+	database.DB.Find(&a)
+
+	c.JSON(200, a)
 }

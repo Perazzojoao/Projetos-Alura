@@ -64,3 +64,75 @@ O `c *gin,Context` da HandlerFunc tem acesso aos valores passados. Para utilizar
 **Ex:**
 
     nome := c.Params.ByName("nome")
+
+
+## Banco de dados (GORM)
+
+**Instalação:**
+
+    go get -u gorm.io/gorm
+
+### Conexão (Postgres)
+
+Para realizar a conexão com um DB já existente, precisamos utilizar `gorm.Open()`, que recebe como parâmetro a abertura do banco de dados `postgres.Open()`
+
+**Ex:**
+
+    DB, err = gorm.Open(postgres.Open(dsn))
+
+**DNS:** É uma string que contém as informação de acesso ao banco de dados. As informações devem ser preenchidas com base no `docker-compose.yml`, no que diz respeito ao banco de dados.
+
+**Ex:**
+
+    dsn := "host=localhost user=root password=root dbname=root port=5432 sslmode=disable"
+
+#### Exemplo de conexão:
+
+```
+var (
+	DB  *gorm.DB
+	err error
+)
+
+func ConectarDB() {
+	dsn := "host=localhost user=root password=root dbname=root port=5432 sslmode=disable"
+	DB, err = gorm.Open(postgres.Open(dsn))
+	if err != nil {
+		fmt.Println("Erro ao conectar com database")
+		log.Panic(err.Error())
+	}
+}
+```
+
+### Criação de tabelas no banco de dados com GORM
+
+Para criar tabelas do zero, primeiro precisamos criar uma struct que irá servir de base para a tabela a ser criada.
+
+**Ex:**
+
+```
+ type Aluno struct {
+	gorm.Model
+	Nome string `json:"nome"`
+	CPF  string `json:"cpf"`
+	RG   string `json:"rg"`
+}
+```
+
+**Obs:** O `gorm.Model` adiciona automaticamente à struct as colunas ID, CreatedAt, UpdatedAt, DeletedAt.
+
+Após a criação da struct, devemos adicionar ao final da função `ConectarDB()` o comando que irá criar a tabela: `DB.AutoMigrate(&<struct_base{}>)`.
+
+**Ex completo:**
+
+```
+  func ConectarDB() {
+    dsn := "host=localhost user=root password=root dbname=root port=5432 sslmode=disable"
+    DB, err = gorm.Open(postgres.Open(dsn))
+    if err != nil {
+      log.Println("Erro ao conectar com DB")
+      log.Panic(err.Error())
+    }
+    DB.AutoMigrate(&models.Aluno{})
+  }
+```
