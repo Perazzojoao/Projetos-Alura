@@ -257,7 +257,7 @@ func AddPersonalidade(w http.ResponseWriter, r *http.Request) {
 
 ### DELETE
 
-Para atualizarmos um valor no banco de dados precisamos apenas do id do ítem específico. Com isso, utilizamos a função `database.DB.Delete(&<valor>, <condições>)` para deletar o ítem.
+Para deletarmos um valor no banco de dados precisamos apenas do id do ítem específico. Com isso, utilizamos a função `database.DB.Delete(&<valor>, <condições>)` para deletar o ítem.
 
 **Ex completo:**
 

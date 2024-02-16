@@ -49,6 +49,7 @@ A "Handlefunc" é uma função que serve para lidar com as requisições que che
 **Obs:** Nesse exemplo retonamos como resposta um JSON com a função `JSON(<status_code>, <obj_body>)`. `gin.H{}` é equivalente a uma instância de `map[string]any`.
 
 ### Parâmetros de URL
+
 Para passar variáveis na url utilizamos `:<nome_variável>`.
 
 **Ex:**
@@ -64,7 +65,6 @@ O `c *gin,Context` da HandlerFunc tem acesso aos valores passados. Para utilizar
 **Ex:**
 
     nome := c.Params.ByName("nome")
-
 
 ## Banco de dados (GORM)
 
@@ -134,5 +134,151 @@ Após a criação da struct, devemos adicionar ao final da função `ConectarDB(
       log.Panic(err.Error())
     }
     DB.AutoMigrate(&models.Aluno{})
+  }
+```
+
+### SELECT All
+
+Para enviar uma lista com todos os dadosa encontrados devemos, primeiro, criar uma variável de destino.
+
+**Variável a receber o SELECT:** Deve ser um struct que contenha todos os campos da tabela do DB -> **Ex:** `var alunos []models.Aluno`.
+
+Após isso, utilizamos a função `DB.Find(&<destino>)`, e passamos o endereço de memória da variável que desejamos atribuir os valores.
+
+**Ex:**
+
+```
+  func GetTodosAlunos(c *gin.Context) {
+    var alunos []models.Aluno
+    database.DB.Find(&a)
+    c.JSON(200, a)
+  }
+```
+
+### SELECT First
+
+Para selecionar o primeiro valor encontrado utilizamos `First(&<destino>, <condições>)`
+
+**Ex:**
+
+    database.DB.First(&aluno, id)
+
+`First()` irá retonar o primeiro valor encontrado, dado uma certa condição, para o endereço de memória passado.
+
+**Ex completo:**
+
+```
+  func GetAluno(c *gin.Context) {
+    var a models.Aluno
+    id := c.Params.ByName("id")
+
+    database.DB.First(&a, id)
+    if a.ID == 0 {
+      c.JSON(http.StatusNotFound, gin.H{
+        "Not found": "Id não encontrado",
+      })
+      return
+    }
+    c.JSON(http.StatusOK, a)
+  }
+```
+
+### INSERT
+
+Para adicionarmos dados ao banco de dados utilizamos a função `Create(&<valor>)`, em que passamos o endereço de memória da variável que contém os valores a serem inseridos como parâmetro.
+
+**Ex:**
+
+    database.DB.Create(&aluno)
+
+Para isso, precisamos receber um json pelo método "POST" e adicionar seu conteúdo a variável "aluno".
+
+**Acessando JSON recebido:** `c.ShouldBindJSON()`
+
+    var aluno models.Aluno
+	  err := c.ShouldBindJSON(&aluno)
+
+**Ex completo:**
+
+```
+  func AddAluno(c *gin.Context) {
+    var aluno models.Aluno
+    err := c.ShouldBindJSON(&aluno)
+    if err != nil {
+      log.Println("Erro ao inserir aluno do DB.")
+      c.JSON(http.StatusBadRequest, gin.H{
+        "Error": err.Error(),
+      })
+      return
+    }
+
+    database.DB.Create(&aluno)
+    c.JSON(http.StatusOK, aluno)
+  }
+```
+
+### DELETE
+
+Para deletarmos um valor no banco de dados precisamos apenas do id do ítem específico. Assim, acessamos o id através de `c.Params.ByName("<nome_variável>")`. Com isso, utilizamos a função `database.DB.Delete(&<valor>, <condições>)` para deletar o ítem.
+
+**Ex completo:**
+
+```
+  func DeleteAluno(c *gin.Context) {
+    var a models.Aluno
+    id := c.Params.ByName("id")
+
+    database.DB.Delete(&a, id)
+    if a.ID == 0 {
+      c.JSON(http.StatusNotFound, gin.H{
+        "Not found": "Id não encontrado",
+      })
+      return
+    }
+    c.JSON(http.StatusOK, gin.H{
+		  "DELETE": "Alunoi deletado com sucesso",
+	  })
+  }
+```
+
+### UPDATE
+
+Para atualizarmos um valor no banco de dados precisamos do id do ítem e dos dados atualizados.
+
+**Recebendo id:**
+
+    var aluno models.Aluno
+    id, found := c.Params.Get("id")
+
+**Acessando JSON:**
+
+    err := c.ShouldBindJSON(&aluno)
+
+Após isso, precisamos encontrar o ítem antigo no banco de dados: `database.DB.First(&aluno, id)`. Com isso, recebemos o json com os dados atualizados e utilizamos a função `Save(&<valor>)` para salvar as alterações no banco de dados.
+
+**Ex completo:**
+
+```
+  func EditAluno(c *gin.Context) {
+    var a models.Aluno
+    id := c.Params.ByName("id")
+
+    database.DB.Find(&a, id)
+    if a.ID == 0 {
+      c.JSON(http.StatusNotFound, gin.H{
+        "Not found": "Id não encontrado",
+      })
+      return
+    }
+    err := c.ShouldBindJSON(&a)
+    if err != nil {
+      log.Println("Erro ao receber json.")
+      c.JSON(http.StatusBadRequest, gin.H{
+        "Erro": err.Error(),
+      })
+      return
+    }
+    database.DB.Model(&a).UpdateColumns(a)
+    c.JSON(http.StatusOK, a)
   }
 ```
