@@ -74,6 +74,10 @@ O `c *gin,Context` da HandlerFunc tem acesso aos valores passados. Para utilizar
 
 ### Conexão (Postgres)
 
+**Plugin postgres:**
+
+    go get gorm.io/driver/postgres
+
 Para realizar a conexão com um DB já existente, precisamos utilizar `gorm.Open()`, que recebe como parâmetro a abertura do banco de dados `postgres.Open()`
 
 **Ex:**
