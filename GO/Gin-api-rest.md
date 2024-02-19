@@ -66,6 +66,41 @@ O `c *gin,Context` da HandlerFunc tem acesso aos valores passados. Para utilizar
 
     nome := c.Params.ByName("nome")
 
+## CORS
+
+Cors é uma política de segurança que impede o acesso de domínios externos à sua aplicação backend. Para liberar o acesso, é necessário especificar as URL's permitidas.
+
+### CORS com GIN
+
+**Documentação:** [CORS](https://github.com/gin-contrib/cors)
+
+**Instalação:**
+
+    go get github.com/gin-contrib/cors
+
+**Uso:**
+
+Cors são estabelecidos via middlewares, que são configurações que afetam todas as rotas. Para Ciar um middleware utilize a função `Use()`. Como parâmetro, podemos criar um novo CORS ou utilizar um padrão do GIN: `cors.New(<cors.Config{}>)` ou `cors.Default()`.
+
+1. `cors.New()`: Cria um novo CORS do zero. Configuração customizada.
+2. `cors.Default()`: Utiliza a config padrão do GIN para CORS (`AllowAllOrigins = true`)
+
+**Configs:**
+
+Para configurar o CORS, utilize como parâmetro a struct `cors.Config{}`.
+
+**Ex completo:**
+
+```
+  r.Use(cors.New(cors.Config{
+      AllowOrigins:     []string{"http://localhost:8000"},
+      AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
+      AllowHeaders:     []string{"Content-Length"},
+      AllowCredentials: true,
+      MaxAge:           15 * time.Minute,
+  }))
+```
+
 ## Banco de dados (GORM)
 
 **Instalação:**
@@ -200,7 +235,7 @@ Para isso, precisamos receber um json pelo método "POST" e adicionar seu conte�
 **Acessando JSON recebido:** `c.ShouldBindJSON()`
 
     var aluno models.Aluno
-	  err := c.ShouldBindJSON(&aluno)
+      err := c.ShouldBindJSON(&aluno)
 
 **Ex completo:**
 
@@ -285,4 +320,27 @@ Após isso, precisamos encontrar o ítem antigo no banco de dados: `database.DB.
     database.DB.Model(&a).UpdateColumns(a)
     c.JSON(http.StatusOK, a)
   }
+```
+
+## .ENV files
+
+Para ter acesso às variáveis de ambiente do arquivo .env, precisamos estabelecer uma conexão com ele. Para isso utilizamos uma biblioteca chamada `godotenv`.
+
+**Instalação:**
+
+    go get github.com/joho/godotenv
+
+### Uso
+
+Para abrir uma conexão com o .env utilizamos `godotenv.Load()`. Após isso, temos acesso às variáveis contidas no .env através da função `os.Getenv("<nome_variável>")`.
+
+**Ex completo:**
+
+```
+  godotenv.Load()
+  dns := fmt.Sprintf("host=localhost user=%s password=%s dbname=%s port=5432 sslmode=disable", 
+    os.Getenv("DB_USER"), 
+    os.Getenv("DB_PASSWORD"), 
+    os.Getenv("DB_NAME"),
+  )
 ```
