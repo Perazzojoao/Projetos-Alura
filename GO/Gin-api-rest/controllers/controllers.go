@@ -10,6 +10,14 @@ import (
 	"api-go-gin/models"
 )
 
+func Exemplo(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"nome": "Fulano",
+		"cpf":  "00000000000",
+		"rg":   "000000000",
+	})
+}
+
 func Saudacao(c *gin.Context) {
 	nome := c.Params.ByName("nome")
 
