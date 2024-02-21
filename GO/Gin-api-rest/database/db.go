@@ -6,7 +6,7 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
-	"api-go-gin/controllers/models"
+	"api-go-gin/models"
 )
 
 var (

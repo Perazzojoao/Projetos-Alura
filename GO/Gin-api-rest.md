@@ -344,3 +344,17 @@ Para abrir uma conexão com o .env utilizamos `godotenv.Load()`. Após isso, tem
     os.Getenv("DB_NAME"),
   )
 ```
+
+## Validações (GO validator)
+
+[Validator](https://pkg.go.dev/github.com/go-playground/validator/v10#section-readme) é uma biblioteca destinada o desenvolvimento de validações de dados.
+
+### Instalação
+
+**Go get:**
+
+    go get github.com/go-playground/validator/v10
+
+**Import:**
+
+    import "github.com/go-playground/validator/v10"

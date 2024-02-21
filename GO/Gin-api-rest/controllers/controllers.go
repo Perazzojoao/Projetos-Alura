@@ -6,8 +6,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"api-go-gin/controllers/models"
 	"api-go-gin/database"
+	"api-go-gin/models"
 )
 
 func Saudacao(c *gin.Context) {
@@ -44,8 +44,17 @@ func AddAluno(c *gin.Context) {
 	var a models.Aluno
 	err := c.ShouldBindJSON(&a)
 	if err != nil {
-		log.Println("Erro ao inserir aluno do DB.")
+		log.Println("Erro: JSON Aluno não recebido.")
 		c.JSON(http.StatusBadRequest, gin.H{
+			"Error": err.Error(),
+		})
+		return
+	}
+
+	err = models.ValidaAluno(&a)
+	if err != nil {
+		log.Println("Erro: JSON Aluno inválido.")
+		c.JSON(http.StatusNotAcceptable, gin.H{
 			"Error": err.Error(),
 		})
 		return

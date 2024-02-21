@@ -6,7 +6,6 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"api-go-gin/controllers"
-
 )
 
 func HandleRequests() {
@@ -20,7 +19,7 @@ func HandleRequests() {
 	r.PUT("/alunos/:id", controllers.EditAluno)
 	r.GET("/alunos/cpf/:cpf", controllers.SeartchAlunoCpf)
 
-	err := r.Run()
+	err := r.Run(":8080")
 	if err != nil {
 		log.Panic(err.Error())
 	}
