@@ -419,7 +419,7 @@ Múltiplas validações podem ser combinadas em uma única tag. Para isso utiliz
 
 ## Testes
 
-Para criar testes precisamos criar um arquivo `*_test.go` na raíz do projeto. Nesse arquivo, criamos uma função main para testes: `func Test*(t *testing.T) {...}`. Ao rodar o comando `go test` o GO executará a função `Test()`.
+Para criar testes precisamos criar um arquivo `*_test.go` na raíz do projeto. Nesse arquivo, criamos uma função main para testes: `func Test*(t *testing.T) {...}`. Ao rodar o comando `go test` o GO executará todas funções `Test*()`.
 
 **Ex:**
 
@@ -428,6 +428,8 @@ Para criar testes precisamos criar um arquivo `*_test.go` na raíz do projeto. N
     t.Fatalf("Teste falhou!")
   }
 ```
+
+**Obs:** Para executar apenas um teste específico utilize `go test -run <nome_função_teste>`.
 
 ### Teste de StatusCodeOK:
 
