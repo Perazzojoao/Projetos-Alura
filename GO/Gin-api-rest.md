@@ -433,6 +433,7 @@ Para criar testes precisamos criar um arquivo `*_test.go` na raíz do projeto. N
 
 ```
   func SetupRoutersTest() *gin.Engine {
+    gin.SetMode(gin.ReleaseMode)
     r := gin.Default()
     return r
   }
@@ -490,3 +491,26 @@ Para utilizar suas funções, primeiro criamos um novo assert utilizando a funç
 - **Assert for not nil (good when you expect something):** `assert.NotNil()`
 
 [Clique aqui](https://github.com/stretchr/testify?tab=readme-ov-file#assert-package) para exemplos.
+
+#### Ex teste statusCode e resposta
+
+```
+  func TestRouteExemplo(t *testing.T) {
+    r := SetupRoutersTest()
+    r.GET("/alunos/exemplo", controllers.Exemplo)
+
+    // Enviando requisição
+    req, _ := http.NewRequest("GET", "/alunos/exemplo", nil)
+    resp := httptest.NewRecorder()
+    r.ServeHTTP(resp, req)
+
+    // Testando StatusCode
+    assert := assert.New(t)
+    assert.Equal(http.StatusOK, resp.Code)
+
+    // Testando Corpo da resposta
+    mockResp := `{"cpf":"00000000000","nome":"Fulano","rg":"000000000"}`
+    respBody, _ := io.ReadAll(resp.Body)
+    assert.Equal(mockResp, string(respBody))
+  }
+```
