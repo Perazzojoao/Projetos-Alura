@@ -101,6 +101,11 @@ Para configurar o CORS, utilize como parâmetro a struct `cors.Config{}`.
   }))
 ```
 
+## Docker postgres server
+
+Ao criar um novo server postgres precisamos informar um endereço. No terminal digite:
+`docker-compose exec postgres sh` e `hostname -i`. O output é o endereço desejado.
+
 ## Banco de dados (GORM)
 
 **Instalação:**
@@ -338,9 +343,9 @@ Para abrir uma conexão com o .env utilizamos `godotenv.Load()`. Após isso, tem
 
 ```
   godotenv.Load()
-  dns := fmt.Sprintf("host=localhost user=%s password=%s dbname=%s port=5432 sslmode=disable", 
-    os.Getenv("DB_USER"), 
-    os.Getenv("DB_PASSWORD"), 
+  dns := fmt.Sprintf("host=localhost user=%s password=%s dbname=%s port=5432 sslmode=disable",
+    os.Getenv("DB_USER"),
+    os.Getenv("DB_PASSWORD"),
     os.Getenv("DB_NAME"),
   )
 ```
@@ -375,6 +380,7 @@ Na struct que criamos como base para a tabela no banco de dados, especificamos t
     RG   string `json:"rg" validate:"len=9,number"`  -> Tamanho de exatamente 9 e apenas caracteres numéricos
   }
 ```
+
 **Obs:** A validação é feita `seguindo a ordem` das tags passadas. Além disso, múltiplas validações devem ser separadas por vírgula ( , ) e `sem espaço`.
 
 Para uma lista completa com todas as validações disponíveis, visite o site oficial da [Validator](https://pkg.go.dev/github.com/go-playground/validator/v10#section-readme).
@@ -387,7 +393,7 @@ Para validar dados temos que instanciar uma nova validação, sendo assim, utili
 
     var validate = validator.New(validator.WithRequiredStructEnabled())
 
-Com isso podemos criar uma função responsável por validar a struct indicada: 
+Com isso podemos criar uma função responsável por validar a struct indicada:
 `func ValidaStruct(<struct> *<Struct_type>) error {...}`. Para validar a struct utilizamos a função `validate.Struct(<endereço_struct>)`.
 
 **Ex completo:**
@@ -410,3 +416,77 @@ Múltiplas validações podem ser combinadas em uma única tag. Para isso utiliz
 **Ex:**
 
     validate.RegisterAlias("cpf", "len=11,number")
+
+## Testes
+
+Para criar testes precisamos criar um arquivo `*_test.go` na raíz do projeto. Nesse arquivo, criamos uma função main para testes: `func Test*(t *testing.T) {...}`. Ao rodar o comando `go test` o GO executará a função `Test()`.
+
+**Ex:**
+
+```
+  func TestFalhador(t *testing.T) {
+    t.Fatalf("Teste falhou!")
+  }
+```
+
+### Teste de StatusCodeOK:
+
+```
+  func SetupRoutersTest() *gin.Engine {
+    r := gin.Default()
+    return r
+  }
+```
+
+```
+  func TestStatusCode(t *testing.T) {
+    r := SetupRoutersTest()
+    r.GET("/alunos/exemplo", controllers.Exemplo)
+
+    req, _ := http.NewRequest("GET", "/alunos/exemplo", nil)  -> Cria requisição
+    resp := httptest.NewRecorder()  -> Cria variável que guardará resposta
+    r.ServeHTTP(resp, req)  -> Envia requisição criada
+
+    if resp.Code != http.StatusOK {
+      t.Fatalf("Status error: valor recebido foi %d e o esperado era %d.", resp.Code, http.StatusOK)
+    }
+  }
+```
+
+## Testes com testify
+
+[Testify](https://github.com/stretchr/testify) é uma biblioteca para testes em GO.
+
+### Instalação
+
+    go get github.com/stretchr/testify
+
+### Imports disponíveis
+
+```
+github.com/stretchr/testify/assert
+github.com/stretchr/testify/require
+github.com/stretchr/testify/mock
+github.com/stretchr/testify/suite
+github.com/stretchr/testify/http (deprecated)
+```
+
+### Uso
+
+Para utilizar suas funções, primeiro criamos um novo assert utilizando a função `assert.New(<t *testing.T>)`.
+
+**Ex:**
+
+    assert := assert.New(t)
+
+**Assert functions:**
+
+- **Assert equality:** `assert.Equal()`
+
+- **Assert inequality:** `assert.NotEqual()`
+
+- **Assert for nil (good for errors):** `assert.Nil()`
+
+- **Assert for not nil (good when you expect something):** `assert.NotNil()`
+
+[Clique aqui](https://github.com/stretchr/testify?tab=readme-ov-file#assert-package) para exemplos.
