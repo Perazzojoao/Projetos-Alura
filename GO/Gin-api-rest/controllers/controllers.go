@@ -62,7 +62,7 @@ func AddAluno(c *gin.Context) {
 	err = models.ValidaAluno(&a)
 	if err != nil {
 		log.Println("Erro: JSON Aluno inválido.")
-		c.JSON(http.StatusNotAcceptable, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"Error": err.Error(),
 		})
 		return
@@ -107,6 +107,16 @@ func EditAluno(c *gin.Context) {
 		})
 		return
 	}
+
+	err = models.ValidaAluno(&a)
+	if err != nil {
+		log.Println("Erro: JSON Aluno inválido.")
+		c.JSON(http.StatusBadRequest, gin.H{
+			"Error": err.Error(),
+		})
+		return
+	}
+
 	// database.DB.Save(&a) -> Não seguro, pois cria dados caso id não seja encontrado.
 	database.DB.Model(&a).UpdateColumns(a)
 	c.JSON(http.StatusOK, a)

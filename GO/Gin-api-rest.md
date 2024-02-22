@@ -358,3 +358,55 @@ Para abrir uma conexão com o .env utilizamos `godotenv.Load()`. Após isso, tem
 **Import:**
 
     import "github.com/go-playground/validator/v10"
+
+### Uso
+
+Para validar os dados, primeiro precisamos especificar as validações que vamos utilizar no projeto
+
+#### Especificando validações:
+
+Na struct que criamos como base para a tabela no banco de dados, especificamos todas as validações necessárias: `validate:"<tag>"`
+
+```
+  type Aluno struct {
+    gorm.Model
+    Nome string `json:"nome" validate:"required"` -> Obrigatório
+    CPF  string `json:"cpf" validate:"len=11,number"`  -> Tamanho de exatamente 11 e apenas caracteres numéricos
+    RG   string `json:"rg" validate:"len=9,number"`  -> Tamanho de exatamente 9 e apenas caracteres numéricos
+  }
+```
+**Obs:** A validação é feita `seguindo a ordem` das tags passadas. Além disso, múltiplas validações devem ser separadas por vírgula ( , ) e `sem espaço`.
+
+Para uma lista completa com todas as validações disponíveis, visite o site oficial da [Validator](https://pkg.go.dev/github.com/go-playground/validator/v10#section-readme).
+
+#### Criando funções para validação:
+
+Para validar dados temos que instanciar uma nova validação, sendo assim, utilizamos : `<validação> := validator.New(...<options>)`. Além disso, é recomendável que passemos a função `validator.WithRequiredStructEnabled()` como parâmetro.
+
+**Ex:**
+
+    var validate = validator.New(validator.WithRequiredStructEnabled())
+
+Com isso podemos criar uma função responsável por validar a struct indicada: 
+`func ValidaStruct(<struct> *<Struct_type>) error {...}`. Para validar a struct utilizamos a função `validate.Struct(<endereço_struct>)`.
+
+**Ex completo:**
+
+```
+  var validate = validator.New(validator.WithRequiredStructEnabled())
+
+  func ValidaAluno(aluno *Aluno) error {
+    if err := validate.Struct(aluno); err != nil {
+      return err
+    }
+    return nil
+  }
+```
+
+#### Combinando tags:
+
+Múltiplas validações podem ser combinadas em uma única tag. Para isso utilize: `validate.RegisterAlias("<nova_tag>", "<combinação_tags>")`.
+
+**Ex:**
+
+    validate.RegisterAlias("cpf", "len=11,number")
