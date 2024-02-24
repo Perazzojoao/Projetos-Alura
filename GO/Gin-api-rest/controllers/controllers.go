@@ -8,6 +8,7 @@ import (
 
 	"api-go-gin/database"
 	"api-go-gin/models"
+
 )
 
 func Exemplo(c *gin.Context) {
@@ -77,7 +78,7 @@ func DeleteAluno(c *gin.Context) {
 	id := c.Params.ByName("id")
 
 	database.DB.Delete(&a, id)
-	if a.ID == 0 {
+	if a.ID != 0 {
 		c.JSON(http.StatusNotFound, gin.H{
 			"Not found": "Id não encontrado",
 		})

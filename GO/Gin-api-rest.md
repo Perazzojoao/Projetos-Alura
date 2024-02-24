@@ -273,7 +273,7 @@ Para deletarmos um valor no banco de dados precisamos apenas do id do ítem espe
     id := c.Params.ByName("id")
 
     database.DB.Delete(&a, id)
-    if a.ID == 0 {
+    if a.ID != 0 {
       c.JSON(http.StatusNotFound, gin.H{
         "Not found": "Id não encontrado",
       })
