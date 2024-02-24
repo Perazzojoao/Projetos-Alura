@@ -516,3 +516,182 @@ Para utilizar suas funções, primeiro criamos um novo assert utilizando a funç
     assert.Equal(mockResp, string(respBody))
   }
 ```
+
+## Autanticação JWT
+
+### Instalação
+
+**[bcrypt](https://pkg.go.dev/golang.org/x/crypto@v0.19.0/bcrypt):**
+
+    go get -u golang.org/x/crypto/bcrypt
+
+**[jwt](https://pkg.go.dev/github.com/golang-jwt/jwt/v5#section-readme):**
+
+    go get -u github.com/golang-jwt/jwt/v5
+
+### Uso
+
+Para criar um sistema de autenticação seguro precisamos seguir um roteiro.
+
+1. Encriptar a senha de novos usuários e enviá-las ao DB.
+
+2. Comparar as informações de login enviadas com as contidas no DB.
+
+3. Gerar um token jwt e guardá-la em um cookie no navegador do cliente.
+
+4. Validar o cookie do cliente em cada requisição feita que seja necessária.
+
+#### 1- Encriptar senha do usuário:
+
+Ao registrar-se, a senha do usuário deve ser encriptada e, apenas depois, salva no banco de dados. Para isso, após todas as validações e antes de registra-lo no db, utilizamos a função `bcrypt.GenerateFromPassword(<senha>, <custo>)`, onde `custo = int que representa o esforço de encriptação`. Seu valor `mínimo é 10`.
+
+**Ex:**
+
+```
+hash, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
+if err != nil {
+  log.Println("Erro: Hash não gerado.")
+  c.JSON(http.StatusInternalServerError, gin.H{
+    "error": err.Error(),
+  })
+  return
+}
+u.Password = string(hash)
+
+database.DB.Create(&u)
+```
+
+**Obs:** A senha é salva encriptada no banco de dados.
+
+#### 2- Desencriptar senha do usuário:
+
+Na função utilizada para logar o usuário, devemos validar se a senha fornecida é exatamente a mesma contida no DB. Para isso, comparamos a senha enviada com a senha encriptada no DB utilizando a função `bcrypt.CompareHashAndPassword(<senha_encriptada>, <senha_fornecida>)`.
+
+**Ex:**
+
+```
+err := bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(l.Password))
+if err != nil {
+  c.JSON(http.StatusUnauthorized, gin.H{
+    "error": "Senha inválida.",
+  })
+  return
+}
+```
+#### 3- Gerando token jwt:
+
+Após todas as validações feitas devemos gerar um token jwt para validar o usuário. Para criar um token primeiro definimos suas características com a função `jwt.NewWithClaims(<método>, <claims>)`, onde `método` é a função que irá gerar o token e `claims` é um map em que definimos informações adicionais ao token, como o sujeito (`sub`) e o tempo de expiração (`exp`).
+
+**Ex:**
+
+```
+token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+  "sub": u.ID,
+  "exp": time.Now().Add(time.Minute * 30).Unix(),
+})
+```
+
+Após isso, encriptamos o token utilizando uma chave secreta com a função `token.SignedString([]byte<chave_secreta>)`.
+
+**Ex:**
+
+```
+tokenString, err := token.SignedString([]byte(os.Getenv("secret_key")))
+if err != nil {
+  c.JSON(http.StatusInternalServerError, gin.H{
+    "error": err.Error(),
+  })
+  return
+}
+```
+
+**Enviando token via cookies:** 
+
+`c.SetCookie(<nome>, <valor>, <duração_segundos>, <path>, <domínio>, <https?>, <httpOnly?>)`
+
+- `path:` Rota em que o cookie é válido. Se este valor "/", o cookie será válido para todo o site. 
+
+- `domínio:` Domínio em que o cookie é válido. Se este valor for deixado em branco, o cookie será válido para o domínio atual.
+
+- `https?:` Se este valor for verdadeiro, o cookie só será enviado em conexões HTTPS.
+
+- `httpOnly?:` Se este valor for verdadeiro, o cookie não será acessível via JavaScript.
+
+```
+c.SetSameSite(http.SameSiteLaxMode)
+c.SetCookie("session_token", tokenString, 1800, "/", "", false, true)
+c.JSON(http.StatusOK, gin.H{})
+```
+
+#### 4- Middleware para validar token no cookie
+
+Para validar o token em apenas as rotas necessárias temos que criar uma função para tal: `func Autenticar(c *gin.Context)`. Nela, devemos seguir um roteiro:
+
+1. Acessar o token contido no cookie da requisição: `c.Cookie("<nome>")`.
+
+2. Decodificar / autenticar o token: `jwt.Parse(<token_recebido>, func<desencriptar>)`.
+
+3. Checar a data de validade.
+
+4. Procurar o usuário com o ID atrelado ao token.
+
+5. Salvar usuário no contexto: `c.Set("<key>", "<value>")`.
+
+6. Continuar: `c.Next()`.
+
+
+**Ex completo:**
+
+```
+func Autenticar(c *gin.Context) {
+	// Get the token from the cookie
+	tokenString, err := c.Cookie("session_token")
+	if err != nil {
+		c.AbortWithStatus(http.StatusUnauthorized)
+		return
+	}
+
+	// Decode and validate the token
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, jwt.ErrSignatureInvalid
+		}
+		return []byte(os.Getenv("SECRET_KEY")), nil
+	})
+	if err != nil {
+		c.AbortWithError(http.StatusUnauthorized, err)
+		return
+	}
+
+  // Check claims and if the token is valid
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+
+		// Check expiration date
+		if float64(time.Now().Unix()) > claims["exp"].(float64) {
+			c.AbortWithStatus(http.StatusUnauthorized)
+		}
+
+		// Check if the user exists
+		var u models.User
+		database.DB.First(&u, claims["sub"])
+		if u.ID == 0 {
+			c.AbortWithStatus(http.StatusUnauthorized)
+		}
+
+		// Set the user in the context
+		c.Set("user", u)
+
+		// Continue
+		c.Next()
+
+	} else {
+		c.AbortWithStatus(http.StatusUnauthorized)
+	}
+}
+```
+
+Feito isso, podemos passar a função `func Autenticar(c *gin.Context)` como parâmetro de todas as rotas em que queremos garantir a autenticação do usuário.
+
+**Ex:**
+
+    r.GET("/api/usuarios", middlewares.Autenticar, controllers.GetAllUsers)
