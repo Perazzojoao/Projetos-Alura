@@ -565,3 +565,20 @@ Para realizar uma operação SQL INSERT utilize os comandos: `db.Prepare("<stmt>
     ```
 
 #### Obs: Após a execução do INSERT devemos lembrar de fechar a conexão com o DB: `db.Close()`.
+
+## Concurrency
+
+Concurrency em go é uma forma de executar várias funções ao mesmo tempo, sem a necessidade de uma função esperar a finalização de outra para executar. Para isso utilizamos a palavra chave `go` antes da função a ser executada.
+
+**Ex:**
+
+```
+count := [5]int{1, 2, 3, 4, 5}
+for _, v := range count {
+  go printCount(v)
+}
+```
+
+**Obs:** Ao utilizarmos a palavra chave `go` dessa forma, o programa como um todo, ao chegar ao fim, não espera todas as funções terminarem de executar para cessar, assim, o programa pode apresentar comportamentos indesejados. Para contornar temos os chamados `Channels`.
+
+### Channels
