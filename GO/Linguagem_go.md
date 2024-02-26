@@ -729,3 +729,41 @@ select {
 }
 ```
 Quando a função main chega em um `select`, quando há multiplos channels,  é seu dever apenas executar a chamada de um channel, `e apenas um`, que esteja pronto no momento do select. Se mais de um channel está pronto, o select irá executar um aleatoriamente. No caso de não existir nenhum channel pronto, o select executará um caso `default`.
+
+### WaitGroup
+
+WaitGroup é uma forma de informar a mainroutine que aguarde a finalização de outras goroutine antes de prosseguir para o próximo comando.
+
+**Inicializando um WaitGroup:** `var wait sync.WaitGroup`
+
+**Adicionando quantidades:** `wait.Add(<quantidade>)`
+
+**Comando esperar:** `wait.Wait()`
+
+**Comando prosseguir:** `wait.Done()`
+
+Deve ser adicionado ao WaitGroup a quantidade de vezes que a mainroutine deve esperar por uma goroutine antes de prosseguir. Com isso, ao final de cada goroutine deve ser utilizada o comando `wait.Done()` para informar de sua finalização.
+
+**Ex:**
+
+```
+func main() {
+	var wait sync.WaitGroup
+	nomes := []string{"João", "Maria", "José"}
+	wait.Add(len(nomes))  // Adicionando 3 esperas
+
+	for _, nome := range nomes {
+		go func(nome string, wait *sync.WaitGroup) {
+			fmt.Println("Hello, ", nome)
+			wait.Done()
+		}(nome, &wait)
+	}
+
+	wait.Wait()
+	fmt.Println("Fim do programa!")
+}
+```
+
+Ao adicionado 3 esperas ao WaitGroup, o comando `wait.Wait()` da função main só será satisfeita após a execução do comando `wait.Done()` por 3 vezes.
+
+**Obs:** Ao passar um WaitGroup como parâmetro de uma função, `é necessário enviar seu endereço de memória`, pois se não, um novo WaitGroup será criado dentro da função e o WaitGroup criado na função main nunca será alterado.

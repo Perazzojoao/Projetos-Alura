@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"sync"
 	"time"
+
 )
 
 var start = time.Now()
@@ -15,19 +17,16 @@ func tempoDecorrido() {
 func main() {
 	defer tempoDecorrido()
 
-	candidato1, candidato2 := make(chan string), make(chan string)
-
-	go elegerGanhador(candidato1, "Candidato 1")
-	go elegerGanhador(candidato2, "Candidato 2")
-
-	select {
-	case vencedor := <-candidato1:
-		fmt.Println(vencedor, "venceu!")
-	case vencedor := <-candidato2:
-		fmt.Println(vencedor, "venceu!")
+	var beeper sync.WaitGroup
+	nomes := [3]string{"João", "Maria", "José"}
+	beeper.Add(len(nomes))
+	for _, nome := range nomes {
+		go func(nome string, beeper *sync.WaitGroup) {
+			fmt.Println("Hello, ", nome)
+			beeper.Done()
+		}(nome, &beeper)
 	}
-}
 
-func elegerGanhador(candidato chan string, mensagem string) {
-	candidato <- mensagem
+	beeper.Wait()
+	fmt.Println("Fim do programa!")
 }
