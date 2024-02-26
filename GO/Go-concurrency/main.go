@@ -5,22 +5,20 @@ import (
 	"time"
 )
 
-func main() {
-	start := time.Now()
-	defer func() {
-		println()
-		fmt.Println("Time taken: ", time.Since(start))
-	}()
+var start = time.Now()
 
-	count := [5]int{1, 2, 3, 4, 5}
-
-	for _, v := range count {
-		go printCount(v)
-	}
-	time.Sleep(time.Second * 2)
+func tempoDecorrido() {
+	println()
+	fmt.Println("Time taken: ", time.Since(start))
 }
 
-func printCount(v int) {
-	fmt.Print(v)
-	time.Sleep(time.Second)
+func main() {
+	defer tempoDecorrido()
+
+	channel := make(chan string, 2)
+	channel <- "Primeira mensagem"
+	channel <- "Segunda mensagem"
+
+	fmt.Println(<-channel)
+	fmt.Println(<-channel)
 }

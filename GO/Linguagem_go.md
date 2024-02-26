@@ -582,3 +582,57 @@ for _, v := range count {
 **Obs:** Ao utilizarmos a palavra chave `go` dessa forma, o programa como um todo, ao chegar ao fim, não espera todas as funções terminarem de executar para cessar, assim, o programa pode apresentar comportamentos indesejados. Para contornar temos os chamados `Channels`.
 
 ### Channels
+
+Channels é uma forma que a linguagem GO utiliza para que uma função executada em paralelo à função main possa informar-la de seu término. Através dessa informação, a função main espera pelo término da função em paralelo para que possa cessar.
+
+**Criação:** channel := `make(chan <type>)`
+
+#### Uso:
+
+Quando um channel é criado, por padrão, o channel é inicializado vazio. Com isso, a função main aguarda a incerção de algum valor no channel para que possar finalizar apropriadamente.
+
+- **Inserção de valor:** `channel <- <valor>`.
+
+- **Chamada de um channel:** "`<- channel`".
+
+**Ex:**
+
+```
+func someFunction(ch chan bool) {
+	time.Sleep(time.Second)
+	fmt.Print("Função executada!")
+	ch <- true  // Atribuindo valor ao channel.
+}
+```
+```
+func main() {
+	channel := make(chan bool)
+	go someFunction(channel)
+	<-channel // Chamando channel na função main.
+}
+```
+
+**Obs:** Para que um channel possa ser executado, é preciso chamá-la na função main.
+
+### Buffered Channels
+
+Channels, por padrão, são criados com capacidade = 1. Isso significa que apenas um valor pode ser inserido em um channel simples. Buffered channels são channels criados com capacidade superior a 1.
+
+#### Criação: `make(chan <type>, <capacidade>)`
+
+**Ex:**
+
+```
+func main() {
+	channel := make(chan string, 2)
+	channel <- "Primeira mensagem"
+	channel <- "Segunda mensagem"
+
+	fmt.Println(<-channel)
+	fmt.Println(<-channel)
+}
+```
+
+**Obs:** Channels armazenam valores utilizando a fila como estrutura de dados, onde o primeiro a entrar é o primeiro a sair (FIFO). Sendo assim, ao chamar um channel `<-channel`, o primeiro valor na fila é extraído, dando lugar aos demais.
+
+### Iterando Channels
