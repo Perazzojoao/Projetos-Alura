@@ -15,10 +15,19 @@ func tempoDecorrido() {
 func main() {
 	defer tempoDecorrido()
 
-	channel := make(chan string, 2)
-	channel <- "Primeira mensagem"
-	channel <- "Segunda mensagem"
+	candidato1, candidato2 := make(chan string), make(chan string)
 
-	fmt.Println(<-channel)
-	fmt.Println(<-channel)
+	go elegerGanhador(candidato1, "Candidato 1")
+	go elegerGanhador(candidato2, "Candidato 2")
+
+	select {
+	case vencedor := <-candidato1:
+		fmt.Println(vencedor, "venceu!")
+	case vencedor := <-candidato2:
+		fmt.Println(vencedor, "venceu!")
+	}
+}
+
+func elegerGanhador(candidato chan string, mensagem string) {
+	candidato <- mensagem
 }
