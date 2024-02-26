@@ -75,6 +75,7 @@ Na linguagem go não existe o comando `while`. Ao invés disso, utilizamos o `fo
 
   }
 ```
+
 Sendo assim, geramos um loop infinito. Para interromper o programa: `os.Exit(<código>)` -> `0` para bem sucedido ou `-1` para mau sucedido.
 
 ### for padrão
@@ -106,7 +107,8 @@ Sendo assim, geramos um loop infinito. Para interromper o programa: `os.Exit(<c�
 **Obs:** Deixar o retorno em branco implica em tipo `void`.
 
 ### Parâmetros indeterminados
-Funções em GO podem receber uma quantidade indeterminada de parâmetros. Para isso utilize: func <nome_> (<nome_param> `...<type>`) {. . .}
+
+Funções em GO podem receber uma quantidade indeterminada de parâmetros. Para isso utilize: func <nome\_> (<nome_param> `...<type>`) {. . .}
 
 **Ex:**
 
@@ -126,6 +128,7 @@ Funções em GO podem receber uma quantidade indeterminada de parâmetros. Para 
     fmt.Println(Somando(1,1,2,4))
   }
 ```
+
 Dessa forma, `numeros ...int` é equivalente a `numeros []int`.
 
 ### Retornando mais de um valor:
@@ -169,10 +172,12 @@ Ao criarmos um slice, a linguagem cria um array de `3 posições por padrão`. C
         exemploSlice = append(exemploSlice, "Hello")
 
 ## Structs (Classes)
+
 Structs são equivalente a classes. Criamos structs para adicionar variáveis e seus respectivos tipos à um objeto.
 
 ### Criação
-**Sintaxe:** `type` `<nome>` `struct` {. . .} 
+
+**Sintaxe:** `type` `<nome>` `struct` {. . .}
 
 **Ex:**
 
@@ -186,18 +191,20 @@ Structs são equivalente a classes. Criamos structs para adicionar variáveis e 
 ```
 
 ### Uso
+
 Criamos um objeto a partir de uma struc utilizando o comando: `<nome_struct> {...}`
 
 #### Há duas formas de atribuir valores a um struct
-1. **Forma completa:**
+
+1.  **Forma completa:**
     ```
       exemplo := exemploStruct {
         var1:  valor1,
         var2:  valor2,
         var3:  valor3,
-      } 
+      }
     ```
-2. **Forma reduzida:**
+2.  **Forma reduzida:**
 
         exemplo := exemploStruct {valor1, valor2, valor3}
 
@@ -224,6 +231,7 @@ Criamos um objeto a partir de uma struc utilizando o comando: `<nome_struct> {..
 ```
 
 ### Adicionando funções à struct
+
 Para adicionar funções e métodos à um determinado struct utilizamos: func `(<var> <struct>)` <nome_func>() {. . .}
 
 **Ex:**
@@ -235,24 +243,27 @@ Para adicionar funções e métodos à um determinado struct utilizamos: func `(
     .
   }
 ```
+
 Temos duas formas de referenciar uma função à um struct: `com ponteiros` ou `forma padrão`.
 
-1. `Ponteiros`: (<var_> *<struct_>)
+1. `Ponteiros`: (<var*> \*<struct*>)
 
-    - Quando queremos `alterar` valores de variáveis da struct `de forma persistente`.
-    - Quando queremos `otimizar` o `uso de memória` do programa.
+   - Quando queremos `alterar` valores de variáveis da struct `de forma persistente`.
+   - Quando queremos `otimizar` o `uso de memória` do programa.
 
-2. `Forma padrão`: (<var_> <struct_>)
+2. `Forma padrão`: (<var*> <struct*>)
 
-    - Quando queremos apenas `visualizar` valores da struct.
-    - Quando `não` temos a intenção de alterar valores da struct `de forma persistente`.
+   - Quando queremos apenas `visualizar` valores da struct.
+   - Quando `não` temos a intenção de alterar valores da struct `de forma persistente`.
 
 ##### Obs: Ponteiros agem sobre o endereço de memória da variável, alterando seu valor original em qualquer escopo. A forma padrão utiliza cópias das variáveis, alterando apenas as cópias. Com isso, ponteiros alteram o valor original e economizam memória, enquanto a forma padrão mantém as alterações no próprio escopo da função enquanto utiliza mais memória.
 
 ## Interfaces
+
 Interface é uma forma de agrupar structures com base em seus métodos em comum. Sendo assim, duas ou mais structures que compartilham métodos iguais podem ser agrupadas por meio de interfaces.
 
 ### Criação
+
 **Sintaxe:** `type` `<nome>` `interface` {. . .}
 
 **Ex:**
@@ -264,9 +275,11 @@ Interface é uma forma de agrupar structures com base em seus métodos em comum.
     Depositar(valor float64) error
   }
 ```
+
 Dentro da interface incluimos todas as funções, seus parâmetros e respectivos retornos que queremos englobar. Com isso, qualquer struct que possúa qualquer uma dessas funções como método pode ser acessada.
 
 ### Uso
+
 Para utilizar, precisamos escrever funções que recebam como parâmetro uma interface.
 
 **Ex:**
@@ -278,6 +291,7 @@ Para utilizar, precisamos escrever funções que recebam como parâmetro uma int
     fmt.Println("Boleto pago com sucesso!")
   }
 ```
+
 Note que a função "pagarBoleto" pede uma "conta" do tipo interface "Conta". Entretanto, aqui passamos uma "conta" do tipo struct:
 
     pagarBoleto(conta1, 1000)   // conta1 ContaCorrente (struct)
@@ -285,6 +299,7 @@ Note que a função "pagarBoleto" pede uma "conta" do tipo interface "Conta". En
 Isso acontece, pois mesmo a variável "conta1" ser uma struct, por compartilhar os métodos com a interface descrita, é englobada pela interface. Com isso, dentro da função "pagarBoleto" podemos acessar o método "Sacar" específico da struct passada.
 
 ### Conclusão
+
 Originalmente, precisaríamos criar uma função específica para cada struct que desejamos trabalhar. Tomando como exemplo a função "pagarBoleto", precisaríamos escrevê-la uma vez para cada tipo de conta que precisemos utilizar, contudo, utilizando interfaces, podemos escrevê-la apenas uma vez e recebermos qualquer conta que precisarmos.
 
 ## Ler arquivos txt
@@ -293,7 +308,7 @@ Existem mais de uma forma de ler arquivos txt. Cada método resulta em diferente
 
 1.  **Ler arquivo inteiro:** `os.ReadFile("<path>")` -> Apenas leitura
 
-    **Ex:** 
+    **Ex:**
 
     ```
       file, err := os.ReadFile(logsPath)
@@ -303,17 +318,17 @@ Existem mais de uma forma de ler arquivos txt. Cada método resulta em diferente
       }
 
       fmt.Println(string(file)) -> Converte []bites em string
-    ```    
+    ```
 
 2.  **Abrir conexão:** `os.Open("<path>")`
 
-      **Sintaxe:** `file`, `err` := `os.Open("arquivo.txt")`
+    **Sintaxe:** `file`, `err` := `os.Open("arquivo.txt")`
 
-      **Criar leitor:** `leitor` := `bufio.NewReader(file)`
+    **Criar leitor:** `leitor` := `bufio.NewReader(file)`
 
-      **Ler linha por linha:** `linha`, `err` := `leitor.ReadString('<fim_linha>')`
+    **Ler linha por linha:** `linha`, `err` := `leitor.ReadString('<fim_linha>')`
 
-      **Ex:**
+    **Ex:**
 
         func lerSites() []string {
           file, err := os.Open("sites.txt")
@@ -341,7 +356,7 @@ Existem mais de uma forma de ler arquivos txt. Cada método resulta em diferente
           return lista
         }
 
-      #### Obs: Ao abrirmos uma conexão com um arquivo, é boa prática fechar-la ao final: `<file>.Close()`
+    #### Obs: Ao abrirmos uma conexão com um arquivo, é boa prática fechar-la ao final: `<file>.Close()`
 
 ## Escrever em arquivos txt
 
@@ -383,6 +398,7 @@ Para escrevermos no arquivo utilizamos: `file.WriteString()`
 ```
 
 ## Requisições http
+
 O GO possúi um pacote padrão para realizar requisições http: `http`
 
 - **GET:** `resp`, `err` := `http.Get(<path>)`
@@ -390,10 +406,12 @@ O GO possúi um pacote padrão para realizar requisições http: `http`
 A resposta contém todas as informações recebidas pela requisição, sendo possível acessá-las.
 
 ## API
+
 A linguagem GO possúi algumas funções padrões para a criação de servidores web
 
 ### Criação:
-1. **Inicialização de servidor**
+
+1.  **Inicialização de servidor**
 
     **Sintaxe:** `http.ListenAndServe("<porta>", <handler_func>)`
 
@@ -402,20 +420,21 @@ A linguagem GO possúi algumas funções padrões para a criação de servidores
     **Ex:**
 
         http.ListenAndServe(":8000", nil)
-    
+
     Passamos "nil" ao invés de uma "handler_func", quando não queremos gerenciar as requisições ao servidor.
 
-2. **Rotas**
+2.  **Rotas**
 
     **Sintaxe:** `http.HandleFunc("<rota>", <handler_func>)`
 
     A "handler_func", nesse caso, é a função que será chamada ao fazermos uma requisição na rota indicada, assim, a função é responsável por retornar uma resposta.
 
     **Ex:**
-    
+
     ```
     http.HandleFunc("/", index)
     ```
+
     ```
     var temp = template.Must(template.ParseGlob("templates/*.html"))
 
@@ -425,52 +444,54 @@ A linguagem GO possúi algumas funções padrões para a criação de servidores
     ```
 
     A func `"index"` nesse caso, é responsável por `executar um template (html)` dentro da `rota raíz ("/")`.
-    
+
     A variável `temp` recebe a leitura de todos os templates na pasta indicada.
 
 ## Banco de Dados (MySQL):
+
 Cada banco de dados tem sua própria forma de conexão. Aqui usaremos o MySQL.
 
 ### Conexão
-1. **Instalando dependências:** 
 
-    Na pasta da sua aplicação utilize o seguinte comando cli:
+1. **Instalando dependências:**
 
-       go get -u github.com/go-sql-driver/mysql
+   Na pasta da sua aplicação utilize o seguinte comando cli:
 
-    Após isso, adicione a importação necessária:
+   go get -u github.com/go-sql-driver/mysql
 
-       import (_ "github.com/go-sql-driver/mysql")
+   Após isso, adicione a importação necessária:
+
+   import (\_ "github.com/go-sql-driver/mysql")
 
 2. **Verificando conexão:**
 
-    Para testar a conexão adicione a seguinte linha de código:
+   Para testar a conexão adicione a seguinte linha de código:
 
-       db, err := sql.Open("mysql", "user:password@method(hostname:port)/dbname")
-    
-    **Ex:**
+   db, err := sql.Open("mysql", "user:password@method(hostname:port)/dbname")
 
-    ```
-      db, err := sql.Open("mysql", "root:**senhadb**@tcp(localhost:3306)/alura_loja")
+   **Ex:**
 
-      if err != nil {
-        fmt.Println("ERROR -> Fail to validate sql.Open() arguments")
-        panic(err.Error())
-      }
-    ```
+   ```
+     db, err := sql.Open("mysql", "root:**senhadb**@tcp(localhost:3306)/alura_loja")
 
-    Agora utilize a função `db.Ping()` para testar se a conexão continua aberta.
+     if err != nil {
+       fmt.Println("ERROR -> Fail to validate sql.Open() arguments")
+       panic(err.Error())
+     }
+   ```
 
-    **Ex:**
+   Agora utilize a função `db.Ping()` para testar se a conexão continua aberta.
 
-    ```
-      err = db.Ping()
+   **Ex:**
 
-      if err != nil {
-        fmt.Println("ERROR -> Fail to verify connection with db.Ping()")
-        panic(err.Error())
-      }
-    ```
+   ```
+     err = db.Ping()
+
+     if err != nil {
+       fmt.Println("ERROR -> Fail to verify connection with db.Ping()")
+       panic(err.Error())
+     }
+   ```
 
 #### Exemplo completo:
 
@@ -499,9 +520,11 @@ Cada banco de dados tem sua própria forma de conexão. Aqui usaremos o MySQL.
     return db
   }
 ```
+
 #### Obs: Após abrir uma conexão com o banco de dados, é de boa prática feixá-la ao final de tudo: `defer db.Close`
 
 ### SELECT
+
 Para realizar uma operação SQL SELECT utilize o comando: `db.Query("<comando_SQL>")`
 
 **Ex:**
@@ -538,37 +561,39 @@ for selectAll.Next() {
 Com isso, cada variável gardará automaticamente o valor de cada dado escaneado pela função
 
 ### INSERT
+
 Para realizar uma operação SQL INSERT utilize os comandos: `db.Prepare("<stmt>")` e `Exec(...<var>)`
 
 1. **Prepare( ):** Serve para validar comandos SQL. Recebe o comando SQL como parâmetro e retornar o argumento (stmt) e um erro (err). Se houver algum erro no código SQL, o erro será guardado pelo err.
 
-  - **Ex:**
+- **Ex:**
 
-    ```
-    stmt, err := db.Prepare("INSERT INTO alura_loja.produtos (nome, descricao, preco, estoque) VALUES (?, ?, ?, ?)")
-    if err != nil {
-      fmt.Println("ERROR -> Wrong insert arguments.")
-      fmt.Println(err.Error())
-      return
-    }
-    ```
-    Note que as "?" é onde as variáveis passadas no Exec( ) serão alocadas. 
-    
-    O stmt gerado pode ser reutilizado em futuras requisições. Para fechar a stmt atual utilize: `stmt.Close()`.
+  ```
+  stmt, err := db.Prepare("INSERT INTO alura_loja.produtos (nome, descricao, preco, estoque) VALUES (?, ?, ?, ?)")
+  if err != nil {
+    fmt.Println("ERROR -> Wrong insert arguments.")
+    fmt.Println(err.Error())
+    return
+  }
+  ```
+
+  Note que as "?" é onde as variáveis passadas no Exec( ) serão alocadas.
+
+  O stmt gerado pode ser reutilizado em futuras requisições. Para fechar a stmt atual utilize: `stmt.Close()`.
 
 2. **Exec( ):** Serve para executar um comando ou stmt previamente definido. Nele, passamos como parâmetro todas as variáveis que utilizaremos no comando SQL.
 
-  - **Ex:**
+- **Ex:**
 
-    ```
-    stmt.Exec(nome, descricao, preco, estoque)
-    ```
+  ```
+  stmt.Exec(nome, descricao, preco, estoque)
+  ```
 
 #### Obs: Após a execução do INSERT devemos lembrar de fechar a conexão com o DB: `db.Close()`.
 
 ## Concurrency
 
-Concurrency em go é uma forma de executar várias funções ao mesmo tempo, sem a necessidade de uma função esperar a finalização de outra para executar. Para isso utilizamos a palavra chave `go` antes da função a ser executada.
+Concurrency em go é uma forma de executar várias funções ao mesmo tempo, sem a necessidade de uma função esperar a finalização de outra para executar. Para isso utilizamos a palavra chave `go` antes da função a ser executada. Cada uso da palavra chave `go` inicia uma nova `goroutine` que roda em paralelo a mainroutine, goroutine principal utilizada pela função main.
 
 **Ex:**
 
@@ -604,6 +629,7 @@ func someFunction(ch chan bool) {
 	ch <- true  // Atribuindo valor ao channel.
 }
 ```
+
 ```
 func main() {
 	channel := make(chan bool)
@@ -636,3 +662,70 @@ func main() {
 **Obs:** Channels armazenam valores utilizando a fila como estrutura de dados, onde o primeiro a entrar é o primeiro a sair (FIFO). Sendo assim, ao chamar um channel `<-channel`, o primeiro valor na fila é extraído, dando lugar aos demais.
 
 ### Iterando Channels
+
+Podemos iterar channels de 3 formas: `for loop`, `for range` ou `for (while)`.
+
+**Funçao count10:**
+
+```
+go func(channel chan string) {
+  for i := 0; i < 10; i++ {
+    score := rand.Intn(10) + 1
+    channel <- fmt.Sprintf("%d°- Score: %d", i+1, score)
+  }
+  close(channel)  // Fechando channel
+}(channel)
+```
+
+`for loop`:
+
+```
+for i := 0; i < 10; i++ {
+  fmt.Println(<-channel)
+}
+```
+
+`for range`:
+
+```
+for mensagem := range channel {
+  fmt.Println(mensagem)
+}
+```
+
+`for (while)`:
+
+```
+for {
+  mensagem, open := <-channel
+  if !open {
+    break
+  }
+
+  fmt.Println(mensagem)
+}
+```
+
+**Obs:** Em loops do tipo `for range` ou `for (while)` devemos utilizar o comando `close(<chanel>)` ao final da última execução de uma função em paralelo, pois loops for range sempre checam se o próximo ítem do channel existe. Sendo assim mesmo após percorrerem todo o channel, ainda assim produzem o erro `deadlock` ao final. Para evitar isso devemos fechar o channel antes que isso ocorra.
+
+### Channel Select
+
+O select verifica quais channels estão prontos para serem executados e executa uma chamada de channel `<-channel` com base em seus casos (case) definidos.
+
+**Ex:**
+
+```
+candidato1, candidato2 := make(chan string), make(chan string)
+go elegerGanhador(candidato1, "Candidato 1")
+go elegerGanhador(candidato2, "Candidato 2")
+
+select {
+  case vencedor := <-candidato1:
+    fmt.Println(vencedor, "venceu!")
+  case vencedor := <-candidato2:
+    fmt.Println(vencedor, "venceu!")
+  default:
+    fmt.Println("Não há vencedores!")
+}
+```
+Quando a função main chega em um `select`, quando há multiplos channels,  é seu dever apenas executar a chamada de um channel, `e apenas um`, que esteja pronto no momento do select. Se mais de um channel está pronto, o select irá executar um aleatoriamente. No caso de não existir nenhum channel pronto, o select executará um caso `default`.
