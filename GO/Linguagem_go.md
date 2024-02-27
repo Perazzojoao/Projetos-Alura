@@ -767,3 +767,127 @@ func main() {
 Ao adicionado 3 esperas ao WaitGroup, o comando `wait.Wait()` da função main só será satisfeita após a execução do comando `wait.Done()` por 3 vezes.
 
 **Obs:** Ao passar um WaitGroup como parâmetro de uma função, `é necessário enviar seu endereço de memória`, pois se não, um novo WaitGroup será criado dentro da função e o WaitGroup criado na função main nunca será alterado.
+
+### Mutex
+
+Mutex é uma técnica usada para evitar que múltiplas goroutines acessem ou alterem a mesma memória ao mesmo tempo, o que pode levar a resultados inesperados ou erros.
+
+**Inicialização:** `var mutex sync.Mutex`
+
+**Bloquear memória:** `mutex.Lock()`
+
+**Desbloquear memória:** `mutex.Unlock()`
+
+Quando uma goroutine chama a função `mutex.Lock()`, ela bloqueia a continuidade de todas as outras até que a função `mutex.Unlock()` seja chamada. Isso garante que apenas uma goroutine possa alterar uma variável ou performar uma ação de cada vez.
+
+**Ex:**
+
+```
+var (
+	counter int
+	mutex   sync.Mutex
+)
+```
+```
+func main() {
+	for i := 0; i < 1000; i++ {
+		go func() {
+			mutex.Lock()
+			counter++
+			mutex.Unlock()
+		}()
+	}
+
+	time.Sleep(1 * time.Second)
+	fmt.Println("Counter: ", counter)
+}
+```
+
+### RWMutex
+
+O `sync.RWMutex` é uma estrutura em Go que implementa a funcionalidade de um Mutex de leitura/escrita, cujas funções `rwMutex.RLock()` e `rwMutex.RUnlock()` são específicas para leitura de dados e `rwMutex.Lock()` e `rwMutex.Unlock()` apenas para escrita em variáveis. Apenas uma goroutine pode escrever de cada vez, contudo a leitura dos dados é liberada para todas as goroutine executarem ao mesmo tempo.
+
+**Ex:**
+
+```
+var (
+	myMap = make(map[string]string)
+	mutex sync.RWMutex
+)
+```
+```
+func write(key, value string) {
+	mutex.Lock()
+	myMap[key] = value
+	mutex.Unlock()
+}
+
+func read(key string) {
+	mutex.RLock()
+	fmt.Println(myMap[key])
+	mutex.RUnlock()
+}
+```
+```
+func main() {
+	go write("Carro", "Vermelho")
+	go read("Carro")
+	go write("Carro", "Azul")
+	go read("Carro")
+
+	time.Sleep(1 * time.Second)
+	fmt.Println("Done!")
+}
+```
+
+As funções write e read usam o sync.RWMutex para garantir que apenas uma goroutine possa escrever no mapa de cada vez, mas várias goroutines podem ler do mapa ao mesmo tempo. Com isso, "Vermelho" é printado no terminal duas vezes, mesmo sendo alterado para "azul", pois `read()` é executado ao mesmo tempo, enquanto `write()` é executada uma de cada vez.
+
+### Once
+
+`sync.Once` é um comando que garante que uma função seja executada apenas uma vez. Assim, quando uma goroutine termina sua execução as demais são paradas automaticamente.
+
+**Inicialização:** `var once sync.Once`
+
+**Uso:** `once.Do(<função>)`
+
+**Ex:**
+
+```
+var (
+	acertou = false
+)
+
+func adivinharNumero() bool {
+	return rand.Intn(10) == 0
+}
+
+func marcarAcerto() {
+	acertou = true
+}
+```
+```
+func main() {
+	var wait sync.WaitGroup
+	wait.Add(100)
+
+	var once sync.Once
+
+	for i := 0; i < 100; i++ {
+		go func() {
+			if adivinharNumero() {
+				once.Do(marcarAcerto)
+			}
+			wait.Done()
+		}()
+	}
+
+	wait.Wait()
+	if acertou {
+		fmt.Println("Acertou!")
+	} else {
+		fmt.Println("Errou!")
+	}
+}
+```
+
+Neste exemplo a função `once.Do()` garante que assim que o número secreto for acertado, as demais goroutine irão ser interrompidas, afim de evitar operações desnecessárias.

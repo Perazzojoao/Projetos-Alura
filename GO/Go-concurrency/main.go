@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"sync"
 	"time"
 
@@ -14,19 +15,39 @@ func tempoDecorrido() {
 	fmt.Println("Time taken: ", time.Since(start))
 }
 
+var (
+	acertou = false
+)
+
 func main() {
 	defer tempoDecorrido()
 
-	var beeper sync.WaitGroup
-	nomes := [3]string{"João", "Maria", "José"}
-	beeper.Add(len(nomes))
-	for _, nome := range nomes {
-		go func(nome string, beeper *sync.WaitGroup) {
-			fmt.Println("Hello, ", nome)
-			beeper.Done()
-		}(nome, &beeper)
+	var wait sync.WaitGroup
+	wait.Add(100)
+
+	var once sync.Once
+	
+	for i := 0; i < 100; i++ {
+		go func() {
+			if adivinharNumero() {
+				once.Do(marcarAcerto)
+			}
+			wait.Done()
+		}()
 	}
 
-	beeper.Wait()
-	fmt.Println("Fim do programa!")
+	wait.Wait()
+	if acertou {
+		fmt.Println("Acertou!")
+	} else {
+		fmt.Println("Errou!")
+	}
+}
+
+func adivinharNumero() bool {
+	return rand.Intn(10) == 0
+}
+
+func marcarAcerto() {
+	acertou = true
 }
