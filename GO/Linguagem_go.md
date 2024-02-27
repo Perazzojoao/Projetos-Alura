@@ -938,3 +938,96 @@ wg.Wait()
 Neste exemplo, você pode obter um slice de bytes do `memPool` usando o método `Get`. Se o `memPool` estiver vazio, ele chamará a função `New` para criar um novo slice de bytes. Se o `memPool` já tiver um slice de bytes armazenado, ele retornará esse slice e removerá-o do pool. Depois de terminar de usar o slice de bytes, você pode colocá-lo de volta no pool usando o método `Put`, para que ele possa ser reutilizado no futuro.
 
 **Obs:** A utilização desse método garante que apenas a quantidade necessária de memória seja alocada, assim, evitando desperdícios.
+
+### Cond (Signal & Broadcast)
+
+`sync.Cond` trabalha em conjunto com `Mutex` para bloquear e desbloquear a execução de goroutines. Utilizando `sync.NewCond(&<mutex>)` criamos uma nova `cond` atrelada a uma `mutex` já existente. 
+
+**Criação:** 
+
+    cond := sync.NewCond(&sync.Mutex{})
+
+`sync.NewCond()` nos da acesso a cinco métodos:
+
+- `cond.L.Lock()`: Acessa o método `mutex.Lock()` da mutex passada como parâmetro.
+
+- `cond.L.Unlock()`: Acessa o método `mutex.Unlock()` da mutex passada como parâmetro.
+
+- `cond.Wait()`: Semelhante ao método `WaitGroup.Wait()`. Faz todas as goroutine durmam.
+
+- `cond.Signal()`: Envia um sinal para que `uma` goroutine adormecida acorde.
+
+- `cond.Broadcast()`: Envia um sinal para que `todas` as goroutine adormecidas acordem.
+
+**Ex:**
+
+```
+var pronto bool
+
+func baixando(cond *sync.Cond) {
+	func() {
+		tempo := time.Duration(rand.Intn(5)+1) * time.Second
+		time.Sleep(tempo)
+	}()
+	pronto = true
+	cond.Signal()
+}
+```
+```
+func main() {
+	cond := sync.NewCond(&sync.Mutex{})
+
+	go baixando(cond)
+	intervalo := 0
+
+	cond.L.Lock()
+	for !pronto {
+		intervalo++
+		cond.Wait()
+	}
+	cond.L.Unlock()
+
+	fmt.Println("Estamos prontos após", intervalo, "intervalos.")
+}
+```
+1. **Obs:** Utilize `cond.Broadcast()` apenas quando mais de uma goroutine são iniciadas, assim, acordando todas elas de uma vez.
+
+2. **Obs:** É importante notar que `cond.Wait()` não retorna automaticamente quando a condição é verdadeira - em vez disso, ele retorna quando a condição pode ter mudado. Isso significa que você geralmente vai querer chamar `cond.Wait()` em um loop que verifica a condição que você está esperando.
+
+### Map
+
+O pacote `sync` fornece métodos para realizar operações com maps, visto que maps comuns, ao serem utilizados por outras goroutine, são ineficientes e podem apresentar erros.
+
+**Criação:** `myMap := sync.Map{}`
+
+**Métodos principais:**
+
+- `myMap.Store(<key>, <value>)`: Insere uma chave e seu respectivo valor no map.
+
+- `myMap.Load(<key>)`: Retorna o valor da chave passada como parâmetro.
+
+- `myMap.Delete(<key>)`: Deleta o conjunto chave e valor do map.
+
+- `myMap.LoadOrStore(<key>, <value>)`: Retorna o valor da chave passada como parâmetro. Se a chave não existe, ele a insere e depois retorna seu valor inserido.
+
+- `myMap.LoadAndDelete(<key>)`: Deleta o conjunto chave e valor do map e retorna seu antigo valor.
+
+### Atomic
+
+O pacote `atomic` em Go fornece funções de baixo nível para operações atômicas de sincronização. São utilizadas em programação multithread para garantir que as operações de leitura e gravação em um valor compartilhado sejam feitas como uma única operação ininterrupta.
+
+Ao declarar uma variável podemos usar o pacote `atomic` para atribuir ou ler valores da variável se forma segura em multithread.
+
+**Criação:** `atom := atomic.Value{}`
+
+**Métodos Principais:**
+
+- `atom.Store(<valor>)`: Atribui um valor à variável.
+
+- `atom.Load()`: Retorna o valor atribuído à variável.
+
+- `atom.Swap(<valor>)`: Atribui um novo valor à variável e retorna o valor antigo. Se não houver, retorna `nil`.
+
+- `atom.CompareAndSwap(<esperado>, <novo>)`: Compara se o valor esperado é igual ao atual e retorna um booleano. Se a comparação for verdadeira ele retorna true e atualiza a variável para o novo valor indicado.
+
+**Obs:** Ao utilizar o pacote `atomic` não faz-se necessário utilizar `Mutex`, pois `atomic` garante a continuidade de leitura e escrita de dados em operações multithread.
