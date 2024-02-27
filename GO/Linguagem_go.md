@@ -728,7 +728,8 @@ select {
     fmt.Println("Não há vencedores!")
 }
 ```
-Quando a função main chega em um `select`, quando há multiplos channels,  é seu dever apenas executar a chamada de um channel, `e apenas um`, que esteja pronto no momento do select. Se mais de um channel está pronto, o select irá executar um aleatoriamente. No caso de não existir nenhum channel pronto, o select executará um caso `default`.
+
+Quando a função main chega em um `select`, quando há multiplos channels, é seu dever apenas executar a chamada de um channel, `e apenas um`, que esteja pronto no momento do select. Se mais de um channel está pronto, o select irá executar um aleatoriamente. No caso de não existir nenhum channel pronto, o select executará um caso `default`.
 
 ### WaitGroup
 
@@ -788,6 +789,7 @@ var (
 	mutex   sync.Mutex
 )
 ```
+
 ```
 func main() {
 	for i := 0; i < 1000; i++ {
@@ -815,6 +817,7 @@ var (
 	mutex sync.RWMutex
 )
 ```
+
 ```
 func write(key, value string) {
 	mutex.Lock()
@@ -828,6 +831,7 @@ func read(key string) {
 	mutex.RUnlock()
 }
 ```
+
 ```
 func main() {
 	go write("Carro", "Vermelho")
@@ -865,6 +869,7 @@ func marcarAcerto() {
 	acertou = true
 }
 ```
+
 ```
 func main() {
 	var wait sync.WaitGroup
@@ -891,3 +896,45 @@ func main() {
 ```
 
 Neste exemplo a função `once.Do()` garante que assim que o número secreto for acertado, as demais goroutine irão ser interrompidas, afim de evitar operações desnecessárias.
+
+### Resource Pool
+
+`sync.Pool` é uma estrutura que armazena itens temporários que podem ser reutilizados, o que pode ajudar a melhorar a eficiência ao reduzir alocações de memória. Utilizando `sync.Pool` criamos uma função que cria uma nova variável e a insere no pool. Para ter acesso ao pool utilizamos o método `Get()`, que remove uma variável criada do pool. Utilizando o método `Put()`, retornamos a variável retirada de volta ao pool para que outras goroutine possam reutilizá-la.
+
+**Criação:**
+
+```
+memPool := &sync.Pool{
+  New: func() interface{} {
+    mem := make([]byte, 1024)
+    return &mem
+  },
+}
+```
+
+A função `New` é uma função que será chamada sempre que você tentar obter um item do pool e o pool estiver vazio. Esta função deve retornar um novo item que será colocado no pool.
+
+
+**Uso:**
+
+```
+const chamadas = 1024 * 1024
+
+wg := &sync.WaitGroup{}
+wg.Add(chamadas)
+for i := 0; i < chamadas; i++ {
+  go func() {
+    defer wg.Done()
+    mem := memPool.Get().(*[]byte)
+
+    fmt.Sprintln("Alocando memória...")
+    memPool.Put(mem)
+  }()
+}
+
+wg.Wait()
+```
+
+Neste exemplo, você pode obter um slice de bytes do `memPool` usando o método `Get`. Se o `memPool` estiver vazio, ele chamará a função `New` para criar um novo slice de bytes. Se o `memPool` já tiver um slice de bytes armazenado, ele retornará esse slice e removerá-o do pool. Depois de terminar de usar o slice de bytes, você pode colocá-lo de volta no pool usando o método `Put`, para que ele possa ser reutilizado no futuro.
+
+**Obs:** A utilização desse método garante que apenas a quantidade necessária de memória seja alocada, assim, evitando desperdícios.
