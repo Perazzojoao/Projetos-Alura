@@ -2,52 +2,29 @@ package main
 
 import (
 	"fmt"
-	"math/rand"
-	"sync"
 	"time"
 
+	"go-concurrency/gui"
 )
 
-var start = time.Now()
+var tempo = time.Now()
 
-func tempoDecorrido() {
+func duration() {
 	println()
-	fmt.Println("Time taken: ", time.Since(start))
+	fmt.Println(time.Since(tempo))
 }
-
-var (
-	acertou = false
-)
 
 func main() {
-	defer tempoDecorrido()
+	defer duration()
 
-	var wait sync.WaitGroup
-	wait.Add(100)
+	var opcao int
+	for opcao != 2 {
+		gui.ExibeMenu()
 
-	var once sync.Once
-	
-	for i := 0; i < 100; i++ {
-		go func() {
-			if adivinharNumero() {
-				once.Do(marcarAcerto)
-			}
-			wait.Done()
-		}()
+		fmt.Print("Escolha uma opção: ")
+		_, err := fmt.Scan(&opcao)
+		if err != nil {
+			fmt.Println("Opção inválida")
+		}
 	}
-
-	wait.Wait()
-	if acertou {
-		fmt.Println("Acertou!")
-	} else {
-		fmt.Println("Errou!")
-	}
-}
-
-func adivinharNumero() bool {
-	return rand.Intn(10) == 0
-}
-
-func marcarAcerto() {
-	acertou = true
 }
