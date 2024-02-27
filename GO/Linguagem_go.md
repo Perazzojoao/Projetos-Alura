@@ -1030,4 +1030,4 @@ Ao declarar uma variável podemos usar o pacote `atomic` para atribuir ou ler va
 
 - `atom.CompareAndSwap(<esperado>, <novo>)`: Compara se o valor esperado é igual ao atual e retorna um booleano. Se a comparação for verdadeira ele retorna true e atualiza a variável para o novo valor indicado.
 
-**Obs:** Ao utilizar o pacote `atomic` não faz-se necessário utilizar `Mutex`, pois `atomic` garante a continuidade de leitura e escrita de dados em operações multithread.
+**Obs:** Ao utilizar o pacote `atomic` não faz-se necessário utilizar `Mutex`, pois `atomic` já garante a continuidade de leitura e escrita de dados em operações multithread.
