@@ -4,7 +4,7 @@
 
 ## Instalação
 
-Cobra disponibiliza um programa cli que gera e configura novos projetos automaticamente. No terminal, utilize o seguinte comando:
+[Cobra](https://github.com/spf13/cobra) disponibiliza um programa cli que gera e configura novos projetos automaticamente. No terminal, utilize o seguinte comando:
 
     cobra init [nome_projeto]
 
@@ -62,9 +62,9 @@ Cobra-cli possúi um comando que gera novos comandos para sua aplicação de for
 
     cobra add [nome_comando]
 
-`Cobra add`, por padrão, adiciona um novo comando cli atrelado ao `rootCmd`. Para especificar um comando pai para atrelar o novo subcomando utilize a flag `-p [nome_comando_pai]`. 
+`Cobra add`, por padrão, adiciona um novo comando cli atrelado ao `rootCmd`. Para especificar um comando pai para atrelar o novo subcomando utilize a flag `-p [nome_comando_pai]`.
 
-Com  isso, é gerado um novo arquivo Go com a seguinte estrutura:
+Com isso, é gerado um novo arquivo Go com a seguinte estrutura:
 
 - `var [nome_comando]Cmd = &cobra.Command{...}`
 
@@ -83,6 +83,7 @@ var NetCmd = &cobra.Command{
 	},
 }
 ```
+
 ```
 func init() {
 	// Here you will define your flags and configuration settings.
@@ -120,6 +121,7 @@ func addSubCommands() {
 	rootCmd.AddCommand(net.NetCmd)
 }
 ```
+
 ```
 func init() {
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
@@ -159,3 +161,45 @@ Cada tipo contém suas respectivas variações dos seguintes métodos:
     pingCmd.Flags().StringVarP(&urlPath, "url", "u", "", "URL to ping")
 
 Neste exemplo, o método `StringVarP()`, captura o valor passado na flag `-u` ou `--url`, converte para string e atribui seu valor à variável `urlPath`.
+
+### Required flags
+
+Flags são opcionais por padrão. `Required flags` garante que determinada flag seja obrigatoriamente utilizada. Para isso utilize o método `MarkFlagRequired(..."<flag>")` para `flags locais` ou `MarkPersistentFlagRequired(..."<flags>")` para `flags globais`.
+
+**Ex:**
+
+```
+rootCmd.Flags().StringVarP(&urlPath, "url", "u", "", "URL to ping")
+if err := pingCmd.MarkFlagRequired("url"); err != nil {
+  fmt.Println(err)
+}
+```
+
+```
+rootCmd.PersistentFlags().StringVarP(&Region, "region", "r", "", "AWS region (required)")
+rootCmd.MarkPersistentFlagRequired("region")
+```
+
+### Flag Groups
+
+`Flag Groups` garante que duas ou mais flags sejam utilizadas em conjunto. Existem 3 métodos disponíveis:
+
+- `MarkFlagsRequiredTogether(... "<flags>")`: Todas as flags devem ser utilizadas
+
+  **Ex:**
+
+  ```
+  rootCmd.Flags().StringVarP(&u, "username", "u", "", "Username (required if password is set)")
+  rootCmd.Flags().StringVarP(&pw, "password", "p", "", "Password (required if username is set)")
+  rootCmd.MarkFlagsRequiredTogether("username", "password")
+  ```
+
+- `MarkFlagsMutuallyExclusive(... "<flags>")`: Flags do grupo não podem ser utilizadas em conjunto.
+
+- `MarkFlagsOneRequired(... "<flags>")`: Pelo menos uma das flags deve ser utilizada.
+
+  **Ex:**
+
+  ```
+
+  ```
