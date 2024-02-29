@@ -201,5 +201,91 @@ rootCmd.MarkPersistentFlagRequired("region")
   **Ex:**
 
   ```
-
+  rootCmd.Flags().BoolVar(&ofJson, "json", false, "Output in JSON")
+  rootCmd.Flags().BoolVar(&ofYaml, "yaml", false, "Output in YAML")
+  rootCmd.MarkFlagsOneRequired("json", "yaml")
+  rootCmd.MarkFlagsMutuallyExclusive("json", "yaml")
   ```
+
+# Viper
+
+[Viper](https://github.com/spf13/viper) é uma biblioteca de configurações para seu projeto Go que pode ser combinado com `Cobra`. Ela permite `ler` e `alterar` arquivos de configurações fornecidos pelo usuário.
+
+## Instalação
+
+`Viper` é integrado com `Cobra-cli`, sendo fornecido um comando para criar um projeto cobra já com o viper instalado. No terminal, utilize o seguinte comando:
+
+    cobra init [nome_projeto] --viper
+
+Ou, para configurar manualmente, utilize:
+
+    go get github.com/spf13/viper
+
+## Estrutura
+
+Ao criar um projeto com viper, o arquivo `root.go` gerado é igual ao projeto cobra comum, porém, com as seguintes adições:
+
+- `var cfgFile, userLicense string`:
+
+  Variáveis que gardam o caminho dos seus respectivos arquivos.
+
+- `rootCmd.PersistentFlags().StringVar(&cfgFile, ...)`:
+
+  Flag que recebe o caminho do arquivo de configurações do usuário e o garda na variável `cfgFile`.
+
+- `func initConfig()`:
+
+  Função que utiliza o caminho do arquivo de configurações do usuário e o adiciona ao projeto.
+
+## Uso
+
+`Viper` adiciona varios métodos próprios que auxiliam a lidar com arquivos de configurações e variáveis.
+
+### Compartilhamento de variáveis
+
+`Viper` contém métodos que auxiliam a passar variáveis entre pacotes distintos. Elas são armazenadas em `maps` e acessíveis por todo o projeto. Para adicionar uma variável utilize o método `viper.Set("<key>", <value>)`. Para acessar o valor armazenado, utilize `viper.GetViper().Get("<key>")`. O método `viper.GetViper().Get()` retorna um valor do tipo `any`, assim, para especificar o tipo de seu retorno `viper` disponibiliza variações como `GetString()`, `GetInt()`, `GetFloat64()`, ...
+
+**Ex:**
+
+```
+viper.Set("name", "Alex")
+```
+
+```
+fmt.Println(viper.GetViper().GetString("name"))
+```
+
+Também podemos criar uma variável `default` que, se seu valor não for atribuído posteriormente, será utilizado o `default` indicado. Utilize `viper.SetDefault("<key>", <value>)`.
+
+**Ex:**
+
+    viper.SetDefault("port", "8080")
+
+### Variáveis de arquivos de configuração
+
+É possível acessar variáveis contidas em arquivos de configurações utilizando o mesmo método de compartilhamento de variáveis `viper.GetViper().Get()` e suas variações.
+
+**Ex:** `toolbox.yaml`
+
+```
+hacker: true
+name: steve
+age: 35
+eyes : brown
+beard: true
+```
+
+    fmt.Println(viper.GetViper().GetString("eyes"))       // brown
+
+### Criar arquivo de configuração
+
+`Viper` possúi um método para criar um arquivo de configurações em tempo de execução. Neste arquivo, são carregadas todas as variáveis criadas pelos métodos `viper.Set()` e `viper.SetDefault()`. Para isso, utilize o método `viper.WriteConfigAs("<file_name>")`.
+
+**Ex:**
+
+```
+err := viper.WriteConfigAs("runTimeVariables.yaml")
+if err != nil {
+  fmt.Println(err)
+}
+```
