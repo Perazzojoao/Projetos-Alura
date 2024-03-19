@@ -238,6 +238,10 @@ Semelhante a um Rpc convencional, porém atualizado para se comunicar com servid
 
       go install google.golang.org/grpc/cmd/protoc-gen-go-grpc
 
+- `grpc`:
+
+      go get google.golang.org/grpc
+
 ### Arquivo de configurações
 
 Precisamos criar um arquivo de configuração `"*.proto"` que, em conjunto com as dependências baixadas, irão gerar arquivos necessários ao servidor gRpc.
@@ -279,6 +283,63 @@ service LogService {
 
 Para gerar os códigos de forma automática, utilizamos o executável `protoc` baixado no GOBIN. Assim, na mesma pasta em que o arquivo `.proto` está localizado, utilize o seguinte comando noterminal:
 
-		protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative <nome>.proto
+    	protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative <nome>.proto
 
 Após isso, utilize o comando `go mod tidy` para baixar todas as dependências
+
+### Criação do servidor
+
+Para criar um servidor gRpc, primeiro devemos criar uma função para tal `func GRpcListen() error {...}`. Nela, utilizamos o método `net.Listen(<network>, <address>)`, onde `network` é o tipo de conexão que será aceito pelo servidor e `addres` é o endereço de ip cujo o servidor irá aceitar requisições e a porta em que o servidor irá escutar.
+
+**Ex:**
+
+```
+listen, err := net.Listen("tcp", fmt.Sprintf(":%s", GRpcPort))
+if err != nil {
+	log.Fatalf("failed to listen for gRpc: %v", err)
+}
+defer listen.Close()
+```
+
+Após isso criamos o servidor com o método `grpc.NewServer()` e o registramos no método `logs.RegisterLogServiceServer(<server>, <body>)`, gerado automaticamente de acordo com o arquivo de fonfiguração `"*.proto"`.
+
+**Ex:**
+
+```
+s := grpc.NewServer()
+logs.RegisterLogServiceServer(s, &LogServer{Models: app.Models})
+log.Println("gRPC server started on port ", GRpcPort)
+```
+
+**OBS:** A struct `logServer` é a responsável por conter todos os métodos ("rotas") disponíveis no servidor. Ela será criada posteriormente em um arquivo `gRpc.go` responsável por tal.
+
+Por fim, utilizando o método `s.Serve(<listener>)`, o servidor gRpc começará a ouvir na porta indicada. Além disso, o método `s.Serve()` automaticamente gera conexões em go routines separadas para aumentar o desempanho.
+
+#### Ex completo
+
+```
+func (app *Config) GRpcListen() {
+	listen, err := net.Listen("tcp", fmt.Sprintf(":%s", GRpcPort))
+	if err != nil {
+		log.Fatalf("failed to listen for gRpc: %v", err)
+	}
+	defer listen.Close()
+
+	s := grpc.NewServer()
+	logs.RegisterLogServiceServer(s, &LogServer{Models: app.Models})
+	log.Println("gRPC server started on port ", GRpcPort)
+
+	if err := s.Serve(listen); err != nil {
+		log.Fatalf("failed to serve gRpc: %v", err)
+	}
+}
+```
+
+### Iniciar servidor na main.go
+
+Para iniciar o servidor gRpc precisamos apenas chamar sua função em uma go routine separada
+
+**Ex:**
+
+	// Iniciar servidor gRPC
+	go app.GRpcListen()
