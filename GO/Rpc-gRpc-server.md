@@ -2,7 +2,7 @@
 
 São protocolos de comunicação mais rápidos e eficientes que http e https. São utilizados principalmente para a comunicação entre micro serviços.
 
-## RPc
+## Rpc
 
 Servidores Rpc podem der criados e executados em paralelo a servidores http comuns
 
@@ -219,3 +219,66 @@ func (app *Config) logItemViaRPC(w http.ResponseWriter, l LogPayload) {
 	app.writeJSON(w, http.StatusOK, payload)
 }
 ```
+
+## gRpc
+
+Semelhante a um Rpc convencional, porém atualizado para se comunicar com servidores escritos em linguagens de programação diferente.
+
+### Dependências necessárias
+
+- `protoc`: Baixar última versão para windows 64 bits (Executável deve estar no GOBIN)
+
+  https://github.com/protocolbuffers/protobuf/releases
+
+- `protoc-gen`:
+
+      go install google.golang.org/protobuf/cmd/protoc-gen-go
+
+- `protoc-gen-go-grpc`:
+
+      go install google.golang.org/grpc/cmd/protoc-gen-go-grpc
+
+### Arquivo de configurações
+
+Precisamos criar um arquivo de configuração `"*.proto"` que, em conjunto com as dependências baixadas, irão gerar arquivos necessários ao servidor gRpc.
+
+#### Arquivo `<nome>.proto`
+
+```
+syntax = "proto3";
+
+// The package name is the same as the go package name
+package logs;
+
+// The go_package option specifies the Go package name
+option go_package = "/logs";
+
+// The Log is the message that will be sent to the server
+message Log {
+  string name = 1;
+  string data = 2;
+}
+
+// The LogRequest is the request to the server
+message LogRequest {
+  Log logEntry = 1;
+}
+
+// The LogResponse is the response from the server
+message LogResponse {
+  string result = 1;
+}
+
+// The LogService is the service definition
+service LogService {
+  rpc WriteLog(LogRequest) returns (LogResponse);
+}
+```
+
+### Gerando os códigos necessários
+
+Para gerar os códigos de forma automática, utilizamos o executável `protoc` baixado no GOBIN. Assim, na mesma pasta em que o arquivo `.proto` está localizado, utilize o seguinte comando noterminal:
+
+		protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative <nome>.proto
+
+Após isso, utilize o comando `go mod tidy` para baixar todas as dependências
