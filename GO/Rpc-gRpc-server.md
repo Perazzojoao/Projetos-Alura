@@ -341,5 +341,160 @@ Para iniciar o servidor gRpc precisamos apenas chamar sua função em uma go rou
 
 **Ex:**
 
-	// Iniciar servidor gRPC
-	go app.GRpcListen()
+    // Iniciar servidor gRPC
+    go app.GRpcListen()
+
+### Adicionando "rotas" ao servidor
+
+Em vez de rotas, o servidor gRpc aceita métodos de uma struct como "rotas" para sua execução. Para isso, criamos uma struct `type <nome> struct{}` e adicionamos seus métodos.
+
+Além disso, em um servidor gRpc, para registrarmos a struct criada como struct do servidor, adicionamos a struct `logs.UnimplementedLogServiceServer`, proveniente dos códigos gerados automaticamente pelo comando `protoc`, bem como quaisquer outras estruturas de dados relevantes para ser utilizada polo servidor.
+
+**Ex:**
+
+    type LogServer struct {
+    	logs.UnimplementedLogServiceServer
+    	Models data.Models
+    	.
+    	.
+    	.
+    }
+
+Após isso, podemos criar os métodos do servidor. Os métodos devem ser criados aceitando os seguintes parâmetros e retornos:
+
+- `ctx context.Context`: Variável que irá estabelecer o contexto (duração) da conexão.
+
+- `req *<package>.<msgName>Request`: Variável contendo o corpo da requisição.
+
+- `*<package>.<msgName>Response`: Resposta da requisição.
+
+- `error`: Erro da requisição, caso houver.
+
+**Ex:**
+
+    func (l *LogServer) WriteLog(ctx context.Context, req *logs.LogRequest) (*logs.LogResponse, error) {...}
+
+**OBS:** `package` é o nome do pacote em que os códigos protoc estão salvos e `msgName` é o nome da mensagem definida no arquivo `"*.proto"`.
+
+#### Exemplo completo
+
+```
+type LogServer struct {
+	logs.UnimplementedLogServiceServer
+	Models data.Models
+}
+```
+
+```
+func (l *LogServer) WriteLog(ctx context.Context, req *logs.LogRequest) (*logs.LogResponse, error) {
+	// Read the body from the request
+	input := req.GetLogEntry()
+
+	// Write the log
+	logEntry := data.LogEntry{
+		Name: input.Name,
+		Data: input.Data,
+	}
+
+	// Insert the log entry into the database
+	err := l.Models.LogEntry.Insert(logEntry)
+	if err != nil {
+		res := &logs.LogResponse{Result: "failed"}
+		return res, err
+	}
+
+	// Return the response
+	res := &logs.LogResponse{Result: "logged!"}
+	return res, nil
+}
+```
+
+### Estabelecendo conexão com o servidor
+
+Para se conectar com o servidor gRpc através de um serviço externo, primeiro devemos copiar o arquivo `"*.proto"` e seus arquivos gerados automaticamente para dentro de uma pasta dentro do servidor. Caso o servidor seja escrito em uma linguagem de programação diferente, utilize o comando `protoc` refernte a lingugem utilizada para gerar os códigos apropriados para a linguagem.
+
+Além disso, é necessário a instalação do pacote `google.golang.org/grpc` bem como a utilização do comando `go mod tidy` para instalar todas as dependências necessárias.
+
+Após isso, utilize o método `grpc.Dial(<target>, ...<opts>)` para efetuar a conexão, onde `target` é o endereço do servidor gRpc e `opts` são as opções da conexão.
+
+**Ex:**
+
+```
+// Set up a connection to the gRpc server.
+conn, err := grpc.Dial("logger-service:50001", grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithBlock())
+if err != nil {
+	app.errorJSON(w, err)
+	return
+}
+defer conn.Close()
+```
+
+### Enviando requisições
+
+Criamos um cliente para efetuar a requisição utilizando o método `logs.NewLogServiceClient(<conection>)` (médodo proveniente dos códigos gerados pelo comando `protoc`).
+
+**Ex:**
+
+    // Create a new gRpc client
+    c := logs.NewLogServiceClient(conn)
+
+Finalmente, devemos chamar o método a ser utilizado pelo servidor gRpc e passar seus parâmetros.
+
+`ctx context.Context`:
+
+    ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+    defer cancel()
+
+`req *logs.LogRequest`:
+
+    logs.LogRequest{
+    	LogEntry: &logs.Log{
+    		Name: requestPayload.Log.Name,
+    		Data: requestPayload.Log.Data,
+    	},
+    }
+
+**Ex:**
+
+```
+	// Call the gRpc server WriteLog method
+	res, err = c.WriteLog(ctx, &logs.LogRequest{
+		LogEntry: &logs.Log{
+			Name: requestPayload.Log.Name,
+			Data: requestPayload.Log.Data,
+		},
+	})
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+```
+
+#### Ex completo
+
+```
+// Set up a connection to the gRpc server.
+conn, err := grpc.Dial("logger-service:50001", grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithBlock())
+if err != nil {
+	app.errorJSON(w, err)
+	return
+}
+defer conn.Close()
+
+// Create a new gRpc client
+c := logs.NewLogServiceClient(conn)
+ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+defer cancel()
+
+// Call the gRpc server WriteLog method
+_, err = c.WriteLog(ctx, &logs.LogRequest{
+	LogEntry: &logs.Log{
+		Name: requestPayload.Log.Name,
+		Data: requestPayload.Log.Data,
+	},
+})
+if err != nil {
+	app.errorJSON(w, err)
+	return
+}
+```
