@@ -222,7 +222,7 @@ func (app *Config) logItemViaRPC(w http.ResponseWriter, l LogPayload) {
 
 ## gRpc
 
-Semelhante a um Rpc convencional, porém atualizado para se comunicar com servidores escritos em linguagens de programação diferente.
+Semelhante a um Rpc convencional, porém atualizado para se comunicar com servidores escritos em linguagens de programação diferente. Link site oficial: https://grpc.io/docs/languages/go/quickstart/
 
 ### Dependências necessárias
 
