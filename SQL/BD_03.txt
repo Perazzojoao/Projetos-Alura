@@ -1,0 +1,179 @@
+1-SELECT ID,NomeDepartamento, ResponsavelDepartamento
+FROM Departamentos
+ORDER BY NomeDepartamento;
+
+2-SELECT 
+    ID AS CodigoProduto,
+    NomeProduto,
+    EstoqueAtual AS QuantidadeEmEstoque,
+    PrecoUnitario AS PrecoDeVenda,
+    (EstoqueAtual * PrecoUnitario) AS ValorTotal
+FROM 
+    Produtos;
+
+3-SELECT 
+    Categoria AS NomeTipo,
+    COUNT(ID) AS QuantidadeProdutos,
+    SUM(EstoqueAtual * PrecoUnitario) AS ValorTotal
+FROM 
+    Produtos
+GROUP BY 
+    Categoria;
+
+4-SELECT 
+    Cidade,
+    COUNT(ID) AS QuantidadeClientes
+FROM 
+    Clientes
+GROUP BY 
+    Cidade
+ORDER BY 
+    Cidade;
+
+5-SELECT 
+    Cargo,
+    Genero,
+    COUNT(*) AS FuncionariosSemEmail
+FROM 
+    Funcionarios
+WHERE 
+    Email IS NULL OR Email = ''
+GROUP BY 
+    Cargo, Genero
+ORDER BY 
+    Cargo;
+
+6-SELECT 
+    p.NomeProduto,
+    p.Categoria,
+    AVG(p.PrecoUnitario * 0.6) AS PrecoMedioCusto,  
+    AVG(p.PrecoUnitario * 1.2) AS PrecoMedioVenda, 
+    (AVG(p.PrecoUnitario * 1.2) - AVG(p.PrecoUnitario * 0.6)) AS DiferencaPrecos
+FROM 
+    Produtos p
+GROUP BY 
+    p.NomeProduto,
+    p.Categoria
+ORDER BY 
+    p.NomeProduto;
+
+7-SELECT 
+    Departamento,
+    SUM(CASE WHEN Genero = 'M' THEN Salario ELSE 0 END) AS TotalSalarioMasculino,
+    SUM(CASE WHEN Genero = 'F' THEN Salario ELSE 0 END) AS TotalSalarioFeminino
+FROM 
+    Funcionarios
+GROUP BY 
+    Departamento
+ORDER BY 
+    Departamento;
+
+8-SELECT 
+    Cargo,
+    SUM(CASE WHEN Genero = 'M' THEN 1 ELSE 0 END) AS QuantidadeHomens,
+    SUM(CASE WHEN Genero = 'F' THEN 1 ELSE 0 END) AS QuantidadeMulheres,
+    SUM(CASE WHEN Genero = 'M' THEN Salario ELSE 0 END) AS TotalSalarioMasculino,
+    SUM(CASE WHEN Genero = 'F' THEN Salario ELSE 0 END) AS TotalSalarioFeminino
+FROM 
+    Funcionarios
+GROUP BY 
+    Cargo
+HAVING 
+    TotalSalarioMasculino > 1000 OR TotalSalarioFeminino > 1000
+ORDER BY 
+    Cargo;
+
+9-SELECT 
+    p.PedidoID AS CodigoPedido,
+    c.NomeCompleto AS Cliente,
+    f.NomeCompleto AS Vendedor,
+    SUM(p.Quantidade * p.PrecoUnitario * (1 - p.Desconto)) AS ValorTotal
+FROM 
+    Pedidos p
+INNER JOIN 
+    Funcionarios f ON p.ID_Funcionario = f.ID
+LEFT JOIN 
+    Funcionarios c ON p.ID_Funcionario = c.ID
+GROUP BY 
+    p.PedidoID, c.NomeCompleto, f.NomeCompleto
+ORDER BY 
+    p.PedidoID;
+
+10-SELECT 
+    NomeCompleto,
+    Genero,
+    Salario,
+    Cidade AS CidadeNascimento
+FROM 
+    Funcionarios
+WHERE 
+    Estado IS NULL;
+
+11-SELECT 
+    Cidade,
+    'Brasil' AS Pais,
+    COUNT(*) AS QuantidadeFuncionarios,
+    SUM(Salario) AS TotalSalarios,
+    AVG(Salario) AS MediaSalarios
+FROM 
+    Funcionarios
+GROUP BY 
+    Cidade;
+
+12-SELECT 
+    f.NomeCompleto AS NomeFuncionario,
+    fc.NOME AS CidadeNascimento,
+    fr.Cidade AS CidadeResidencia
+FROM 
+    Funcionarios f
+LEFT JOIN 
+    Funcionarios fc ON f.Cidade = fc.Cidade
+LEFT JOIN 
+    Funcionarios fr ON f.Endereco = fr.Endereco
+ORDER BY 
+    NomeFuncionario;
+
+13-SELECT 
+    p.PedidoID AS CodigoPedido,
+    p.MetodoPagamento AS ViaTransporte,
+    f_cliente.NomeCompleto AS NomeCliente,
+    f_vendedor.NomeCompleto AS NomeVendedor
+FROM 
+    Pedidos p
+JOIN 
+    Funcionarios f_vendedor ON p.ID_Funcionario = f_vendedor.ID
+JOIN 
+    Funcionarios f_cliente ON p.PedidoID = f_cliente.ID
+WHERE 
+    p.MetodoPagamento = 'Via Aérea'
+ORDER BY 
+    CodigoPedido;
+
+14-SELECT 
+    t.NomeTipoProduto,
+    COALESCE(p.NomeProduto, 'Nenhum produto associado') AS NomeProduto
+FROM 
+    TiposProdutos t
+LEFT JOIN 
+    Produtos p ON t.ID = p.TipoProdutoID
+ORDER BY 
+    t.NomeTipoProduto, p.NomeProduto;
+
+15-SELECT 
+    f.Cargo AS Funcao,
+    COALESCE(fi.NomeCompleto, 'Nenhum funcionario associado') AS Funcionario
+FROM 
+    Funcionarios f
+LEFT JOIN 
+    Funcionarios fi ON f.Cargo = fi.Cargo
+ORDER BY 
+    f.Cargo,
+    fi.NomeCompleto;
+
+
+
+
+
+
+
+

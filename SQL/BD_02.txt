@@ -1,0 +1,99 @@
+Aluna(o): Ramon Fhelipe Vieira Marques
+Componente Curricular: Banco de Dados  
+Professor(es): Prof. Washington Barbosa  
+Semestre: 1 	Período:  2 	Turma:  
+Sexta/noite 
+
+
+-- 1ª questão 
+SELECT PedidoID, Produto, MAX(Quantidade) AS QuantidadeMaisVendida 
+FROM Pedidos 
+GROUP BY PedidoID, Produto 
+ORDER BY PedidoID; 
+  
+ 
+-- 2ª questão 
+SELECT Cidade, Pais 
+FROM (SELECT Cidade, Pais, ROW_NUMBER() OVER (ORDER BY Cidade DESC) AS RowNum FROM Cidades) AS CityRow 
+WHERE RowNum = 1; 
+  
+ 
+-- 3ª questão 
+SELECT NomeProduto, Categoria, PrecoUnitario 
+FROM Produtos 
+WHERE PrecoUnitario = (SELECT MAX(PrecoUnitario) FROM Produtos);   
+ 
+-- 4ª questão 
+SELECT D.Sigla D.NomeDepartamento, D.ResponsavelDepartamento 
+FROM Departamentos D 
+WHERE EXISTS (SELECT 1 FROM Funcionarios F WHERE F.Departamento = D.ID GROUP BY 
+F.Departamento HAVING MIN(F.Salario) < (SELECT AVG(Salario) FROM Funcionarios WHERE 
+Departamento = D.ID)) 
+ORDER BY D.NomeDepartamento ASC; 
+ 
+  
+-- 5ª questão 
+SELECT ID, NomeProduto, PrecoUnitario, PrecoUnitario * 0.15 AS Desconto, PrecoUnitario * 0.85 AS PrecoPromocao 
+FROM Produtos 
+WHERE PrecoUnitario > (SELECT AVG(PrecoUnitario) FROM Produtos) 
+ORDER BY Categoria ASC; 
+  
+  
+ 
+-- 6ª questão 
+SELECT  
+    (SELECT NomeCompleto FROM Funcionarios WHERE Genero = 'Masculino' AND DATEDIFF(YEAR, 
+DataNascimento, GETDATE()) BETWEEN 50 AND 60 ORDER BY DataNascimento DESC OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY) AS NomeFuncionario, 
+    (SELECT DataNascimento FROM Funcionarios WHERE Genero = 'Masculino' AND DATEDIFF(YEAR, 
+DataNascimento, GETDATE()) BETWEEN 50 AND 60 ORDER BY DataNascimento DESC OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY) AS DataNascimento, 
+    DATEDIFF(YEAR, (SELECT DataNascimento FROM Funcionarios WHERE Genero = 'Masculino' AND 
+DATEDIFF(YEAR, DataNascimento, GETDATE()) BETWEEN 50 AND 60 ORDER BY DataNascimento DESC OFFSET 0 
+ROWS FETCH NEXT 1 ROWS ONLY), GETDATE()) AS Idade, 
+    (SELECT NomeCidade FROM Cidades WHERE ID = (SELECT CidadeNascimento FROM Funcionarios WHERE 
+Genero = 'Masculino' AND DATEDIFF(YEAR, DataNascimento, GETDATE()) BETWEEN 50 AND 60 ORDER BY 
+DataNascimento DESC OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY)) AS NomeCidade, 
+    (SELECT NomePais FROM Paises WHERE ID = (SELECT Pais FROM Cidades WHERE ID = (SELECT 
+CidadeNascimento FROM Funcionarios WHERE Genero = 'Masculino' AND DATEDIFF(YEAR, DataNascimento, 
+GETDATE()) BETWEEN 50 AND 60 ORDER BY DataNascimento DESC OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY))) 
+AS NomePais; 
+ 
+-- 7ª questão 
+SELECT  
+    F.ID, F.NomeCompleto, 
+    (SELECT D.NomeDepartamento FROM Departamentos D WHERE D.ID = F.Departamento) AS NomeSetor, 
+    (SELECT D.ResponsavelDepartamento FROM Departamentos D WHERE D.ID = F.Departamento) AS NomeChefeSetor, 
+    F.Cargo AS Funcao, 
+    F.Salario, 
+    F.Graticacao, 
+    F.Salario + F.Graticacao AS SalarioTotal 
+FROM  
+    Funcionarios F 
+WHERE  
+    F.Salario + F.Graticacao > 1500 
+ORDER BY  
+    NomeSetor ASC; 
+ 
+-- 8ª questão 
+SELECT  
+    (SELECT PedidoID FROM Pedidos WHERE PrecoUnitario = (SELECT MAX(PrecoUnitario) FROM 
+Produtos)) AS CodigoPedido, 
+    (SELECT TOP 1 NomeProduto FROM Produtos WHERE PrecoUnitario = (SELECT MAX(PrecoUnitario) FROM Produtos)) AS NomeProduto, 
+    (SELECT TOP 1 Categoria FROM Produtos WHERE PrecoUnitario = (SELECT MAX(PrecoUnitario) FROM Produtos)) AS NomeTipo, 
+    (SELECT MAX(PrecoUnitario) FROM Produtos) AS PrecoVenda; 
+ 
+-- 9ª questão 
+SELECT D.NomeDepartamento, D.Sigla, SUM(F.Salario) AS TotalSalarios 
+FROM Funcionarios F, Departamentos D 
+WHERE F.Departamento = D.ID AND F.Cargo IN ('Vendedor', 'Supervisor') 
+GROUP BY D.NomeDepartamento, D.Sigla 
+HAVING SUM(F.Salario) > 5000 
+ORDER BY D.NomeDepartamento ASC; 
+ 
+-- 10ª questão 
+SELECT F.Cargo, AVG(F.Graticacao) AS GratificacaoMedia, F.Genero, COUNT(*) AS 
+QuantidadeFuncionarios, SUM(F.Salario) AS TotalSalarios, SUM(F.Graticacao) AS TotalGratificacoes, 
+SUM(F.Salario + F.Graticacao) AS TotalGeralSalarios 
+FROM Funcionarios F, Departamentos D 
+WHERE F.Departamento = D.ID AND D.NomeDepartamento IN ('Compras e Vendas', 'Marketing', 'Finanças') 
+GROUP BY F.Cargo, F.Genero 
+ORDER BY F.Cargo ASC; 

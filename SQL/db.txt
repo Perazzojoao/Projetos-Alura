@@ -1,0 +1,189 @@
+## Exercício Banco de Dados
+
+*Aluno:*
+
+---
+
+### 1 - Criação do Banco de Dados
+
+sql
+sqlCopiar código
+CREATE DATABASE ProjetoAlunos;
+
+
+
+---
+
+### 2 - Criação das Tabelas
+
+### Criação da tabela Clientes
+
+sql
+sqlCopiar código
+CREATE TABLE Clientes (
+    ClienteID INT PRIMARY KEY AUTO_INCREMENT,
+    Nome VARCHAR(255) NOT NULL,
+    Email VARCHAR(255) NOT NULL
+);
+
+
+
+### Criação da tabela Produtos
+
+sql
+sqlCopiar código
+CREATE TABLE Produtos (
+    ProdutoID INT PRIMARY KEY AUTO_INCREMENT,
+    Nome VARCHAR(255) NOT NULL,
+    Preco DECIMAL(10, 2) NOT NULL
+);
+
+
+
+### Criação da tabela Pedidos
+
+sql
+sqlCopiar código
+CREATE TABLE Pedidos (
+    PedidoID INT PRIMARY KEY AUTO_INCREMENT,
+    ClienteID INT,
+    ProdutoID INT,
+    Quantidade INT NOT NULL,
+    DataPedido DATE NOT NULL,
+    FOREIGN KEY (ClienteID) REFERENCES Clientes(ClienteID),
+    FOREIGN KEY (ProdutoID) REFERENCES Produtos(ProdutoID)
+);
+
+
+
+---
+
+### 3 - Inserção de Dados nas Tabelas
+
+### Inserção de registros na tabela Clientes
+
+sql
+sqlCopiar código
+INSERT INTO Clientes (Nome, Email) VALUES
+('João Silva', 'joao.silva@example.com'),
+('Maria Oliveira', 'maria.oliveira@example.com'),
+('Carlos Pereira', 'carlos.pereira@example.com');
+
+
+
+### Inserção de registros na tabela Produtos
+
+sql
+sqlCopiar código
+INSERT INTO Produtos (Nome, Preco) VALUES
+('Produto A', 10.50),
+('Produto B', 20.00),
+('Produto C', 15.75);
+
+
+
+### Inserção de registros na tabela Pedidos
+
+sql
+sqlCopiar código
+INSERT INTO Pedidos (ClienteID, ProdutoID, Quantidade, DataPedido) VALUES
+(1, 1, 2, '2024-06-01'),
+(2, 2, 1, '2024-06-02'),
+(3, 3, 3, '2024-06-03');
+
+
+
+---
+
+### 4 - Junção de Tabelas
+
+### Consulta para obter informações completas sobre os pedidos
+
+sql
+sqlCopiar código
+SELECT
+    c.Nome AS ClienteNome,
+    c.Email AS ClienteEmail,
+    p.Nome AS ProdutoNome,
+    p.Preco AS ProdutoPreco,
+    pd.Quantidade,
+    pd.DataPedido
+FROM
+    Pedidos pd
+JOIN
+    Clientes c ON pd.ClienteID = c.ClienteID
+JOIN
+    Produtos p ON pd.ProdutoID = p.ProdutoID;
+
+
+
+### Consulta para listar cada cliente, o número total de pedidos e a quantidade total de produtos pedidos
+
+sql
+sqlCopiar código
+SELECT
+    c.Nome AS ClienteNome,
+    COUNT(pd.PedidoID) AS TotalPedidos,
+    SUM(pd.Quantidade) AS TotalProdutos
+FROM
+    Clientes c
+JOIN
+    Pedidos pd ON c.ClienteID = pd.ClienteID
+GROUP BY
+    c.Nome;
+
+
+
+---
+
+### 5 - Criação de Procedimentos Armazenados
+
+### Procedimento armazenado para inserir um novo pedido
+
+sql
+sqlCopiar código
+DELIMITER //
+
+CREATE PROCEDURE InserirPedido (
+    IN p_ClienteID INT,
+    IN p_ProdutoID INT,
+    IN p_Quantidade INT,
+    IN p_DataPedido DATE
+)
+BEGIN
+    INSERT INTO Pedidos (ClienteID, ProdutoID, Quantidade, DataPedido)
+    VALUES (p_ClienteID, p_ProdutoID, p_Quantidade, p_DataPedido);
+END //
+
+DELIMITER ;
+
+
+
+### Procedimento armazenado para obter os detalhes dos pedidos feitos por um cliente específico
+
+sql
+sqlCopiar código
+DELIMITER //
+
+CREATE PROCEDURE ObterPedidosPorCliente (
+    IN p_ClienteID INT
+)
+BEGIN
+    SELECT
+        c.Nome AS ClienteNome,
+        c.Email AS ClienteEmail,
+        p.Nome AS ProdutoNome,
+        p.Preco AS ProdutoPreco,
+        pd.Quantidade,
+        pd.DataPedido
+    FROM
+        Pedidos pd
+    JOIN
+        Clientes c ON pd.ClienteID = c.ClienteID
+    JOIN
+        Produtos p ON pd.ProdutoID = p.ProdutoID
+    WHERE
+        c.ClienteID = p_ClienteID;
+END //
+
+DELIMITER ;
