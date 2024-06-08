@@ -17,6 +17,24 @@ Para criar um novo projeto Nest podemos utilizar dois métodos:
 
       npx @nestjs/cli new project-name
 
+## Instalando Prisma com SQLite
+
+    pnpm i prisma -D
+
+    pnpm dlx prisma init --datasource-provider SQLite
+
+### Realizando migrations ao alterar algo nas tabelas
+
+    pnpm dlx prisma migrate dev 
+
+### Instalar prisma como dependência de produção
+
+    pnpm i @prisma/client
+
+### Visualizar banco de dados no navegador
+
+    pnpm dlx prisma studio
+
 ## Controllers
 
 Controllers são onde definimos as rotas da aplicação e seus respectivos métodos.
