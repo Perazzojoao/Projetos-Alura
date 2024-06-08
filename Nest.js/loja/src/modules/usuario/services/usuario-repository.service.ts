@@ -1,11 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { UsuarioEntity } from '../../interfaces/usuario.entity';
-import { UsuarioRepository } from '../usuario.repository';
+import { UsuarioEntity } from '../interfaces/usuario.entity';
+import { UsuarioRepository } from '../repository/usuario.repository';
 import { PrismaService } from 'src/database/prisma.service';
 import { Prisma } from '@prisma/client';
 
 @Injectable()
-export class PrismaUsuarioRepository implements UsuarioRepository {
+export class UsuarioRepositoryService implements UsuarioRepository {
   constructor(private prisma: PrismaService) {}
 
   async salvar(usuario: UsuarioEntity) {

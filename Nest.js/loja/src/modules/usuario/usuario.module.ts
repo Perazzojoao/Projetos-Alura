@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { UsuarioController } from './usuario.controller';
-import { PrismaUsuarioRepository } from 'src/modules/usuario/repository/prisma/prisma-usuario.repository';
+import { UsuarioRepositoryService } from 'src/modules/usuario/services/usuario-repository.service';
 import { EmailEhUnicoValidator } from './validacao/email-eh-unico.validator';
 import { PrismaService } from 'src/database/prisma.service';
 import { UsuarioRepository } from './repository/usuario.repository';
@@ -13,7 +13,7 @@ import { UsuarioRepository } from './repository/usuario.repository';
     EmailEhUnicoValidator,
     {
       provide: UsuarioRepository,
-      useClass: PrismaUsuarioRepository,
+      useClass: UsuarioRepositoryService,
     },
   ],
 })
