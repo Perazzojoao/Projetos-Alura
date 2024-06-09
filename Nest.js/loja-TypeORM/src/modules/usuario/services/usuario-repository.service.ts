@@ -1,78 +1,71 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { UsuarioEntity } from '../interfaces/usuario.entity';
+import { UsuarioEntity } from '../entitys/usuario.entity';
 import { UsuarioRepository } from '../repository/usuario.repository';
-import { PrismaService } from 'src/database/prisma.service';
-import { Prisma } from '@prisma/client';
-
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 @Injectable()
 export class UsuarioRepositoryService implements UsuarioRepository {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    @InjectRepository(UsuarioEntity)
+    private readonly usuarioRepository: Repository<UsuarioEntity>,
+  ) {}
 
   async salvar(usuario: UsuarioEntity) {
     try {
-      const novoUsuario = await this.prisma.usuario.create({
-        data: {
-          nome: usuario.nome,
-          email: usuario.email,
-          senha: usuario.senha,
-        },
+      const novoUsuario = await this.usuarioRepository.save({
+        nome: usuario.nome,
+        email: usuario.email,
+        senha: usuario.senha,
       });
       return novoUsuario;
     } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        throw new HttpException(
-          'Erro ao salvar usuário',
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
-      } else {
-        throw new HttpException(
-          'Erro inesperado ao salvar usuário',
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
-      }
+      throw new Error('Erro ao salvar usuário');
     }
   }
 
   async buscarTodos() {
-    return await this.prisma.usuario.findMany();
+    try {
+      return await this.usuarioRepository.find();
+    } catch (error) {
+      throw new Error('Erro ao buscar usuários');
+    }
   }
 
   async buscarPorEmail(email: string) {
-    const usuario = await this.prisma.usuario.findUnique({ where: { email } });
+    const usuario = await this.usuarioRepository.findOne({ where: { email } });
     return usuario ? true : false;
   }
 
-  async buscarPorId(id: number) {
-    const usuario = await this.prisma.usuario.findUnique({ where: { id } });
-    return usuario;
+  async buscarPorId(id: string) {
+    return await this.usuarioRepository.findOne({ where: { id } });
   }
 
-  async atualiza(id: number, usuarioAtt: Partial<UsuarioEntity>) {
-    const usuarioAlvo: { [key: string]: string | number } | null =
+  async atualiza(id: string, usuarioAtt: Partial<UsuarioEntity>) {
+    const usuarioAlvo: { [key: string]: string } | null =
       await this.buscarPorId(id);
     if (!usuarioAlvo) {
       throw new HttpException('Usuário não encontrado', HttpStatus.NOT_FOUND);
     }
     Object.entries(usuarioAtt).forEach(([chave, valor]) => {
-      if (chave === 'id') {
+      if (chave === 'id' || !valor) {
         return;
       }
 
       usuarioAlvo[chave] = valor;
     });
 
-    return await this.prisma.usuario.update({
-      where: { id },
-      data: usuarioAlvo,
-    });
+    return await this.usuarioRepository.save({ ...usuarioAlvo });
   }
 
-  async deleta(id: number) {
-    const usuarioAlvo = await this.buscarPorId(id);
-    if (!usuarioAlvo) {
-      throw new HttpException('Usuário não encontrado', HttpStatus.NOT_FOUND);
+  async deleta(id: string) {
+    try {
+      const usuarioAlvo = await this.buscarPorId(id);
+      if (!usuarioAlvo) {
+        throw new Error('Usuário não encontrado');
+      }
+      return await this.usuarioRepository.remove(usuarioAlvo);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.NOT_FOUND);
     }
-
-    return await this.prisma.usuario.delete({ where: { id } });
   }
 }

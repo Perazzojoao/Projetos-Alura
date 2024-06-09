@@ -17,6 +17,48 @@ Para criar um novo projeto Nest podemos utilizar dois métodos:
 
       npx @nestjs/cli new project-name
 
+## [Configurando variáveis de ambiente](https://docs.nestjs.com/techniques/configuration)
+
+Para ter acesso ao arquivo .env com suas variáveis de ambiente precisamos instalar e configurar seu uso.
+
+    pnpm i @nestjs/config
+
+Para configurar seu acesso, adicione o seguinte código no arquivo app.module.ts:
+
+```
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+
+@Module({
+  imports: [ConfigModule.forRoot()],
+})
+export class AppModule {}
+```
+
+Com isso, suas variáveis de ambiente já estarão acessíveis dentro do módulo em que foi adicionado.
+
+Para liberar seu uso de forma global, adicione `{isGlobal: true}` na função `forRoot()`
+
+**Ex:**
+
+    @Module({
+      imports: [ConfigModule.forRoot({
+        isGlobal: true
+      })],
+    })
+
+**Obs:** Esta configuração apenas da acesso ao arquivo nomeado como `.env` na raíz do projeto. Para acessar outros arquivos, é necessário passar o nome do arquivo como parâmetro da função `forRoot()`. Ex: `forRoot({envFilePath: '.env.development'})`. Para mais detalhes, acesse a [documentação](https://docs.nestjs.com/techniques/configuration).
+
+## Uso
+
+Para acessar as variáveis de ambiente, basta importar o módulo `ConfigService` e injetá-lo no construtor da classe que deseja utilizar. Após isso, basta chamar o método `get()` passando o nome da variável desejada.
+
+**Ex:**
+
+    constructor(private configService: ConfigService) {}
+
+    const port = this.configService.get('PORT');
+
 ## Instalando Prisma com SQLite
 
     pnpm i prisma -D
@@ -25,7 +67,7 @@ Para criar um novo projeto Nest podemos utilizar dois métodos:
 
 ### Realizando migrations ao alterar algo nas tabelas
 
-    pnpm dlx prisma migrate dev 
+    pnpm dlx prisma migrate dev
 
 ### Instalar prisma como dependência de produção
 
@@ -34,6 +76,12 @@ Para criar um novo projeto Nest podemos utilizar dois métodos:
 ### Visualizar banco de dados no navegador
 
     pnpm dlx prisma studio
+
+## Instalando TypeORM com Postgres
+
+    pnpm i @nestjs/typeorm typeorm
+
+    pnpm i pg
 
 ## Controllers
 
@@ -60,6 +108,7 @@ export class UsuarioController {
   }
 }
 ```
+
 Após isso, devemos adicionar o controller ao seu respectivo `module`:
 
 ```

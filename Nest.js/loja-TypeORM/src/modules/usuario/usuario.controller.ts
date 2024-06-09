@@ -5,13 +5,14 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  NotFoundException,
   Param,
   Post,
   Put,
 } from '@nestjs/common';
 import { UsuarioRepository } from './repository/usuario.repository';
 import { CriaUsuarioDto } from './dto/CriaUsuario.dto';
-import { UsuarioEntity } from './interfaces/usuario.entity';
+import { UsuarioEntity } from './entitys/usuario.entity';
 import { ListaUsuarioDto } from './dto/ListaUsuario.sto';
 import { AtualizaUsuarioDto } from './dto/AtualizaUsuario.dto';
 
@@ -30,22 +31,34 @@ export class UsuarioController {
 
       return await this.usuarioRepository.salvar(usuarioEntity);
     } catch (error) {
-      return error;
+      throw new HttpException(
+        'Algo deu errado',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        { cause: error },
+      );
     }
   }
 
   @Get()
   async buscaUsuarios() {
-    const usuariosSalvos = await this.usuarioRepository.buscarTodos();
-    const usuariosLista = usuariosSalvos.map(
-      (usuario) => new ListaUsuarioDto(usuario.id, usuario.nome),
-    );
-    return usuariosLista;
+    try {
+      const usuariosSalvos = await this.usuarioRepository.buscarTodos();
+      const usuariosLista = usuariosSalvos.map(
+        (usuario) => new ListaUsuarioDto(usuario.id, usuario.nome),
+      );
+      return usuariosLista;
+    } catch (error) {
+      throw new HttpException(
+        'Algo deu errado',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        { cause: error },
+      );
+    }
   }
 
   @Put(':id')
   async atualizaUsuario(
-    @Param('id') id: number,
+    @Param('id') id: string,
     @Body() usuario: AtualizaUsuarioDto,
   ) {
     const usuarioAlvo = await this.usuarioRepository.atualiza(id, usuario);
@@ -63,13 +76,10 @@ export class UsuarioController {
   }
 
   @Delete(':id')
-  async deletaUsuario(@Param('id') id: number) {
+  async deletaUsuario(@Param('id') id: string) {
     const usuarioADeletar = await this.usuarioRepository.deleta(id);
     if (!usuarioADeletar) {
-      return {
-        status: HttpStatus.NOT_FOUND,
-        mensagem: 'Usuário não encontrado',
-      };
+      throw new NotFoundException('Usuário não encontrado');
     }
     return {
       status: HttpStatus.OK,
