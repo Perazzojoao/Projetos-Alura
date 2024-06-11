@@ -1,4 +1,4 @@
-import { UsuarioEntity } from "../entitys/usuario.entity";
+import { UsuarioEntity } from "../entities/usuario.entity";
 
 export abstract class UsuarioRepository {
   abstract salvar(usuario: UsuarioEntity): Promise<UsuarioEntity>;

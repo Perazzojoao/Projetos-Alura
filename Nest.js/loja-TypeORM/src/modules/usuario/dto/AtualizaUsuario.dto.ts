@@ -1,6 +1,6 @@
 import { IsEmail, IsNotEmpty, IsOptional, MinLength } from 'class-validator';
 import { EmailEhUnico } from '../validacao/email-eh-unico.validator';
-import { UsuarioEntity } from '../entitys/usuario.entity';
+import { UsuarioEntity } from '../entities/usuario.entity';
 
 // Classe responsável por criar uma interface que valida os dados de entrada para criação de um usuário
 export class AtualizaUsuarioDto implements Partial<UsuarioEntity> {

@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { UsuarioRepository } from './repository/usuario.repository';
 import { CriaUsuarioDto } from './dto/CriaUsuario.dto';
-import { UsuarioEntity } from './entitys/usuario.entity';
+import { UsuarioEntity } from './entities/usuario.entity';
 import { ListaUsuarioDto } from './dto/ListaUsuario.sto';
 import { AtualizaUsuarioDto } from './dto/AtualizaUsuario.dto';
 
