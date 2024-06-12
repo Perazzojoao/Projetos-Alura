@@ -1,10 +1,7 @@
 import { Controller, Post, Body, Get, Put, Delete } from '@nestjs/common';
 import { ProdutoRepository } from './repositories/produto.repository';
 import { CriaProdutoDto } from './dto/CriaProduto.dto';
-import { ProdutoEntity } from './entities/produto.entity';
 import { AtualizaProdutoDto } from './dto/AtualizaProduto.dto';
-import { ProdutoImagemEntity } from './entities/produto-imagem.entity'; // Import the missing entity
-import { ProdutoCaracteristicaEntity } from './entities/produto-caracteristicas.entity';
 
 @Controller('produtos')
 export class ProdutoController {

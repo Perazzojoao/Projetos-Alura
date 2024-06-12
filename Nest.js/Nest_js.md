@@ -83,6 +83,59 @@ Para acessar as variáveis de ambiente, basta importar o módulo `ConfigService`
 
     pnpm i pg
 
+### Migrações
+
+Para criar migrações, primeiro criamos um arquivo de configuração de migrações do typeorm:
+
+**Ex:** `database/data-source-cli.ts`
+
+```
+import { DataSource, DataSourceOptions } from 'typeorm';
+import 'dotenv/config';
+
+const dataSourceOptions: DataSourceOptions = {
+  type: 'postgres',
+  host: process.env.DB_HOST,
+  port: Number(process.env.DB_PORT),
+  username: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  entities: [__dirname + '/../modules/**/entities/*.entity{.ts,.js}'],
+  migrations: [__dirname + '/migrations/*{.ts,.js}'],
+};
+
+const dataSource = new DataSource(dataSourceOptions);
+export default dataSource;
+```
+
+Após isso, instalamos o typeorm cli:
+
+    pnpm i -g typeorm
+
+Com isso, podemos criar um script para rodar as migrações de maneira mais fácil. Adicione o seguinte script no `package.json`:
+
+```
+"typeorm": "typeorm-ts-node-esm --dataSource dist/database/data-source-cli.js"
+```
+
+Este comando irá acessar o arquivo de configuração de migrações e rodar os comandos do typeorm com base nele.
+
+### Comandos úteis
+
+Criar uma nova migração:
+
+    pnpm typeorm migration:generate path/to/migration/migration-name
+
+Rodar a migração:
+
+    pnpm typeorm migration:run
+
+Mostrar as migrações já rodadas:
+
+    pnpm typeorm migration:show
+
+**Obs:** Devido a um bug no typeorm, é necessário adicionar o caminho até o arquivo de configuração de migrações na pasta `dist` do projeto. Sendo assim, é necessário rodar o comando `pnpm build` antes de rodar os comandos do typeorm.
+
 ## Controllers
 
 Controllers são onde definimos as rotas da aplicação e seus respectivos métodos.

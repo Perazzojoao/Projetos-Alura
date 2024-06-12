@@ -6,7 +6,7 @@ export class ProdutoCaracteristicaEntity {
   @PrimaryGeneratedColumn('uuid', { name: 'id' })
   id: string;
 
-  @Column({ name: 'id', length: 100, nullable: false })
+  @Column({ name: 'nome', length: 100, nullable: false })
   nome: string;
 
   @Column({ name: 'valor', length: 100, nullable: false })
