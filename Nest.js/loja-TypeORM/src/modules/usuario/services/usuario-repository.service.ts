@@ -3,6 +3,7 @@ import { UsuarioEntity } from '../entities/usuario.entity';
 import { UsuarioRepository } from '../repository/usuario.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { CriaUsuarioDto } from '../dto/CriaUsuario.dto';
 @Injectable()
 export class UsuarioRepositoryService implements UsuarioRepository {
   constructor(
@@ -10,14 +11,15 @@ export class UsuarioRepositoryService implements UsuarioRepository {
     private readonly usuarioRepository: Repository<UsuarioEntity>,
   ) {}
 
-  async salvar(usuario: UsuarioEntity) {
+  async salvar(usuario: CriaUsuarioDto) {
     try {
-      const novoUsuario = await this.usuarioRepository.save({
-        nome: usuario.nome,
-        email: usuario.email,
-        senha: usuario.senha,
-      });
-      return novoUsuario;
+      const novoUsuario = new UsuarioEntity(
+        usuario.nome,
+        usuario.email,
+        usuario.senha,
+      );
+      
+      return await this.usuarioRepository.save(novoUsuario);
     } catch (error) {
       throw new Error('Erro ao salvar usuário');
     }

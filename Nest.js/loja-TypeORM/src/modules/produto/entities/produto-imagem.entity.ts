@@ -1,7 +1,5 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { v4 as uuid } from 'uuid';
 import { ProdutoEntity } from './produto.entity';
-import { on } from 'events';
 
 @Entity({ name: 'produto_imagens' })
 export class ProdutoImagemEntity {
@@ -22,8 +20,6 @@ export class ProdutoImagemEntity {
   produto: ProdutoImagemEntity;
 
   constructor(url: string, descricao: string) {
-    this.id = uuid();
-    this.url = url;
     this.descricao = descricao;
   }
 }

@@ -12,7 +12,6 @@ import {
 } from '@nestjs/common';
 import { UsuarioRepository } from './repository/usuario.repository';
 import { CriaUsuarioDto } from './dto/CriaUsuario.dto';
-import { UsuarioEntity } from './entities/usuario.entity';
 import { ListaUsuarioDto } from './dto/ListaUsuario.sto';
 import { AtualizaUsuarioDto } from './dto/AtualizaUsuario.dto';
 
@@ -23,13 +22,12 @@ export class UsuarioController {
   @Post()
   async criaUsuario(@Body() usuario: CriaUsuarioDto) {
     try {
-      const usuarioEntity = new UsuarioEntity(
-        usuario.nome,
-        usuario.email,
-        usuario.senha,
-      );
-
-      return await this.usuarioRepository.salvar(usuarioEntity);
+      const novoUsuario = await this.usuarioRepository.salvar(usuario);
+      return {
+        status: HttpStatus.CREATED,
+        mensagem: 'Usuário criado com sucesso',
+        usuario: novoUsuario,
+      }
     } catch (error) {
       throw new HttpException(
         'Algo deu errado',

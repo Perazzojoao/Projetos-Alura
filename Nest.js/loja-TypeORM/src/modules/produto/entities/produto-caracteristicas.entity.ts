@@ -1,5 +1,4 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { v4 as uuid } from 'uuid';
 import { ProdutoEntity } from './produto.entity';
 
 @Entity({ name: 'produto_caracteristicas' })
@@ -21,7 +20,6 @@ export class ProdutoCaracteristicaEntity {
   produto: ProdutoEntity;
 
   constructor(nome: string, descricao: string) {
-    this.id = uuid();
     this.nome = nome;
     this.descricao = descricao;
   }

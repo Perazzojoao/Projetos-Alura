@@ -6,7 +6,6 @@ import {
   DeleteDateColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { v4 as uuid } from 'uuid';
 
 @Entity('usuarios')
 export class UsuarioEntity {
@@ -32,7 +31,6 @@ export class UsuarioEntity {
   [key: string]: string;
 
   constructor(nome: string, email: string, senha: string) {
-    this.id = uuid();
     this.nome = nome;
     this.email = email;
     this.senha = senha;

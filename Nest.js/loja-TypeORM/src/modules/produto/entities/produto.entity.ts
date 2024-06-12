@@ -9,7 +9,6 @@ import {
 } from 'typeorm';
 import { ProdutoCaracteristicaEntity } from './produto-caracteristicas.entity';
 import { ProdutoImagemEntity } from './produto-imagem.entity';
-import { v4 as uuid } from 'uuid';
 
 @Entity({ name: 'produtos' })
 export class ProdutoEntity {
@@ -67,7 +66,6 @@ export class ProdutoEntity {
     caracteristicas: ProdutoCaracteristicaEntity[],
     imagens: ProdutoImagemEntity[],
   ) {
-    this.id = uuid();
     this.usuarioId = usuarioID;
     this.nome = nome;
     this.valor = valor;

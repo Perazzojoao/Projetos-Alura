@@ -1,7 +1,8 @@
+import { CriaUsuarioDto } from "../dto/CriaUsuario.dto";
 import { UsuarioEntity } from "../entities/usuario.entity";
 
 export abstract class UsuarioRepository {
-  abstract salvar(usuario: UsuarioEntity): Promise<UsuarioEntity>;
+  abstract salvar(usuario: CriaUsuarioDto): Promise<UsuarioEntity>;
   abstract buscarTodos(): Promise<UsuarioEntity[]>;
   abstract buscarPorEmail(email: string): Promise<boolean>;
   abstract buscarPorId(id: string): Promise<UsuarioEntity | null>;

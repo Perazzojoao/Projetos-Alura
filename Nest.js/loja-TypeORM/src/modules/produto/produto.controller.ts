@@ -12,25 +12,11 @@ export class ProdutoController {
 
   @Post()
   async criaProduto(@Body() produto: CriaProdutoDto) {
-    const novoProduto = new ProdutoEntity(
-      produto.usuarioId,
-      produto.nome,
-      produto.valor,
-      produto.quantidade,
-      produto.descricao,
-      produto.categoria,
-      produto.caracteristicas.map(
-        (caracteristica) =>
-          new ProdutoCaracteristicaEntity(
-            caracteristica.nome,
-            caracteristica.descricao,
-          ),
-      ),
-      produto.imagens.map(
-        (imagem) => new ProdutoImagemEntity(imagem.url, imagem.descricao),
-      ),
-    );
-    return await this.produtoRepository.salvar(novoProduto);
+    const novoProduto = await this.produtoRepository.salvar(produto);
+    return {
+      message: 'Produto criado com sucesso',
+      produto: novoProduto,
+    }
   }
 
   @Get()

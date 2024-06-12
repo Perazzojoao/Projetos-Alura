@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProdutoCaracteristicaEntity } from '../entities/produto-caracteristicas.entity';
 import { ProdutoImagemEntity } from '../entities/produto-imagem.entity';
+import { CriaProdutoDto } from '../dto/CriaProduto.dto';
 
 @Injectable()
 export class ProdutoService implements ProdutoRepository {
@@ -13,10 +14,27 @@ export class ProdutoService implements ProdutoRepository {
     private readonly produtoRepository: Repository<ProdutoEntity>,
   ) {}
 
-  async salvar(produto: ProdutoEntity): Promise<ProdutoEntity> {
+  async salvar(produto: CriaProdutoDto): Promise<ProdutoEntity> {
     try {
-      const novoProduto = await this.produtoRepository.save(produto);
-      return novoProduto;
+      const novoProduto = new ProdutoEntity(
+        produto.usuarioId,
+        produto.nome,
+        produto.valor,
+        produto.quantidade,
+        produto.descricao,
+        produto.categoria,
+        produto.caracteristicas.map(
+          (caracteristica) =>
+            new ProdutoCaracteristicaEntity(
+              caracteristica.nome,
+              caracteristica.descricao,
+            ),
+        ),
+        produto.imagens.map(
+          (imagem) => new ProdutoImagemEntity(imagem.url, imagem.descricao),
+        ),
+      );
+      return await this.produtoRepository.save(novoProduto);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
