@@ -1,5 +1,5 @@
 import { StatusPedido } from "../enum/statusPedidi.enum";
-import { IsNumber, IsNotEmpty, Min, IsString, IsEnum, IsUUID } from "class-validator";
+import { IsNumber, IsNotEmpty, Min, IsEnum, IsUUID } from "class-validator";
 
 export class CreatePedidoDto {
   @IsNotEmpty({ message: 'Valor total é obrigatório' })

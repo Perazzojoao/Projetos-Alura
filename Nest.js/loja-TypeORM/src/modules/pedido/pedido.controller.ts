@@ -1,34 +1,41 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus } from '@nestjs/common';
 import { CreatePedidoDto } from './dto/create-pedido.dto';
 import { UpdatePedidoDto } from './dto/update-pedido.dto';
 import { PedidoRepository } from './repositories/pedido.ropository';
+import { HttpResponse } from 'src/lib/http-response';
+import { PedidoEntity } from './entities/pedido.entity';
 
 @Controller('pedidos')
 export class PedidoController {
   constructor(private readonly pedidoService: PedidoRepository) {}
 
   @Post()
-  create(@Body() createPedidoDto: CreatePedidoDto) {
-    return this.pedidoService.create(createPedidoDto);
+  async create(@Body() createPedidoDto: CreatePedidoDto) {
+    const newPedido = this.pedidoService.create(createPedidoDto);
+    return new HttpResponse(newPedido, 'Pedido criado com sucesso', HttpStatus.CREATED);
   }
 
   @Get()
-  findAll() {
-    return this.pedidoService.findAll();
+  async findAll() {
+    const pedidos = await this.pedidoService.findAll();
+    return new HttpResponse(pedidos, 'Pedidos encontrados com sucesso', HttpStatus.OK);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.pedidoService.findOne(id);
+  async findOne(@Param('id') id: string) {
+    const pedido = await this.pedidoService.findOne(id);
+    return new HttpResponse(pedido, 'Pedido encontrado com sucesso');
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePedidoDto: UpdatePedidoDto) {
-    return this.pedidoService.update(id, updatePedidoDto);
+  async update(@Param('id') id: string, @Body() updatePedidoDto: UpdatePedidoDto) {
+    const updatedPedido = await this.pedidoService.update(id, updatePedidoDto);
+    return new HttpResponse(updatedPedido, 'Pedido atualizado com sucesso', HttpStatus.OK);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.pedidoService.delete(id);
+  async remove(@Param('id') id: string) {
+    const deleted = await this.pedidoService.delete(id);
+    return new HttpResponse(deleted, 'Pedido removido com sucesso');
   }
 }

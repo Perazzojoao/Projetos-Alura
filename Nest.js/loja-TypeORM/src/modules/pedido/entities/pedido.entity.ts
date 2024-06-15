@@ -6,9 +6,11 @@ import {
   DeleteDateColumn,
   PrimaryGeneratedColumn,
   ManyToOne,
+  OneToMany,
 } from 'typeorm';
 import { StatusPedido } from '../enum/statusPedidi.enum';
 import { UsuarioEntity } from '../../usuario/entities/usuario.entity';
+import { ItensPedidoEntity } from './itens-pedido.entity';
 
 @Entity('pedidos')
 export class PedidoEntity {
@@ -31,11 +33,17 @@ export class PedidoEntity {
   @ManyToOne(() => UsuarioEntity, (usuario) => usuario.pedidos)
   usuario: UsuarioEntity;
 
+  @OneToMany(() => ItensPedidoEntity, (itemPedido) => itemPedido.pedido, {
+    cascade: true,
+  })
+  itensPedido: ItensPedidoEntity[];
+
   [key: string]: any;
 
   constructor(valor_total: number, status: StatusPedido, usuario: UsuarioEntity) {
     this.valor_total = valor_total;
     this.status = status;
     this.usuario = usuario;
+    // this.itensPedido = itensPedido;
   }
 }

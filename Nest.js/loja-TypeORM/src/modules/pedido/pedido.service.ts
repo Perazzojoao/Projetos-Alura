@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { PedidoRepository } from './repositories/pedido.ropository';
 import { PedidoEntity } from './entities/pedido.entity';
 import { CreatePedidoDto } from './dto/create-pedido.dto';
@@ -28,6 +28,7 @@ export class PedidoService implements PedidoRepository {
       throw new HttpException(error.message || 'Erro ao salvar usuário', HttpStatus.BAD_REQUEST);
     }
   }
+
   async update(id: string, produtoAtt: Partial<PedidoEntity>): Promise<PedidoEntity> {
     const pedidoAlvo: { [key: string]: string | number } | null = await this.pedidoRepository.findOne({
       where: { id },
@@ -43,6 +44,7 @@ export class PedidoService implements PedidoRepository {
     });
     return await this.pedidoRepository.save(pedidoAlvo);
   }
+
   async delete(id: string): Promise<PedidoEntity> {
     const pedidoAlvo = await this.pedidoRepository.findOne({ where: { id } });
     if (!pedidoAlvo) {
@@ -50,8 +52,13 @@ export class PedidoService implements PedidoRepository {
     }
     return await this.pedidoRepository.remove(pedidoAlvo);
   }
+
   async findOne(id: string): Promise<PedidoEntity | null> {
-    return await this.pedidoRepository.findOne({ where: { id } });
+    const pedido = await this.pedidoRepository.findOne({ where: { id } });
+    if (!pedido) {
+      throw new NotFoundException('Pedido não encontrado');
+    }
+    return pedido;
   }
   async findAll(): Promise<PedidoEntity[]> {
     return await this.pedidoRepository.find();
