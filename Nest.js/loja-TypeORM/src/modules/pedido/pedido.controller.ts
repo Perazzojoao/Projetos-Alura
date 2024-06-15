@@ -3,7 +3,6 @@ import { CreatePedidoDto } from './dto/create-pedido.dto';
 import { UpdatePedidoDto } from './dto/update-pedido.dto';
 import { PedidoRepository } from './repositories/pedido.ropository';
 import { HttpResponse } from 'src/lib/http-response';
-import { PedidoEntity } from './entities/pedido.entity';
 
 @Controller('pedidos')
 export class PedidoController {
@@ -11,7 +10,7 @@ export class PedidoController {
 
   @Post()
   async create(@Body() createPedidoDto: CreatePedidoDto) {
-    const newPedido = this.pedidoService.create(createPedidoDto);
+    const newPedido = await this.pedidoService.create(createPedidoDto);
     return new HttpResponse(newPedido, 'Pedido criado com sucesso', HttpStatus.CREATED);
   }
 
