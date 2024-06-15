@@ -15,9 +15,6 @@ export class ProdutoEntity {
   @PrimaryGeneratedColumn('uuid', { name: 'id' })
   id: string;
 
-  @Column({ name: 'usuario_id', length: 100, nullable: false })
-  usuarioId: string;
-
   @Column({ name: 'nome', length: 100, nullable: false })
   nome: string;
 
@@ -57,7 +54,6 @@ export class ProdutoEntity {
   [key: string]: any;
 
   constructor(
-    usuarioID: string,
     nome: string,
     valor: number,
     quantidade: number,
@@ -66,7 +62,6 @@ export class ProdutoEntity {
     caracteristicas: ProdutoCaracteristicaEntity[],
     imagens: ProdutoImagemEntity[],
   ) {
-    this.usuarioId = usuarioID;
     this.nome = nome;
     this.valor = valor;
     this.quantidade = quantidade;

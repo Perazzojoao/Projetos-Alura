@@ -2,7 +2,7 @@
 
 > Resumo das principais funcionalidades do Nest.js
 
-`DOCUMENTAÇÃO`: https://docs.nestjs.com
+`DOCUMENTAÇÃO`: <https://docs.nestjs.com>
 
 ## Criar novo projeto Nest
 
@@ -25,7 +25,7 @@ Para ter acesso ao arquivo .env com suas variáveis de ambiente precisamos insta
 
 Para configurar seu acesso, adicione o seguinte código no arquivo app.module.ts:
 
-```
+```typescript
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
@@ -89,7 +89,7 @@ Para criar migrações, primeiro criamos um arquivo de configuração de migraç
 
 **Ex:** `database/data-source-cli.ts`
 
-```
+```typescript
 import { DataSource, DataSourceOptions } from 'typeorm';
 import 'dotenv/config';
 
@@ -114,7 +114,7 @@ Após isso, instalamos o typeorm cli:
 
 Com isso, podemos criar um script para rodar as migrações de maneira mais fácil. Adicione o seguinte script no `package.json`:
 
-```
+```json
 "typeorm": "typeorm-ts-node-esm --dataSource dist/database/data-source-cli.js"
 ```
 
@@ -144,7 +144,7 @@ Controllers são onde definimos as rotas da aplicação e seus respectivos méto
 
 Para criar um novo controller, criamos uma classe:
 
-```
+```typescript
 @Controller('/usuarios')  // Decorator para marcar a classe como um controller
 export class UsuarioController {
   constructor(private usuarioRepository: UsuarioRepository) {}  // Dependency injection
@@ -164,7 +164,7 @@ export class UsuarioController {
 
 Após isso, devemos adicionar o controller ao seu respectivo `module`:
 
-```
+```typescript
 @Module({
   imports: [],
   controllers: [UsuarioController],

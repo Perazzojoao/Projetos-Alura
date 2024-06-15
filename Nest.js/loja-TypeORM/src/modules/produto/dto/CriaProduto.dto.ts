@@ -14,10 +14,6 @@ import {
 import { ProdutoEntity } from '../entities/produto.entity';
 
 export class CriaProdutoDto {
-  @IsNotEmpty({ message: 'UsuarioId é obrigatório' })
-  @IsUUID(4, { message: 'UsuarioId deve ser um UUID' })
-  usuarioId: string;
-
   @MaxLength(100, { message: 'Nome deve ter no máximo 100 caracteres' })
   @MinLength(3, { message: 'Nome deve ter no mínimo 3 caracteres' })
   @IsNotEmpty({ message: 'Nome é obrigatório' })

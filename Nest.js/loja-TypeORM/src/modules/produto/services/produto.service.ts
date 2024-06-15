@@ -17,7 +17,6 @@ export class ProdutoService implements ProdutoRepository {
   async salvar(produto: CriaProdutoDto): Promise<ProdutoEntity> {
     try {
       const novoProduto = new ProdutoEntity(
-        produto.usuarioId,
         produto.nome,
         produto.valor,
         produto.quantidade,
