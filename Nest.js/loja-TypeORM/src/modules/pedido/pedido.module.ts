@@ -1,12 +1,17 @@
 import { Module } from '@nestjs/common';
 import { PedidoService } from './pedido.service';
 import { PedidoController } from './pedido.controller';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { PedidoEntity } from './entities/pedido.entity';
+import { UsuarioEntity } from '../usuario/entities/usuario.entity';
+import { PedidoRepository } from './repositories/pedido.ropository';
 
 @Module({
+  imports: [TypeOrmModule.forFeature([PedidoEntity, UsuarioEntity])],
   controllers: [PedidoController],
   providers: [
     {
-      provide: 'PedidoRepository',
+      provide: PedidoRepository,
       useClass: PedidoService,
     },
   ],

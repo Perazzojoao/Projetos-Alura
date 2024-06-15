@@ -9,9 +9,8 @@ import {
   IsUrl,
   ValidateNested,
   IsArray,
-  ArrayMinSize
+  ArrayMinSize,
 } from 'class-validator';
-import { ProdutoEntity } from '../entities/produto.entity';
 
 export class CriaProdutoDto {
   @MaxLength(100, { message: 'Nome deve ter no máximo 100 caracteres' })
@@ -24,10 +23,7 @@ export class CriaProdutoDto {
   @Min(0.1, { message: 'Preço deve ser maior que 0' })
   valor: number;
 
-  @IsNumber(
-    { maxDecimalPlaces: 0 },
-    { message: 'Quantidade deve ser um número' },
-  )
+  @IsNumber({ maxDecimalPlaces: 0 }, { message: 'Quantidade deve ser um número' })
   @IsNotEmpty({ message: 'Quantidade é obrigatória' })
   @Min(1, { message: 'Quantidade deve ser maior que 0' })
   quantidade: number;

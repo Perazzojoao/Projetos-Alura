@@ -1,22 +1,59 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PedidoRepository } from './repositories/pedido.ropository';
 import { PedidoEntity } from './entities/pedido.entity';
+import { CreatePedidoDto } from './dto/create-pedido.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { UsuarioEntity } from '../usuario/entities/usuario.entity';
 
 @Injectable()
-export class PedidoService implements PedidoRepository{
-  create(produto: PedidoEntity): Promise<PedidoEntity> {
-    throw new Error('Method not implemented.');
+export class PedidoService implements PedidoRepository {
+  constructor(
+    @InjectRepository(PedidoEntity)
+    private readonly pedidoRepository: Repository<PedidoEntity>,
+
+    @InjectRepository(UsuarioEntity)
+    private readonly usuarioRepository: Repository<UsuarioEntity>,
+  ) {}
+
+  async create(produto: CreatePedidoDto): Promise<PedidoEntity | undefined> {
+    try {
+      const usuario = await this.usuarioRepository.findOneBy({ id: produto.usuarioId });
+      if (!usuario) {
+        throw new Error('Usuário não existe');
+      }
+      const newPedido = new PedidoEntity(produto.valorTotal, produto.status, usuario);
+      return await this.pedidoRepository.save(newPedido);
+    } catch (error) {
+      throw new HttpException(error.message || 'Erro ao salvar usuário', HttpStatus.BAD_REQUEST);
+    }
   }
-  update(id: string, produtoAtt: Partial<PedidoEntity>): Promise<PedidoEntity> {
-    throw new Error('Method not implemented.');
+  async update(id: string, produtoAtt: Partial<PedidoEntity>): Promise<PedidoEntity> {
+    const pedidoAlvo: { [key: string]: string | number } | null = await this.pedidoRepository.findOne({
+      where: { id },
+    });
+    if (!pedidoAlvo) {
+      throw new HttpException('Pedido não existe', HttpStatus.NOT_FOUND);
+    }
+    Object.entries(produtoAtt).forEach(([key, value]) => {
+      if (key === 'id' || !value) {
+        return;
+      }
+      pedidoAlvo[key] = value;
+    });
+    return await this.pedidoRepository.save(pedidoAlvo);
   }
-  delete(id: string): Promise<PedidoEntity> {
-    throw new Error('Method not implemented.');
+  async delete(id: string): Promise<PedidoEntity> {
+    const pedidoAlvo = await this.pedidoRepository.findOne({ where: { id } });
+    if (!pedidoAlvo) {
+      throw new HttpException('Pedido não existe', HttpStatus.NOT_FOUND);
+    }
+    return await this.pedidoRepository.remove(pedidoAlvo);
   }
-  findOne(id: string): Promise<PedidoEntity | null> {
-    throw new Error('Method not implemented.');
+  async findOne(id: string): Promise<PedidoEntity | null> {
+    return await this.pedidoRepository.findOne({ where: { id } });
   }
-  findAll(): Promise<PedidoEntity[]> {
-    throw new Error('Method not implemented.');
+  async findAll(): Promise<PedidoEntity[]> {
+    return await this.pedidoRepository.find();
   }
 }

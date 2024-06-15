@@ -1,3 +1,4 @@
+import { PedidoEntity } from '../../pedido/entities/pedido.entity';
 import {
   Entity,
   Column,
@@ -5,6 +6,7 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
   PrimaryGeneratedColumn,
+  OneToMany,
 } from 'typeorm';
 
 @Entity('usuarios')
@@ -28,7 +30,10 @@ export class UsuarioEntity {
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: string;
 
-  [key: string]: string;
+  @OneToMany(() => PedidoEntity, (pedido) => pedido.usuario)
+  pedidos: PedidoEntity[];
+
+  [key: string]: any;
 
   constructor(nome: string, email: string, senha: string) {
     this.nome = nome;
