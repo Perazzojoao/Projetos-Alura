@@ -17,7 +17,7 @@ export class PedidoEntity {
   @PrimaryGeneratedColumn('uuid', { name: 'id' })
   id: string;
 
-  @Column({ name: 'valor_total', nullable: false })
+  @Column({ name: 'valor_total', type: 'float',  nullable: false })
   valor_total: number;
 
   @Column({ name: 'status', enum: StatusPedido, nullable: false })
@@ -40,10 +40,10 @@ export class PedidoEntity {
 
   [key: string]: any;
 
-  constructor(valor_total: number, status: StatusPedido, usuario: UsuarioEntity) {
+  constructor(valor_total: number, status: StatusPedido, usuario: UsuarioEntity, itensPedido: ItensPedidoEntity[]) {
     this.valor_total = valor_total;
     this.status = status;
     this.usuario = usuario;
-    // this.itensPedido = itensPedido;
+    this.itensPedido = itensPedido;
   }
 }

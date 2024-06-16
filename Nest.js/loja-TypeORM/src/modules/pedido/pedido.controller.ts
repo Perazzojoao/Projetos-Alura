@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, Query } from '@nestjs/common';
 import { CreatePedidoDto } from './dto/create-pedido.dto';
 import { UpdatePedidoDto } from './dto/update-pedido.dto';
 import { PedidoRepository } from './repositories/pedido.ropository';
@@ -9,8 +9,8 @@ export class PedidoController {
   constructor(private readonly pedidoService: PedidoRepository) {}
 
   @Post()
-  async create(@Body() createPedidoDto: CreatePedidoDto) {
-    const newPedido = await this.pedidoService.create(createPedidoDto);
+  async create(@Query('usuario') usuarioId: string, @Body() createPedidoDto: CreatePedidoDto) {
+    const newPedido = await this.pedidoService.create(usuarioId, createPedidoDto);
     return new HttpResponse(newPedido, 'Pedido criado com sucesso', HttpStatus.CREATED);
   }
 

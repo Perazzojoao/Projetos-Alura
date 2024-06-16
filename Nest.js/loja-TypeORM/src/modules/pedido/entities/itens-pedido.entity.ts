@@ -14,7 +14,7 @@ export class ItensPedidoEntity {
   @Column({ name: 'quantidade', nullable: false })
   quantidade: number;
 
-  @Column({ name: 'preco_venda', nullable: false })
+  @Column({ name: 'preco_venda', nullable: false, type: 'float' })
   precoVenda: number;
 
   @ManyToOne(() => PedidoEntity, (pedido) => pedido.itensPedido, {
@@ -23,9 +23,8 @@ export class ItensPedidoEntity {
   })
   pedido: PedidoEntity;
 
-  // constructor(quantidade: number, precoVenda: number, pedido: PedidoEntity) {
-  //   this.quantidade = quantidade;
-  //   this.precoVenda = precoVenda;
-  //   this.pedido = pedido;
-  // }
+  constructor(quantidade: number, precoVenda: number) {
+    this.quantidade = quantidade;
+    this.precoVenda = precoVenda;
+  }
 }

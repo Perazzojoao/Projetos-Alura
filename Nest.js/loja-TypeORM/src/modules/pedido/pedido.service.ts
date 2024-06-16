@@ -5,6 +5,7 @@ import { CreatePedidoDto } from './dto/create-pedido.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UsuarioEntity } from '../usuario/entities/usuario.entity';
+import { ItensPedidoEntity } from './entities/itens-pedido.entity';
 
 @Injectable()
 export class PedidoService implements PedidoRepository {
@@ -16,13 +17,19 @@ export class PedidoService implements PedidoRepository {
     private readonly usuarioRepository: Repository<UsuarioEntity>,
   ) {}
 
-  async create(produto: CreatePedidoDto): Promise<PedidoEntity | undefined> {
+  async create(usuarioId: string, produto: CreatePedidoDto): Promise<PedidoEntity | undefined> {
     try {
-      const usuario = await this.usuarioRepository.findOneBy({ id: produto.usuarioId });
+      const usuario = await this.usuarioRepository.findOneBy({ id: usuarioId });
       if (!usuario) {
         throw new Error('Usuário não existe');
       }
-      const newPedido = new PedidoEntity(produto.valorTotal, produto.status, usuario);
+      const itensPedido = produto.itensPedido.map(
+        (item) => new ItensPedidoEntity(item.quantidade, item.precoVenda),
+      );
+      const valorTotal = produto.itensPedido.reduce((acc, item) => {
+        return acc + item.quantidade * item.precoVenda;
+      }, 0);
+      const newPedido = new PedidoEntity(valorTotal, produto.status, usuario, itensPedido);
       return await this.pedidoRepository.save(newPedido);
     } catch (error) {
       throw new HttpException(error.message || 'Erro ao salvar usuário', HttpStatus.BAD_REQUEST);
