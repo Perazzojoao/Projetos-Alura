@@ -5,6 +5,7 @@ import {
   ManyToOne,
 } from 'typeorm';
 import { PedidoEntity } from './pedido.entity';
+import { ProdutoEntity } from 'src/modules/produto/entities/produto.entity';
 
 @Entity('itens-pedido')
 export class ItensPedidoEntity {
@@ -23,8 +24,14 @@ export class ItensPedidoEntity {
   })
   pedido: PedidoEntity;
 
-  constructor(quantidade: number, precoVenda: number) {
+  @ManyToOne(() => ProdutoEntity, (produto) => produto.itensPedido, {
+    cascade: ['update'],
+  })
+  produto: ProdutoEntity;
+
+  constructor(quantidade: number, precoVenda: number, produto: ProdutoEntity) {
     this.quantidade = quantidade;
     this.precoVenda = precoVenda;
+    this.produto = produto;
   }
 }

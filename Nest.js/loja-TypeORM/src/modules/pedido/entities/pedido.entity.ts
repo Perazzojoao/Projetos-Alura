@@ -38,8 +38,6 @@ export class PedidoEntity {
   })
   itensPedido: ItensPedidoEntity[];
 
-  [key: string]: any;
-
   constructor(valor_total: number, status: StatusPedido, usuario: UsuarioEntity, itensPedido: ItensPedidoEntity[]) {
     this.valor_total = valor_total;
     this.status = status;

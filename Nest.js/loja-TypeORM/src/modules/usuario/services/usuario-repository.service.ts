@@ -43,7 +43,7 @@ export class UsuarioRepositoryService implements UsuarioRepository {
   }
 
   async atualiza(id: string, usuarioAtt: Partial<UsuarioEntity>) {
-    const usuarioAlvo: { [key: string]: string } | null =
+    const usuarioAlvo: { [key: string]: any } | null =
       await this.buscarPorId(id);
     if (!usuarioAlvo) {
       throw new HttpException('Usuário não encontrado', HttpStatus.NOT_FOUND);

@@ -20,6 +20,7 @@ export class ProdutoImagemEntity {
   produto: ProdutoImagemEntity;
 
   constructor(url: string, descricao: string) {
+    this.url = url;
     this.descricao = descricao;
   }
 }

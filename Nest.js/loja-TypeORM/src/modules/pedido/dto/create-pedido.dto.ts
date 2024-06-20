@@ -1,7 +1,7 @@
 import { Type } from 'class-transformer';
 import { ItensPedidoEntity } from '../entities/itens-pedido.entity';
 import { StatusPedido } from '../enum/statusPedidi.enum';
-import { IsNumber, IsNotEmpty, Min, IsEnum, IsUUID, IsArray, ArrayMinSize } from 'class-validator';
+import { IsNumber, IsNotEmpty, Min, IsEnum, IsArray, ArrayMinSize, IsUUID } from 'class-validator';
 
 export class CreatePedidoDto {
   @IsNotEmpty({ message: 'Status é obrigatório' })
@@ -15,7 +15,10 @@ export class CreatePedidoDto {
   itensPedido: ItensPedidoDto[];
 }
 
-class ItensPedidoDto extends ItensPedidoEntity{
+class ItensPedidoDto extends ItensPedidoEntity {
+  @IsUUID('4', { message: 'Id do produto inválida' })
+  produtoId: string;
+
   @IsNotEmpty({ message: 'Quantidade é obrigatória' })
   @IsNumber({ maxDecimalPlaces: 0 }, { message: 'Quantidade inválida' })
   @Min(1, { message: 'Quantidade deve ser maior que 0' })

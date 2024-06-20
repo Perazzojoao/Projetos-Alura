@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { ProdutoCaracteristicaEntity } from './produto-caracteristicas.entity';
 import { ProdutoImagemEntity } from './produto-imagem.entity';
+import { ItensPedidoEntity } from 'src/modules/pedido/entities/itens-pedido.entity';
 
 @Entity({ name: 'produtos' })
 export class ProdutoEntity {
@@ -33,16 +34,18 @@ export class ProdutoEntity {
   @OneToMany(
     () => ProdutoCaracteristicaEntity,
     (produtoCaracteristicaEntity) => produtoCaracteristicaEntity.produto,
-    { cascade: true, eager: true},
+    { cascade: true, eager: true },
   )
   caracteristicas: ProdutoCaracteristicaEntity[];
 
-  @OneToMany(
-    () => ProdutoImagemEntity,
-    (produtoImagemEntity) => produtoImagemEntity.produto,
-    { cascade: true, eager: true},
-  )
+  @OneToMany(() => ProdutoImagemEntity, (produtoImagemEntity) => produtoImagemEntity.produto, {
+    cascade: true,
+    eager: true,
+  })
   imagens: ProdutoImagemEntity[];
+
+  @OneToMany(() => ItensPedidoEntity, (itensPedido) => itensPedido.produto)
+  itensPedido: ItensPedidoEntity[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: string;
@@ -50,8 +53,6 @@ export class ProdutoEntity {
   updatedAt: string;
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: string;
-
-  [key: string]: any;
 
   constructor(
     nome: string,

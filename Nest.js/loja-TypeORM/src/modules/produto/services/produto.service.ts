@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { ProdutoEntity } from '../entities/produto.entity';
 import { ProdutoRepository } from '../repositories/produto.repository';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -23,15 +23,9 @@ export class ProdutoService implements ProdutoRepository {
         produto.descricao,
         produto.categoria,
         produto.caracteristicas.map(
-          (caracteristica) =>
-            new ProdutoCaracteristicaEntity(
-              caracteristica.nome,
-              caracteristica.descricao,
-            ),
+          (caracteristica) => new ProdutoCaracteristicaEntity(caracteristica.nome, caracteristica.descricao),
         ),
-        produto.imagens.map(
-          (imagem) => new ProdutoImagemEntity(imagem.url, imagem.descricao),
-        ),
+        produto.imagens.map((imagem) => new ProdutoImagemEntity(imagem.url, imagem.descricao)),
       );
       return await this.produtoRepository.save(novoProduto);
     } catch (error) {
@@ -42,14 +36,14 @@ export class ProdutoService implements ProdutoRepository {
     try {
       return await this.produtoRepository.find();
     } catch (error) {
-      throw new Error('Erro ao buscar produtos');
+      throw new NotFoundException('Erro ao buscar produtos');
     }
   }
   async buscarPorUsuario(usuarioId: string): Promise<ProdutoEntity[]> {
     try {
-      return await this.produtoRepository.find({ where: { usuarioId } });
+      return await this.produtoRepository.find({ where: { id: usuarioId } });
     } catch (error) {
-      throw new Error('Erro ao buscar produtos');
+      throw new NotFoundException('Erro ao buscar produtos');
     }
   }
   async buscarPorId(id: string): Promise<ProdutoEntity | null> {
@@ -57,15 +51,10 @@ export class ProdutoService implements ProdutoRepository {
   }
   async atualiza(id: string, produtoAtt: Partial<ProdutoEntity>) {
     const produtoAlvo: {
-      [key: string]:
-        | string
-        | number
-        | ProdutoCaracteristicaEntity[]
-        | ProdutoImagemEntity[]
-        | undefined;
+      [key: string]: any;
     } | null = await this.buscarPorId(id);
     if (!produtoAlvo) {
-      throw new Error('Produto não encontrado');
+      throw new NotFoundException('Produto não encontrado');
     }
     Object.entries(produtoAtt).forEach(([chave, valor]) => {
       if (chave === 'id' || !valor) {
@@ -79,7 +68,7 @@ export class ProdutoService implements ProdutoRepository {
   async deleta(id: string): Promise<ProdutoEntity> {
     const produtoAlvo: ProdutoEntity | null = await this.buscarPorId(id);
     if (!produtoAlvo) {
-      throw new Error('Produto não encontrado');
+      throw new NotFoundException('Produto não encontrado');
     }
     return await this.produtoRepository.remove(produtoAlvo);
   }

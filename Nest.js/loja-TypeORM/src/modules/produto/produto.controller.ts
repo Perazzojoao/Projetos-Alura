@@ -13,7 +13,7 @@ export class ProdutoController {
     return {
       message: 'Produto criado com sucesso',
       produto: novoProduto,
-    }
+    };
   }
 
   @Get()
@@ -22,10 +22,7 @@ export class ProdutoController {
   }
 
   @Put(':id')
-  async atualizaProduto(
-    @Body() produto: Partial<AtualizaProdutoDto>,
-    id: string,
-  ) {
+  async atualizaProduto(@Body() produto: Partial<AtualizaProdutoDto>, id: string) {
     const produtoAtt = await this.produtoRepository.atualiza(id, produto);
     return {
       message: 'Produto atualizado com sucesso',

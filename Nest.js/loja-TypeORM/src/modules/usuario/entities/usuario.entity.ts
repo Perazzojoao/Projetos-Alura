@@ -33,8 +33,6 @@ export class UsuarioEntity {
   @OneToMany(() => PedidoEntity, (pedido) => pedido.usuario)
   pedidos: PedidoEntity[];
 
-  [key: string]: any;
-
   constructor(nome: string, email: string, senha: string) {
     this.nome = nome;
     this.email = email;
