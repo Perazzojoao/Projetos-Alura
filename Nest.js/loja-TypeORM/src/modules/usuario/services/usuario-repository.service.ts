@@ -13,12 +13,8 @@ export class UsuarioRepositoryService implements UsuarioRepository {
 
   async salvar(usuario: CriaUsuarioDto) {
     try {
-      const novoUsuario = new UsuarioEntity(
-        usuario.nome,
-        usuario.email,
-        usuario.senha,
-      );
-      
+      const novoUsuario = new UsuarioEntity(usuario.nome, usuario.email, usuario.senha);
+
       return await this.usuarioRepository.save(novoUsuario);
     } catch (error) {
       throw new Error('Erro ao salvar usuário');
@@ -43,18 +39,11 @@ export class UsuarioRepositoryService implements UsuarioRepository {
   }
 
   async atualiza(id: string, usuarioAtt: Partial<UsuarioEntity>) {
-    const usuarioAlvo: { [key: string]: any } | null =
-      await this.buscarPorId(id);
+    const usuarioAlvo = await this.buscarPorId(id);
     if (!usuarioAlvo) {
       throw new HttpException('Usuário não encontrado', HttpStatus.NOT_FOUND);
     }
-    Object.entries(usuarioAtt).forEach(([chave, valor]) => {
-      if (chave === 'id' || !valor) {
-        return;
-      }
-
-      usuarioAlvo[chave] = valor;
-    });
+    Object.assign(usuarioAlvo, usuarioAtt as UsuarioEntity);
 
     return await this.usuarioRepository.save({ ...usuarioAlvo });
   }

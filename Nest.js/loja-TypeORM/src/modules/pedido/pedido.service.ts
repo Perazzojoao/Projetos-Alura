@@ -51,18 +51,13 @@ export class PedidoService implements PedidoRepository {
   }
 
   async update(id: string, produtoAtt: Partial<PedidoEntity>): Promise<PedidoEntity> {
-    const pedidoAlvo: { [key: string]: any } | null = await this.pedidoRepository.findOne({
+    const pedidoAlvo = await this.pedidoRepository.findOne({
       where: { id },
     });
     if (!pedidoAlvo) {
       throw new HttpException('Pedido não existe', HttpStatus.NOT_FOUND);
     }
-    Object.entries(produtoAtt).forEach(([key, value]) => {
-      if (key === 'id' || !value) {
-        return;
-      }
-      pedidoAlvo[key] = value;
-    });
+    Object.assign(pedidoAlvo, produtoAtt as PedidoEntity);
     return await this.pedidoRepository.save(pedidoAlvo);
   }
 

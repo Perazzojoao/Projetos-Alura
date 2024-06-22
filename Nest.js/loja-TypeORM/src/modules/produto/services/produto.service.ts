@@ -49,19 +49,12 @@ export class ProdutoService implements ProdutoRepository {
   async buscarPorId(id: string): Promise<ProdutoEntity | null> {
     return await this.produtoRepository.findOne({ where: { id } });
   }
-  async atualiza(id: string, produtoAtt: Partial<ProdutoEntity>) {
-    const produtoAlvo: {
-      [key: string]: any;
-    } | null = await this.buscarPorId(id);
+  async atualiza(id: string, produtoAtt: Partial<CriaProdutoDto>) {
+    const produtoAlvo = await this.buscarPorId(id);
     if (!produtoAlvo) {
       throw new NotFoundException('Produto não encontrado');
     }
-    Object.entries(produtoAtt).forEach(([chave, valor]) => {
-      if (chave === 'id' || !valor) {
-        return;
-      }
-      produtoAlvo[chave] = valor;
-    });
+    Object.assign(produtoAlvo, produtoAtt as ProdutoEntity);
 
     return await this.produtoRepository.save({ ...produtoAlvo });
   }
