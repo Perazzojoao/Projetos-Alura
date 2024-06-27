@@ -26,7 +26,12 @@ export class UsuarioRepositoryService implements UsuarioRepository {
 
   async buscarPorEmail(email: string) {
     const usuario = await this.usuarioRepository.findOne({ where: { email } });
-    return usuario ? true : false;
+
+    if (!usuario) {
+      throw new HttpException('Usuário não encontrado', HttpStatus.NOT_FOUND);
+    }
+
+    return usuario;
   }
 
   async buscarPorId(id: string) {

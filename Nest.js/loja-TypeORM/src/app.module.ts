@@ -9,6 +9,7 @@ import { FiltroDeExcecaoGlobal } from './resources/filters/filtro-de-excecao-glo
 import { APP_FILTER } from '@nestjs/core';
 import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-yet';
+import { AuthModule } from './modules/auth/auth.module';
 @Module({
   imports: [
     UsuarioModule,
@@ -21,6 +22,7 @@ import { redisStore } from 'cache-manager-redis-yet';
     }),
     ProdutoModuleModule,
     PedidoModule,
+    AuthModule,
     CacheModule.registerAsync({
       useFactory: async () => ({
         store: await redisStore({ ttl: 10 * 1000 }),

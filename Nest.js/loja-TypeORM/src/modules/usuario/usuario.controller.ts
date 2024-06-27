@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { UsuarioRepository } from './repository/usuario.repository';
 import { CriaUsuarioDto } from './dto/CriaUsuario.dto';
-import { ListaUsuarioDto } from './dto/ListaUsuario.sto';
+import { ListaUsuarioDto } from './dto/ListaUsuario.dto';
 import { AtualizaUsuarioDto } from './dto/AtualizaUsuario.dto';
 import { HashPasswordPipe } from 'src/resources/pipes/hash-password.pipe';
 import { HttpResponse } from 'src/lib/http-response';
