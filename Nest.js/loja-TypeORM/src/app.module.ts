@@ -7,6 +7,8 @@ import { PedidoModule } from './modules/pedido/pedido.module';
 import { ProdutoModuleModule } from './modules/produto/produto.module';
 import { FiltroDeExcecaoGlobal } from './filtros/filtro-de-excecao-global';
 import { APP_FILTER } from '@nestjs/core';
+import { CacheModule } from '@nestjs/cache-manager';
+import { redisStore } from 'cache-manager-redis-yet';
 @Module({
   imports: [
     UsuarioModule,
@@ -15,15 +17,23 @@ import { APP_FILTER } from '@nestjs/core';
     }),
     TypeOrmModule.forRootAsync({
       useClass: PostgresConfigService,
-      inject: [PostgresConfigService]
+      inject: [PostgresConfigService],
     }),
     ProdutoModuleModule,
-    PedidoModule
+    PedidoModule,
+    CacheModule.registerAsync({
+      useFactory: async () => ({
+        store: await redisStore({ ttl: 10 * 1000 }),
+      }),
+      isGlobal: true,
+    }),
   ],
   controllers: [],
-  providers: [{
-    provide: APP_FILTER,
-    useClass: FiltroDeExcecaoGlobal,
-  }],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: FiltroDeExcecaoGlobal,
+    },
+  ],
 })
 export class AppModule {}

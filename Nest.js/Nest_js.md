@@ -136,6 +136,53 @@ Mostrar as migrações já rodadas:
 
 **Obs:** Devido a um bug no typeorm, é necessário adicionar o caminho até o arquivo de configuração de migrações na pasta `dist` do projeto. Sendo assim, é necessário rodar o comando `pnpm build` antes de rodar os comandos do typeorm.
 
+## Caching com cache-manager do nestjs
+
+Para utilizar o cache nativo do nestjs, precisamos instalar o pacote `@nestjs/cache-manager`:
+
+    pnpm install @nestjs/cache-manager cache-manager
+
+Após isso, podemos configurar o cache no módulo desejado:
+
+```typescript
+@Module({
+  imports: [
+    CacheModule.register({ isGlobal: true, ttl: 10000 }), // ttl = time to live in ms
+  ],
+})
+```
+
+Com isso, o cache estará disponível para ser utilizado em qualquer serviço ou controller. Para utiliza-lo, basta importar o `CacheInterceptor` e adicionar o decorator `@UseInterceptors(CacheInterceptor)` no método desejado.
+
+```typescript
+@Controller('produtos')
+@UseInterceptors(CacheInterceptor)
+export class ProdutoController {}
+```
+
+## Caching com Redis
+
+Para utilizar o Redis como cache, precisamos instalar o pacote `cache-manager-redis-store`:
+
+    pnpm install @nestjs/cache-manager cache-manager
+
+    pnpm install cache-manager-redis-yet
+
+Após isso, podemos configurar o cache no módulo desejado:
+
+```typescript
+@Module({
+  imports: [
+    CacheModule.registerAsync({
+      useFactory: async () => ({
+        store: await redisStore({ ttl: 10 * 1000 }), // ttl = time to live in ms
+      }),
+      isGlobal: true,
+    }),
+  ],
+})
+```
+
 ## Controllers
 
 Controllers são onde definimos as rotas da aplicação e seus respectivos métodos.
