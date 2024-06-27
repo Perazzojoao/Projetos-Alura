@@ -183,6 +183,12 @@ Após isso, podemos configurar o cache no módulo desejado:
 })
 ```
 
+## Hashing de senhas
+
+Para realizar o hashing de senhas, podemos utilizar o pacote `bcrypt`:
+
+    pnpm install bcrypt
+
 ## Controllers
 
 Controllers são onde definimos as rotas da aplicação e seus respectivos métodos.

@@ -14,27 +14,21 @@ import { UsuarioRepository } from './repository/usuario.repository';
 import { CriaUsuarioDto } from './dto/CriaUsuario.dto';
 import { ListaUsuarioDto } from './dto/ListaUsuario.sto';
 import { AtualizaUsuarioDto } from './dto/AtualizaUsuario.dto';
+import { HashPasswordPipe } from 'src/resources/pipes/hash-password.pipe';
+import { HttpResponse } from 'src/lib/http-response';
 
 @Controller('/usuarios')
 export class UsuarioController {
   constructor(private usuarioRepository: UsuarioRepository) {}
 
   @Post()
-  async criaUsuario(@Body() usuario: CriaUsuarioDto) {
-    try {
-      const novoUsuario = await this.usuarioRepository.salvar(usuario);
-      return {
-        status: HttpStatus.CREATED,
-        mensagem: 'Usuário criado com sucesso',
-        usuario: novoUsuario,
-      }
-    } catch (error) {
-      throw new HttpException(
-        'Algo deu errado',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-        { cause: error },
-      );
-    }
+  async criaUsuario(@Body() usuario: CriaUsuarioDto, @Body('senha', HashPasswordPipe) senhaHasheada: string) {
+    usuario.senha = senhaHasheada;
+    const novoUsuario = await this.usuarioRepository.salvar(usuario);
+    return new HttpResponse(
+      new ListaUsuarioDto(novoUsuario.id, novoUsuario.nome, novoUsuario.email),
+      'Usuário criado com sucesso',
+    );
   }
 
   @Get()
@@ -42,23 +36,16 @@ export class UsuarioController {
     try {
       const usuariosSalvos = await this.usuarioRepository.buscarTodos();
       const usuariosLista = usuariosSalvos.map(
-        (usuario) => new ListaUsuarioDto(usuario.id, usuario.nome),
+        (usuario) => new ListaUsuarioDto(usuario.id, usuario.nome, usuario.email),
       );
       return usuariosLista;
     } catch (error) {
-      throw new HttpException(
-        'Algo deu errado',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-        { cause: error },
-      );
+      throw new HttpException('Algo deu errado', HttpStatus.INTERNAL_SERVER_ERROR, { cause: error });
     }
   }
 
   @Put(':id')
-  async atualizaUsuario(
-    @Param('id') id: string,
-    @Body() usuario: AtualizaUsuarioDto,
-  ) {
+  async atualizaUsuario(@Param('id') id: string, @Body() usuario: AtualizaUsuarioDto) {
     const usuarioAlvo = await this.usuarioRepository.atualiza(id, usuario);
     if (!usuarioAlvo) {
       return {

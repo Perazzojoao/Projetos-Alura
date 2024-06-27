@@ -5,7 +5,7 @@ import { PostgresConfigService } from './database/postgres-config.service';
 import { ConfigModule } from '@nestjs/config';
 import { PedidoModule } from './modules/pedido/pedido.module';
 import { ProdutoModuleModule } from './modules/produto/produto.module';
-import { FiltroDeExcecaoGlobal } from './filtros/filtro-de-excecao-global';
+import { FiltroDeExcecaoGlobal } from './resources/filters/filtro-de-excecao-global';
 import { APP_FILTER } from '@nestjs/core';
 import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-yet';

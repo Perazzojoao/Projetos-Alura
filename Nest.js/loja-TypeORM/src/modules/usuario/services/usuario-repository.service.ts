@@ -12,13 +12,8 @@ export class UsuarioRepositoryService implements UsuarioRepository {
   ) {}
 
   async salvar(usuario: CriaUsuarioDto) {
-    try {
-      const novoUsuario = new UsuarioEntity(usuario.nome, usuario.email, usuario.senha);
-
-      return await this.usuarioRepository.save(novoUsuario);
-    } catch (error) {
-      throw new Error('Erro ao salvar usuário');
-    }
+    const novoUsuario = new UsuarioEntity(usuario.nome, usuario.email, usuario.senha);
+    return await this.usuarioRepository.save(novoUsuario);
   }
 
   async buscarTodos() {
