@@ -4,7 +4,7 @@ import { ExibeUsuarioDto } from './dto/ExibeUsuarioDto';
 import { UsuarioService } from '../usuario/usuario.service';
 import { JwtService } from '@nestjs/jwt';
 
-interface UsuarioPayload {
+export interface UsuarioPayload {
   sub: string;
   nomeUsuario: string;
 }

@@ -1,10 +1,24 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, Query, UseInterceptors } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  HttpStatus,
+  Query,
+  UseInterceptors,
+  UseGuards,
+} from '@nestjs/common';
 import { CreatePedidoDto } from './dto/create-pedido.dto';
 import { UpdatePedidoDto } from './dto/update-pedido.dto';
 import { HttpResponse } from 'src/lib/http-response';
 import { PedidoService } from './pedido.service';
 import { CacheInterceptor } from '@nestjs/cache-manager';
+import { AuthGuard } from '../auth/guards/auth.guard';
 
+@UseGuards(AuthGuard)
 @Controller('pedidos')
 @UseInterceptors(CacheInterceptor)
 export class PedidoController {

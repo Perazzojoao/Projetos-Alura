@@ -9,6 +9,7 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { UsuarioRepository } from './repository/usuario.repository';
@@ -20,6 +21,7 @@ import { HttpResponse } from 'src/lib/http-response';
 import { UsuarioService } from './usuario.service';
 import { UsuarioEntity } from './entities/usuario.entity';
 import { CacheInterceptor } from '@nestjs/cache-manager';
+import { AuthGuard } from '../auth/guards/auth.guard';
 
 @Controller('/usuarios')
 @UseInterceptors(CacheInterceptor)
@@ -37,6 +39,7 @@ export class UsuarioController {
   }
 
   @Get()
+  @UseGuards(AuthGuard)
   async buscaUsuarios() {
     try {
       const usuariosSalvos = await this.UsuarioService.buscarTodos();
@@ -50,6 +53,7 @@ export class UsuarioController {
   }
 
   @Put(':id')
+  @UseGuards(AuthGuard)
   async atualizaUsuario(@Param('id') id: string, @Body() usuario: AtualizaUsuarioDto) {
     const usuarioAlvo = await this.UsuarioService.atualiza(id, usuario as UsuarioEntity);
     if (!usuarioAlvo) {
@@ -66,6 +70,7 @@ export class UsuarioController {
   }
 
   @Delete(':id')
+  @UseGuards(AuthGuard)
   async deletaUsuario(@Param('id') id: string) {
     const usuarioADeletar = await this.UsuarioService.deleta(id);
     if (!usuarioADeletar) {
