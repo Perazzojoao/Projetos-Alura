@@ -5,7 +5,7 @@ import { HttpAdapterHost } from '@nestjs/core';
 export class FiltroDeExcecaoGlobal implements ExceptionFilter {
   constructor(private adapterHost: HttpAdapterHost) {}
 
-  catch(exception: any, host: ArgumentsHost) {
+  catch(exception: unknown, host: ArgumentsHost) {
     const { httpAdapter } = this.adapterHost;
 
     const context = host.switchToHttp();
@@ -24,9 +24,12 @@ export class FiltroDeExcecaoGlobal implements ExceptionFilter {
               statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
               timestamp: new Date().toISOString(),
               path: httpAdapter.getRequestUrl(request),
-              message: exception.toString(),  // Excluir em produção
             },
           };
+
+    if (status === HttpStatus.INTERNAL_SERVER_ERROR) {
+      console.error(exception);
+    }
 
     httpAdapter.reply(response, body, status);
   }

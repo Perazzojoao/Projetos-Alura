@@ -1,11 +1,33 @@
-import { CriaProdutoDto } from "../dto/CriaProduto.dto";
-import { ProdutoEntity } from "../entities/produto.entity";
+import { InjectRepository } from '@nestjs/typeorm';
+import { In, Repository } from 'typeorm';
+import { ProdutoEntity } from '../entities/produto.entity';
+import { ProdutoAbstractRepository } from './produto.abstract.repository';
 
-export abstract class ProdutoRepository {
-  abstract salvar(produto: CriaProdutoDto): Promise<ProdutoEntity>;
-  abstract buscarTodos(): Promise<ProdutoEntity[]>;
-  abstract buscarPorUsuario(usuarioId: string): Promise<ProdutoEntity[]>;
-  abstract buscarPorId(id: string): Promise<ProdutoEntity | null>;
-  abstract atualiza(id: string, produtoAtt: Partial<CriaProdutoDto>): Promise<ProdutoEntity>;
-  abstract deleta(id: string): Promise<ProdutoEntity>;
+export class ProdutoRepository implements ProdutoAbstractRepository {
+  constructor(
+    @InjectRepository(ProdutoEntity)
+    private readonly produtoRepository: Repository<ProdutoEntity>,
+  ) {}
+
+  async salvar(produto: ProdutoEntity): Promise<ProdutoEntity> {
+    return await this.produtoRepository.save(produto);
+  }
+  async buscarTodos(): Promise<ProdutoEntity[]> {
+    return await this.produtoRepository.find();
+  }
+  async buscarPorUsuario(usuarioId: string): Promise<ProdutoEntity | null> {
+    return await this.produtoRepository.findOne({ where: { id: usuarioId } });
+  }
+  async buscarPorId(id: string): Promise<ProdutoEntity | null> {
+    return await this.produtoRepository.findOne({ where: { id } });
+  }
+  async buscarVariosPorId(ids: string[]): Promise<ProdutoEntity[]> {
+    return await this.produtoRepository.findBy({ id: In(ids) })
+  }
+  async atualiza(produtoAtt: Partial<ProdutoEntity>): Promise<ProdutoEntity> {
+    return await this.produtoRepository.save({ ...produtoAtt });
+  }
+  async deleta(produto: ProdutoEntity): Promise<ProdutoEntity> {
+    return await this.produtoRepository.remove(produto);
+  }
 }

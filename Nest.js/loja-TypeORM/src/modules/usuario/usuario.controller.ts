@@ -16,15 +16,17 @@ import { ListaUsuarioDto } from './dto/ListaUsuario.dto';
 import { AtualizaUsuarioDto } from './dto/AtualizaUsuario.dto';
 import { HashPasswordPipe } from 'src/resources/pipes/hash-password.pipe';
 import { HttpResponse } from 'src/lib/http-response';
+import { UsuarioService } from './usuario.service';
+import { UsuarioEntity } from './entities/usuario.entity';
 
 @Controller('/usuarios')
 export class UsuarioController {
-  constructor(private usuarioRepository: UsuarioRepository) {}
+  constructor(private UsuarioService: UsuarioService) {}
 
   @Post()
   async criaUsuario(@Body() usuario: CriaUsuarioDto, @Body('senha', HashPasswordPipe) senhaHasheada: string) {
     usuario.senha = senhaHasheada;
-    const novoUsuario = await this.usuarioRepository.salvar(usuario);
+    const novoUsuario = await this.UsuarioService.salvar(usuario as UsuarioEntity);
     return new HttpResponse(
       new ListaUsuarioDto(novoUsuario.id, novoUsuario.nome, novoUsuario.email),
       'Usuário criado com sucesso',
@@ -34,7 +36,7 @@ export class UsuarioController {
   @Get()
   async buscaUsuarios() {
     try {
-      const usuariosSalvos = await this.usuarioRepository.buscarTodos();
+      const usuariosSalvos = await this.UsuarioService.buscarTodos();
       const usuariosLista = usuariosSalvos.map(
         (usuario) => new ListaUsuarioDto(usuario.id, usuario.nome, usuario.email),
       );
@@ -46,7 +48,7 @@ export class UsuarioController {
 
   @Put(':id')
   async atualizaUsuario(@Param('id') id: string, @Body() usuario: AtualizaUsuarioDto) {
-    const usuarioAlvo = await this.usuarioRepository.atualiza(id, usuario);
+    const usuarioAlvo = await this.UsuarioService.atualiza(id, usuario as UsuarioEntity);
     if (!usuarioAlvo) {
       return {
         status: HttpStatus.NOT_FOUND,
@@ -62,7 +64,7 @@ export class UsuarioController {
 
   @Delete(':id')
   async deletaUsuario(@Param('id') id: string) {
-    const usuarioADeletar = await this.usuarioRepository.deleta(id);
+    const usuarioADeletar = await this.UsuarioService.deleta(id);
     if (!usuarioADeletar) {
       throw new NotFoundException('Usuário não encontrado');
     }

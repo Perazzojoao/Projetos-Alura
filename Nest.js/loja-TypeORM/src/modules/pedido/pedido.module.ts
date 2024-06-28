@@ -7,14 +7,22 @@ import { UsuarioEntity } from '../usuario/entities/usuario.entity';
 import { PedidoRepository } from './repositories/pedido.ropository';
 import { ItensPedidoEntity } from './entities/itens-pedido.entity';
 import { ProdutoEntity } from '../produto/entities/produto.entity';
+import { PedidoAbstractRepository } from './repositories/pedido.abstract.repository';
+import { UsuarioModule } from '../usuario/usuario.module';
+import { ProdutoModuleModule } from '../produto/produto.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([PedidoEntity, UsuarioEntity, ItensPedidoEntity, ProdutoEntity])],
+  imports: [
+    TypeOrmModule.forFeature([PedidoEntity, ItensPedidoEntity]), 
+    UsuarioModule, 
+    ProdutoModuleModule,
+  ],
   controllers: [PedidoController],
   providers: [
+    PedidoService,
     {
-      provide: PedidoRepository,
-      useClass: PedidoService,
+      provide: PedidoAbstractRepository,
+      useClass: PedidoRepository,
     },
   ],
 })

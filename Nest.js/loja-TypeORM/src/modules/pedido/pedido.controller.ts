@@ -1,12 +1,12 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, Query } from '@nestjs/common';
 import { CreatePedidoDto } from './dto/create-pedido.dto';
 import { UpdatePedidoDto } from './dto/update-pedido.dto';
-import { PedidoRepository } from './repositories/pedido.ropository';
 import { HttpResponse } from 'src/lib/http-response';
+import { PedidoService } from './pedido.service';
 
 @Controller('pedidos')
 export class PedidoController {
-  constructor(private readonly pedidoService: PedidoRepository) {}
+  constructor(private readonly pedidoService: PedidoService) {}
 
   @Post()
   async create(@Query('usuario') usuarioId: string, @Body() createPedidoDto: CreatePedidoDto) {
