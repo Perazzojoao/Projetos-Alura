@@ -1,12 +1,20 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { ExibeUsuarioDto } from './dto/ExibeUsuarioDto';
-import { AuthRepository } from './repositories/auth.repository';
 import { UsuarioService } from '../usuario/usuario.service';
+import { JwtService } from '@nestjs/jwt';
+
+interface UsuarioPayload {
+  sub: string;
+  nomeUsuario: string;
+}
 
 @Injectable()
-export class AuthService implements AuthRepository {
-  constructor(private readonly usuarioService: UsuarioService) {}
+export class AuthService {
+  constructor(
+    private readonly usuarioService: UsuarioService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   async login(email: string, senha: string) {
     const usuario = await this.usuarioService.buscarPorEmail(email);
@@ -15,7 +23,15 @@ export class AuthService implements AuthRepository {
     if (!athenticated) {
       throw new UnauthorizedException('E-mail ou senha inválidos');
     }
-    
-    return new ExibeUsuarioDto(usuario.id, usuario.nome, usuario.email)
+
+    const payload: UsuarioPayload = {
+      sub: usuario.id,
+      nomeUsuario: usuario.nome,
+    };
+
+    return {
+      token: this.jwtService.sign(payload),
+      usuario: new ExibeUsuarioDto(usuario.id, usuario.nome, usuario.email),
+    };
   }
 }

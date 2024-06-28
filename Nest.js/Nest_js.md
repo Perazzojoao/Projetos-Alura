@@ -189,6 +189,29 @@ Para realizar o hashing de senhas, podemos utilizar o pacote `bcrypt`:
 
     pnpm install bcrypt
 
+## Autenticação com JWT
+
+Para realizar a autenticação com JWT, podemos utilizar o pacote `@nestjs/jwt`:
+
+    pnpm install @nestjs/jwt passport-jwt
+
+Após isso, podemos configurar o JWT no módulo desejado:
+  
+  ```typescript
+  @Module({
+    imports: [
+    JwtModule.registerAsync({
+      global: true,
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET'),
+      }),
+    }),
+  ],
+  })
+  ```
+
 ## Controllers
 
 Controllers são onde definimos as rotas da aplicação e seus respectivos métodos.
