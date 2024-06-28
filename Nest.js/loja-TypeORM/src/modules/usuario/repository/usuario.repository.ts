@@ -2,9 +2,9 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { CriaUsuarioDto } from "../dto/CriaUsuario.dto";
 import { UsuarioEntity } from "../entities/usuario.entity";
-import { UsuarioInterfaceRepository } from "./usuario.interface.repository";
+import { UsuarioAbstractRepository } from "./usuario.abstract.repository";
 
-export class UsuarioRepository implements UsuarioInterfaceRepository {
+export class UsuarioRepository implements UsuarioAbstractRepository {
   constructor(
     @InjectRepository(UsuarioEntity)
     private readonly usuarioRepository: Repository<UsuarioEntity>,

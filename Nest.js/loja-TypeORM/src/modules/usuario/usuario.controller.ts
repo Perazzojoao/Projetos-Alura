@@ -9,6 +9,7 @@ import {
   Param,
   Post,
   Put,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UsuarioRepository } from './repository/usuario.repository';
 import { CriaUsuarioDto } from './dto/CriaUsuario.dto';
@@ -18,8 +19,10 @@ import { HashPasswordPipe } from 'src/resources/pipes/hash-password.pipe';
 import { HttpResponse } from 'src/lib/http-response';
 import { UsuarioService } from './usuario.service';
 import { UsuarioEntity } from './entities/usuario.entity';
+import { CacheInterceptor } from '@nestjs/cache-manager';
 
 @Controller('/usuarios')
+@UseInterceptors(CacheInterceptor)
 export class UsuarioController {
   constructor(private UsuarioService: UsuarioService) {}
 

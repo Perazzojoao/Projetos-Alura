@@ -9,14 +9,14 @@ import { PedidoEntity } from './entities/pedido.entity';
 import { CreatePedidoDto } from './dto/create-pedido.dto';
 import { ItensPedidoEntity } from './entities/itens-pedido.entity';
 import { PedidoAbstractRepository } from './repositories/pedido.abstract.repository';
-import { UsuarioInterfaceRepository } from '../usuario/repository/usuario.interface.repository';
+import { UsuarioAbstractRepository } from '../usuario/repository/usuario.abstract.repository';
 import { ProdutoAbstractRepository } from '../produto/repositories/produto.abstract.repository';
 
 @Injectable()
 export class PedidoService {
   constructor(
     private readonly pedidoRepository: PedidoAbstractRepository,
-    private readonly usuarioRepository: UsuarioInterfaceRepository,
+    private readonly usuarioRepository: UsuarioAbstractRepository,
     private readonly produtoRepository: ProdutoAbstractRepository,
   ) {}
 

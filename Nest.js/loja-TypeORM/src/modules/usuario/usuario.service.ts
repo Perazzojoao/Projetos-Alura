@@ -1,10 +1,10 @@
 import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { UsuarioEntity } from './entities/usuario.entity';
 import { CriaUsuarioDto } from './dto/CriaUsuario.dto';
-import { UsuarioInterfaceRepository } from './repository/usuario.interface.repository';
+import { UsuarioAbstractRepository } from './repository/usuario.abstract.repository';
 @Injectable()
 export class UsuarioService {
-  constructor(private readonly usuarioRepository: UsuarioInterfaceRepository) {}
+  constructor(private readonly usuarioRepository: UsuarioAbstractRepository) {}
 
   async salvar(usuario: UsuarioEntity) {
     return await this.usuarioRepository.salvar(usuario);
