@@ -1,7 +1,17 @@
-import { Controller, Post, Body, HttpStatus, HttpCode, Res } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  HttpStatus,
+  HttpCode,
+  ConsoleLogger,
+  UseInterceptors,
+  Logger,
+} from '@nestjs/common';
 import { AuthDTO } from './dto/auth.dto';
 import { HttpResponse } from 'src/lib/http-response';
 import { AuthService } from './auth.service';
+import { LoggingInterceptor } from 'src/resources/interceptors/logging.interceptor';
 
 @Controller('auth')
 export class AuthController {

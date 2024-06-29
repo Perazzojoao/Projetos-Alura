@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   HttpException,
   HttpStatus,
   Injectable,
@@ -51,27 +52,40 @@ export class PedidoService {
     return await this.pedidoRepository.create(newPedido);
   }
 
-  async update(id: string, produtoAtt: Partial<PedidoEntity>): Promise<PedidoEntity> {
-    const pedidoAlvo = await this.pedidoRepository.findOne(id);
+  async update(
+    pedidoId: string,
+    produtoAtt: Partial<PedidoEntity>,
+    usuarioId: string,
+  ): Promise<PedidoEntity> {
+    const pedidoAlvo = await this.pedidoRepository.findOne(pedidoId);
     if (!pedidoAlvo) {
       throw new HttpException('Pedido não existe', HttpStatus.NOT_FOUND);
+    }
+    if (pedidoAlvo.usuario.id !== usuarioId) {
+      throw new ForbiddenException('Você não tem autorização para atualizar esse pedido');
     }
     Object.assign(pedidoAlvo, produtoAtt as PedidoEntity);
     return await this.pedidoRepository.update(pedidoAlvo);
   }
 
-  async delete(id: string): Promise<PedidoEntity> {
-    const pedidoAlvo = await this.pedidoRepository.findOne(id);
+  async delete(pedidoId: string, usuarioId: string): Promise<PedidoEntity> {
+    const pedidoAlvo = await this.pedidoRepository.findOne(pedidoId);
     if (!pedidoAlvo) {
       throw new HttpException('Pedido não existe', HttpStatus.NOT_FOUND);
+    }
+    if (pedidoAlvo.usuario.id !== usuarioId) {
+      throw new ForbiddenException('Você não tem autorização para atualizar esse pedido');
     }
     return await this.pedidoRepository.delete(pedidoAlvo);
   }
 
-  async findOne(id: string): Promise<PedidoEntity> {
-    const pedido = await this.pedidoRepository.findOne(id);
+  async findOne(pedidoId: string, usuarioId: string): Promise<PedidoEntity> {
+    const pedido = await this.pedidoRepository.findOne(pedidoId);
     if (!pedido) {
       throw new NotFoundException('Pedido não encontrado');
+    }
+    if (pedido.usuario.id !== usuarioId) {
+      throw new ForbiddenException('Você não tem autorização para atualizar esse pedido');
     }
     return pedido;
   }
