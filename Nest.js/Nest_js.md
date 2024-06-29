@@ -41,11 +41,13 @@ Para liberar seu uso de forma global, adicione `{isGlobal: true}` na função `f
 
 **Ex:**
 
-    @Module({
-      imports: [ConfigModule.forRoot({
-        isGlobal: true
-      })],
-    })
+```typescript
+@Module({
+  imports: [ConfigModule.forRoot({
+    isGlobal: true
+  })],
+})
+```
 
 **Obs:** Esta configuração apenas da acesso ao arquivo nomeado como `.env` na raíz do projeto. Para acessar outros arquivos, é necessário passar o nome do arquivo como parâmetro da função `forRoot()`. Ex: `forRoot({envFilePath: '.env.development'})`. Para mais detalhes, acesse a [documentação](https://docs.nestjs.com/techniques/configuration).
 
@@ -206,45 +208,9 @@ Após isso, podemos configurar o JWT no módulo desejado:
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET'),
+        signOptions: { expiresIn: '24h' },
       }),
     }),
   ],
   })
   ```
-
-## Controllers
-
-Controllers são onde definimos as rotas da aplicação e seus respectivos métodos.
-
-### Criação
-
-Para criar um novo controller, criamos uma classe:
-
-```typescript
-@Controller('/usuarios')  // Decorator para marcar a classe como um controller
-export class UsuarioController {
-  constructor(private usuarioRepository: UsuarioRepository) {}  // Dependency injection
-
-  @Post()
-  async criaUsuario(@Body() usuario: CriaUsuarioDto){
-    this.usuarioRepository.salvar(usuario);
-    return usuario;
-  }
-
-  @Get()
-  async buscaUsuarios(){
-    return this.usuarioRepository.buscarTodos();
-  }
-}
-```
-
-Após isso, devemos adicionar o controller ao seu respectivo `module`:
-
-```typescript
-@Module({
-  imports: [],
-  controllers: [UsuarioController],
-  providers: [UsuarioRepository],
-})
-export class UsuarioModule {}
-```
