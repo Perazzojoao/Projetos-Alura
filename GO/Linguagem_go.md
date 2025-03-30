@@ -714,7 +714,7 @@ O select verifica quais channels estão prontos para serem executados e executa 
 
 **Ex:**
 
-```
+```go
 candidato1, candidato2 := make(chan string), make(chan string)
 go elegerGanhador(candidato1, "Candidato 1")
 go elegerGanhador(candidato2, "Candidato 2")
@@ -747,7 +747,7 @@ Deve ser adicionado ao WaitGroup a quantidade de vezes que a mainroutine deve es
 
 **Ex:**
 
-```
+```go
 func main() {
 	var wait sync.WaitGroup
 	nomes := []string{"João", "Maria", "José"}
@@ -783,14 +783,14 @@ Quando uma goroutine chama a função `mutex.Lock()`, ela bloqueia a continuidad
 
 **Ex:**
 
-```
+```go
 var (
 	counter int
 	mutex   sync.Mutex
 )
 ```
 
-```
+```go
 func main() {
 	for i := 0; i < 1000; i++ {
 		go func() {
@@ -811,14 +811,14 @@ O `sync.RWMutex` é uma estrutura em Go que implementa a funcionalidade de um Mu
 
 **Ex:**
 
-```
+```go
 var (
 	myMap = make(map[string]string)
 	mutex sync.RWMutex
 )
 ```
 
-```
+```go
 func write(key, value string) {
 	mutex.Lock()
 	myMap[key] = value
@@ -832,7 +832,7 @@ func read(key string) {
 }
 ```
 
-```
+```go
 func main() {
 	go write("Carro", "Vermelho")
 	go read("Carro")
@@ -856,7 +856,7 @@ As funções write e read usam o sync.RWMutex para garantir que apenas uma gorou
 
 **Ex:**
 
-```
+```go
 var (
 	acertou = false
 )
@@ -870,7 +870,7 @@ func marcarAcerto() {
 }
 ```
 
-```
+```go
 func main() {
 	var wait sync.WaitGroup
 	wait.Add(100)
@@ -903,7 +903,7 @@ Neste exemplo a função `once.Do()` garante que assim que o número secreto for
 
 **Criação:**
 
-```
+```go
 memPool := &sync.Pool{
   New: func() interface{} {
     mem := make([]byte, 1024)
@@ -917,7 +917,7 @@ A função `New` é uma função que será chamada sempre que você tentar obter
 
 **Uso:**
 
-```
+```go
 const chamadas = 1024 * 1024
 
 wg := &sync.WaitGroup{}
@@ -961,7 +961,7 @@ Neste exemplo, você pode obter um slice de bytes do `memPool` usando o método 
 
 **Ex:**
 
-```
+```go
 var pronto bool
 
 func baixando(cond *sync.Cond) {
@@ -973,7 +973,7 @@ func baixando(cond *sync.Cond) {
 	cond.Signal()
 }
 ```
-```
+```go
 func main() {
 	cond := sync.NewCond(&sync.Mutex{})
 
